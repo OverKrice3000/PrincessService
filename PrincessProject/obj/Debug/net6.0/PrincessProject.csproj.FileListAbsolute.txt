@@ -1,0 +1,15 @@
+C:\Users\Igor\RiderProjects\PrincessService\PrincessProject\bin\Debug\net6.0\PrincessProject.exe
+C:\Users\Igor\RiderProjects\PrincessService\PrincessProject\bin\Debug\net6.0\PrincessProject.deps.json
+C:\Users\Igor\RiderProjects\PrincessService\PrincessProject\bin\Debug\net6.0\PrincessProject.runtimeconfig.json
+C:\Users\Igor\RiderProjects\PrincessService\PrincessProject\bin\Debug\net6.0\PrincessProject.dll
+C:\Users\Igor\RiderProjects\PrincessService\PrincessProject\bin\Debug\net6.0\PrincessProject.pdb
+C:\Users\Igor\RiderProjects\PrincessService\PrincessProject\obj\Debug\net6.0\PrincessProject.csproj.AssemblyReference.cache
+C:\Users\Igor\RiderProjects\PrincessService\PrincessProject\obj\Debug\net6.0\PrincessProject.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Igor\RiderProjects\PrincessService\PrincessProject\obj\Debug\net6.0\PrincessProject.AssemblyInfoInputs.cache
+C:\Users\Igor\RiderProjects\PrincessService\PrincessProject\obj\Debug\net6.0\PrincessProject.AssemblyInfo.cs
+C:\Users\Igor\RiderProjects\PrincessService\PrincessProject\obj\Debug\net6.0\PrincessProject.csproj.CoreCompileInputs.cache
+C:\Users\Igor\RiderProjects\PrincessService\PrincessProject\obj\Debug\net6.0\PrincessProject.dll
+C:\Users\Igor\RiderProjects\PrincessService\PrincessProject\obj\Debug\net6.0\refint\PrincessProject.dll
+C:\Users\Igor\RiderProjects\PrincessService\PrincessProject\obj\Debug\net6.0\PrincessProject.pdb
+C:\Users\Igor\RiderProjects\PrincessService\PrincessProject\obj\Debug\net6.0\PrincessProject.genruntimeconfig.cache
+C:\Users\Igor\RiderProjects\PrincessService\PrincessProject\obj\Debug\net6.0\ref\PrincessProject.dll
