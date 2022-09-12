@@ -8,7 +8,6 @@ public class CsvLoader : ITableLoader
     private string? _filepath;
     private string[]? _columns;
     private char _separator = ',';
-    private const string PathToRoot = "..\\..";
 
     public CsvLoader WithFilepath(in string filepath)
     {

@@ -8,4 +8,8 @@
         <RootNamespace>Princess</RootNamespace>
     </PropertyGroup>
 
+    <ItemGroup>
+      <Folder Include="output" />
+    </ItemGroup>
+
 </Project>

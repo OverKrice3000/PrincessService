@@ -18,4 +18,9 @@ public class Contender
     {
         HasVisited = true;
     }
+
+    public override string ToString()
+    {
+        return Name + " " + Surname;
+    }
 };

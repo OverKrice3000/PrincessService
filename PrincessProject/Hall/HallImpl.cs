@@ -1,4 +1,5 @@
-﻿using PrincessProject.ContenderGenerator;
+﻿using System.Security.AccessControl;
+using PrincessProject.ContenderGenerator;
 using PrincessProject.Friend;
 using PrincessProject.model;
 using PrincessProject.utils;
@@ -61,6 +62,7 @@ public class HallImpl : IHall
         {
             Console.WriteLine("Princess hasn't chosen anyone!");
             Console.WriteLine("Her happiness level: " + Constants.NoHusbandHappinessLevel);
+            _saveAttemptToFile(Constants.NoHusbandHappinessLevel);
             return;
         }
         Contender contender = _findContenderByName(contenderName);
@@ -73,10 +75,33 @@ public class HallImpl : IHall
         {
             Console.WriteLine("Princess has chosen an idiot husband: " + contenderName.Name + " " + contenderName.Surname);
             Console.WriteLine("Her happiness level: " + Constants.IdiotHusbandHappinessLevel);
+            _saveAttemptToFile(Constants.IdiotHusbandHappinessLevel);
             return;
         }
         Console.WriteLine("Princess has chosen a worthy contender: " + contenderName.Name + " " + contenderName.Surname);
         Console.WriteLine("Her happiness level: " + contender.Value);
+        _saveAttemptToFile(contender.Value);
+    }
+    
+    // TODO change to attempt saved class
+    private void _saveAttemptToFile(int happiness)
+    {
+        var currentDirectory = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
+        string projectPath = currentDirectory.Parent!.Parent!.Parent!.FullName;
+        int outputFilesExists = new DirectoryInfo(Path.Join(projectPath, Constants.FromProjectRootOutputFolderPath))
+            .EnumerateFiles().Count();
+        var nextFile = new FileInfo(Path.Join(projectPath, Constants.FromProjectRootOutputFolderPath,
+            Util.deriveOutputFileName(outputFilesExists)));
+        using (var writer = new StreamWriter(nextFile.Create()))
+        {
+            foreach (var candidate in _contenders)
+            {
+                writer.Write(candidate.ToString() + Environment.NewLine);
+            }
+            Util.writeSectionSeparator(writer);
+            writer.Write(happiness);
+        }
+
     }
 
     private Contender _findContenderByName(ContenderName contenderName)
