@@ -19,8 +19,8 @@ public class LargeNumbersLawStrategy : IStrategy
     {
         int contenderScore = _contenderChain.Add(contender);
         if (
-            _contendersAssessed++ >= _contendersCount * Constants.LargeNumbersLawStrategyConfig.FirstContendersRejectedPercentage
-            && contenderScore <= Constants.LargeNumbersLawStrategyConfig.SatisfactoryContenderPositionUpperBorder
+            _contendersAssessed++ >= _contendersCount * LargeNumbersLawStrategyConfig.FirstContendersRejectedPercentage
+            && contenderScore <= LargeNumbersLawStrategyConfig.SatisfactoryContenderPositionUpperBorder
         )
         {
             return true;

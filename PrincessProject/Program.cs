@@ -21,7 +21,7 @@ var contenders = Constants.DefaultContendersCount;
 var friend = new FriendImpl();
 var hall = new HallImpl(contenderGenerator, friend, contenders);
 IStrategy strategy = contenders < Constants.ManyCandidatesStrategyCandidatesLowerBorder ?
-    new CurrentCandidatePositionAnalysisStrategy(hall, contenders) : new LargeNumbersLawStrategy(hall, contenders);
+    new CandidatePositionAnalysisStrategy(hall, contenders) : new LargeNumbersLawStrategy(hall, contenders);
 var princess = new Princess(hall).WithStrategy(strategy);
 
 var chosen = princess.MakeAssessment();

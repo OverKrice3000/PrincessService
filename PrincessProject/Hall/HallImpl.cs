@@ -34,8 +34,11 @@ public class HallImpl : IHall
     {
         if (_size == _currentContender)
             throw new ApplicationException("No more contenders!");
-        Console.WriteLine("NEXT CONTENDER IS:");
-        Console.WriteLine(_contenders[_currentContender].Value);
+        if (Constants.DebugMode)
+        {
+            Console.WriteLine("NEXT CONTENDER IS:");
+            Console.WriteLine(_contenders[_currentContender].Value);
+        }
         Contender nextContender = _contenders[_currentContender++];
         nextContender.SetHasVisited();
         return _formNameFromContender(nextContender);
