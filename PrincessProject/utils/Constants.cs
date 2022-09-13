@@ -28,4 +28,5 @@ public static class Constants
     public const double IdiotHusbandTopBorderPercentage = 0.5;
     public const int IdiotHusbandHappinessLevel = 0;
     public const int NoHusbandHappinessLevel = 10;
+    public const int First7DigitInteger = 1000000;
 }

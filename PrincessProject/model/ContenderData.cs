@@ -1,6 +1,6 @@
 ﻿namespace PrincessProject.model;
 
-public record ContenderName(string Name, string Surname)
+public record ContenderData(string Name, string Surname, int Value)
 {
     public override string ToString()
     {

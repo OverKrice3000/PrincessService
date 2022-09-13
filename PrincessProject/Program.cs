@@ -4,6 +4,7 @@ using PrincessProject.Hall;
 using PrincessProject.Princess.Strategy;
 using PrincessProject.PrincessClasses;
 using PrincessProject.utils;
+using PrincessProject.utils.AttemptLoader;
 using PrincessProject.utils.ContenderNamesLoader;
 
 var namesLoader = new CsvLoader()
@@ -19,7 +20,8 @@ var contenderGenerator = new FromNamesSurnamesContenderGenerator()
     .WithSurnamesLoader(surnamesLoader);
 var contenders = Constants.DefaultContendersCount;
 var friend = new FriendImpl();
-var hall = new HallImpl(contenderGenerator, friend, contenders);
+var hall = new HallImpl(contenderGenerator, friend, contenders)
+    .WithAttemptSaver(new FileAttemptSaver());
 IStrategy strategy = contenders < Constants.ManyCandidatesStrategyCandidatesLowerBorder ?
     new CandidatePositionAnalysisStrategy(hall, contenders) : new LargeNumbersLawStrategy(hall, contenders);
 var princess = new Princess(hall).WithStrategy(strategy);

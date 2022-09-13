@@ -2,14 +2,23 @@
 
 public static class Util
 {
-    public static string deriveOutputFileName(int outputFilesExists)
+    public static string DeriveOutputFileName(int outputFilesExists)
     {
-        return Constants.OutputFileBasename + "_" + outputFilesExists.ToString("D" + Constants.OutputFileNumberPadding) +
-               Constants.OutputFileExtension;
+        return Constants.OutputFileBasename 
+               + "_" + new Random().Next(Constants.First7DigitInteger).ToString("D" + Constants.OutputFileNumberPadding)
+               + "_" + outputFilesExists.ToString("D" + Constants.OutputFileNumberPadding)
+               + Constants.OutputFileExtension;
     }
 
-    public static void writeSectionSeparator(StreamWriter writer)
+    public static void WriteSectionSeparator(StreamWriter writer)
     {
-        writer.Write("----------" + Environment.NewLine);
+        writer.WriteLine("----------");
     }
+
+    public static string GetProjectBasedir()
+    {
+        var currentDirectory = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
+        return currentDirectory.Parent!.Parent!.Parent!.FullName;
+    }
+    
 }

@@ -3,6 +3,7 @@ using PrincessProject.ContenderGenerator;
 using PrincessProject.Friend;
 using PrincessProject.model;
 using PrincessProject.utils;
+using PrincessProject.utils.AttemptLoader;
 
 namespace PrincessProject.Hall;
 
@@ -12,6 +13,7 @@ public class HallImpl : IHall
     private readonly Contender[] _contenders;
     private int _currentContender = 0;
     private readonly IFriend _friend;
+    private IAttemptSaver _attemptSaver = new VoidAttemptSaver();
     
     public HallImpl(
         IContenderGenerator generator,
@@ -25,6 +27,12 @@ public class HallImpl : IHall
         _contenders = generator.Generate(size)
             .OrderBy(item => random.Next())
             .ToArray();
+    }
+
+    public HallImpl WithAttemptSaver(IAttemptSaver attemptSaver)
+    {
+        _attemptSaver = attemptSaver;
+        return this;
     }
     public int GetTotalCandidates()
     {
@@ -62,7 +70,12 @@ public class HallImpl : IHall
         {
             Console.WriteLine("Princess hasn't chosen anyone!");
             Console.WriteLine("Her happiness level: " + Constants.NoHusbandHappinessLevel);
-            _saveAttemptToFile(Constants.NoHusbandHappinessLevel);
+            _attemptSaver.Save(new Attempt(
+                _size,
+                Mappers.ContenderToContenderData(_contenders),
+                null,
+                Constants.NoHusbandHappinessLevel
+                ));
             return;
         }
         Contender contender = _findContenderByName(contenderName);
@@ -75,33 +88,22 @@ public class HallImpl : IHall
         {
             Console.WriteLine("Princess has chosen an idiot husband: " + contenderName.Name + " " + contenderName.Surname);
             Console.WriteLine("Her happiness level: " + Constants.IdiotHusbandHappinessLevel);
-            _saveAttemptToFile(Constants.IdiotHusbandHappinessLevel);
+            _attemptSaver.Save(new Attempt(
+                _size,
+                Mappers.ContenderToContenderData(_contenders),
+                null,
+                Constants.IdiotHusbandHappinessLevel
+            ));
             return;
         }
         Console.WriteLine("Princess has chosen a worthy contender: " + contenderName.Name + " " + contenderName.Surname);
         Console.WriteLine("Her happiness level: " + contender.Value);
-        _saveAttemptToFile(contender.Value);
-    }
-    
-    // TODO change to attempt saved class
-    private void _saveAttemptToFile(int happiness)
-    {
-        var currentDirectory = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
-        string projectPath = currentDirectory.Parent!.Parent!.Parent!.FullName;
-        int outputFilesExists = new DirectoryInfo(Path.Join(projectPath, Constants.FromProjectRootOutputFolderPath))
-            .EnumerateFiles().Count();
-        var nextFile = new FileInfo(Path.Join(projectPath, Constants.FromProjectRootOutputFolderPath,
-            Util.deriveOutputFileName(outputFilesExists)));
-        using (var writer = new StreamWriter(nextFile.Create()))
-        {
-            foreach (var candidate in _contenders)
-            {
-                writer.Write(candidate.ToString() + Environment.NewLine);
-            }
-            Util.writeSectionSeparator(writer);
-            writer.Write(happiness);
-        }
-
+        _attemptSaver.Save(new Attempt(
+            _size,
+            Mappers.ContenderToContenderData(_contenders),
+            null,
+            contender.Value
+        ));
     }
 
     private Contender _findContenderByName(ContenderName contenderName)
