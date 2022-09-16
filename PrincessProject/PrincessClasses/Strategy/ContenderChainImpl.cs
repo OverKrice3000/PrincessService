@@ -1,7 +1,8 @@
 ﻿using PrincessProject.Hall;
 using PrincessProject.model;
+using PrincessProject.Princess.Strategy;
 
-namespace PrincessProject.Princess.Strategy;
+namespace PrincessProject.PrincessClasses.Strategy;
 
 public class ContenderChainImpl : IContenderChain
 {

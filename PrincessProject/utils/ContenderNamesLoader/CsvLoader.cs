@@ -1,6 +1,4 @@
-﻿using System.Collections;
-
-namespace PrincessProject.utils.ContenderNamesLoader;
+﻿namespace PrincessProject.utils.ContenderNamesLoader;
 
 public class CsvLoader : ITableLoader
 {

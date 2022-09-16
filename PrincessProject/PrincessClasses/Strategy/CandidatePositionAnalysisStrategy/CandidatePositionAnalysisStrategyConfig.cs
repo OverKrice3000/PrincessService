@@ -1,7 +1,6 @@
-﻿using PrincessProject.utils;
-using radj307;
+﻿using radj307;
 
-namespace PrincessProject.Princess.Strategy;
+namespace PrincessProject.PrincessClasses.Strategy.CandidatePositionAnalysisStrategy;
 
 public static class CandidatePositionAnalysisStrategyConfig
 {

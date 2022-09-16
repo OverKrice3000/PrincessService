@@ -2,6 +2,7 @@
 using PrincessProject.model;
 using PrincessProject.Princess;
 using PrincessProject.Princess.Strategy;
+using PrincessProject.PrincessClasses.Strategy;
 
 namespace PrincessProject.PrincessClasses;
 

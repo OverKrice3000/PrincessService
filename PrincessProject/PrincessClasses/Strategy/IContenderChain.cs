@@ -1,6 +1,6 @@
 ﻿using PrincessProject.model;
 
-namespace PrincessProject.Princess.Strategy;
+namespace PrincessProject.PrincessClasses.Strategy;
 
 public interface IContenderChain
 {

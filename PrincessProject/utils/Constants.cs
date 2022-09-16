@@ -1,6 +1,4 @@
-﻿using PrincessProject.utils;
-
-namespace PrincessProject.utils;
+﻿namespace PrincessProject.utils;
 
 public static class Constants
 {

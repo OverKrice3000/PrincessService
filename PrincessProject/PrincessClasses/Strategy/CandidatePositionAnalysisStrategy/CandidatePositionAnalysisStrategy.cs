@@ -1,6 +1,9 @@
 ﻿using PrincessProject.Hall;
 using PrincessProject.model;
+using PrincessProject.PrincessClasses.Strategy;
+using PrincessProject.PrincessClasses.Strategy.CandidatePositionAnalysisStrategy;
 using PrincessProject.utils;
+using PrincessProject.utils.PrincessMath;
 using radj307;
 
 namespace PrincessProject.Princess.Strategy;

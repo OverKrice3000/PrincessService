@@ -1,5 +1,6 @@
-﻿namespace PrincessProject.utils;
-using System.Numerics;
+﻿using System.Numerics;
+
+namespace PrincessProject.utils.PrincessMath;
 
 public static class BigIntegerCache
 {

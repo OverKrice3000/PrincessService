@@ -1,7 +1,7 @@
 ﻿using System.Numerics;
 using radj307;
 
-namespace PrincessProject.utils;
+namespace PrincessProject.utils.PrincessMath;
 
 public static class PrincessMath
 {

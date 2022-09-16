@@ -1,6 +1,6 @@
 ﻿using PrincessProject.model;
 
-namespace PrincessProject.Princess;
+namespace PrincessProject.PrincessClasses;
 
 public interface IPrincess
 {

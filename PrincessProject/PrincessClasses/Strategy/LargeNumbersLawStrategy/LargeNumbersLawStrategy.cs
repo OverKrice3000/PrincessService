@@ -1,8 +1,7 @@
 ﻿using PrincessProject.Hall;
 using PrincessProject.model;
-using PrincessProject.utils;
 
-namespace PrincessProject.Princess.Strategy;
+namespace PrincessProject.PrincessClasses.Strategy.LargeNumbersLawStrategy;
 
 public class LargeNumbersLawStrategy : IStrategy
 {

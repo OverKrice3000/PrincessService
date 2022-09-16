@@ -3,6 +3,8 @@ using PrincessProject.Friend;
 using PrincessProject.Hall;
 using PrincessProject.Princess.Strategy;
 using PrincessProject.PrincessClasses;
+using PrincessProject.PrincessClasses.Strategy;
+using PrincessProject.PrincessClasses.Strategy.LargeNumbersLawStrategy;
 using PrincessProject.utils;
 using PrincessProject.utils.AttemptLoader;
 using PrincessProject.utils.ContenderNamesLoader;
