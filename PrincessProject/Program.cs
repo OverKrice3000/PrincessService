@@ -17,17 +17,13 @@ var surnamesLoader = new CsvLoader()
     .WithSeparator(';')
     .WithColumns(new string[1] { Constants.CsvSurnamesColumn })
     .WithFilepath(Constants.FromProjectRootCsvSurnamesFilepath);
-var contenderGenerator = new FromNamesSurnamesContenderGenerator()
-    .WithNamesLoader(namesLoader)
-    .WithSurnamesLoader(surnamesLoader);
+var contenderGenerator = new ContenderGenerator(namesLoader, surnamesLoader);
 var contenders = Constants.DefaultContendersCount;
-var friend = new FriendImpl();
+var friend = new Friend();
 var hall = new HallImpl(contenderGenerator, friend, contenders)
     .WithAttemptSaver(new FileAttemptSaver());
-IStrategy strategy = contenders < Constants.ManyCandidatesStrategyCandidatesLowerBorder ?
-    new CandidatePositionAnalysisStrategy(hall, contenders) : new LargeNumbersLawStrategy(hall, contenders);
-var princess = new Princess(hall).WithStrategy(strategy);
+var princess = new Princess(hall);
 
-var chosen = princess.MakeAssessment();
+var chosen = princess.ChooseHusband();
 hall.ChooseContenderAndCalculateHappiness(chosen);
     

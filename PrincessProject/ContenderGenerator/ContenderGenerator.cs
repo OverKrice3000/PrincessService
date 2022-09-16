@@ -4,28 +4,29 @@ using PrincessProject.utils.ContenderNamesLoader;
 
 namespace PrincessProject.ContenderGenerator;
 
-public class FromNamesSurnamesContenderGenerator : IContenderGenerator
+public class ContenderGenerator : IContenderGenerator
 {
-    private ITableLoader? _namesLoader;
-    private ITableLoader? _surnamesLoader;
+    private ITableLoader _namesLoader;
+    private ITableLoader _surnamesLoader;
 
-    public FromNamesSurnamesContenderGenerator WithNamesLoader(ITableLoader loader)
+    public ContenderGenerator(ITableLoader namesLoader, ITableLoader surnamesLoader)
     {
-        this._namesLoader = loader;
-        return this;
+        _namesLoader = namesLoader;
+        _surnamesLoader = surnamesLoader;
     }
-    public FromNamesSurnamesContenderGenerator WithSurnamesLoader(ITableLoader loader)
+    
+    public void SetNamesLoader(ITableLoader loader)
     {
-        this._surnamesLoader = loader;
-        return this;
+        _namesLoader = loader;
+    }
+    
+    public void SetSurnamesLoader(ITableLoader loader)
+    {
+        _surnamesLoader = loader;
     }
 
-    public Contender[] Generate(int size = 100)
+    public Contender[] Generate(int size = Constants.DefaultContendersCount)
     {
-        if (this._namesLoader is null || this._surnamesLoader is null)
-        {
-            throw new ArgumentException("Loaders are not set!");
-        }
         var names = this._namesLoader
             .Load()[Constants.CsvNamesColumn];
         var surnames = this._surnamesLoader

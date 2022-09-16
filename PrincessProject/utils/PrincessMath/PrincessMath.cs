@@ -17,14 +17,6 @@ public static class PrincessMath
 
     public static BigInteger BinomialCoefficient(uint n, uint m)
     {
-        /*uint min = Math.Min(m, n - m);
-        uint max = Math.Max(m, n - m);
-        ulong coef = 1;
-        for (uint i = max + 1; i <= n; i++)
-        {
-            coef *= i;
-        }
-        return coef / Factorial(min);*/
         return Factorial(n) / Factorial(m) / Factorial(n - m);
     }
 

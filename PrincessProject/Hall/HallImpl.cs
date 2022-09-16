@@ -11,7 +11,7 @@ public class HallImpl : IHall
 {
     private readonly int _size;
     private readonly Contender[] _contenders;
-    private int _currentContender = 0;
+    private int _nextContender = 0;
     private readonly IFriend _friend;
     private IAttemptSaver _attemptSaver = new VoidAttemptSaver();
     
@@ -34,6 +34,7 @@ public class HallImpl : IHall
         _attemptSaver = attemptSaver;
         return this;
     }
+    
     public int GetTotalCandidates()
     {
         return this._size;
@@ -41,14 +42,14 @@ public class HallImpl : IHall
 
     public ContenderName GetNextContender()
     {
-        if (_size == _currentContender)
+        if (_size == _nextContender)
             throw new ApplicationException("No more contenders!");
         if (Constants.DebugMode)
         {
             Console.WriteLine("NEXT CONTENDER IS:");
-            Console.WriteLine(_contenders[_currentContender].Value);
+            Console.WriteLine(_contenders[_nextContender].Value);
         }
-        Contender nextContender = _contenders[_currentContender++];
+        Contender nextContender = _contenders[_nextContender++];
         nextContender.SetHasVisited();
         return _formNameFromContender(nextContender);
     }
@@ -78,8 +79,11 @@ public class HallImpl : IHall
                 ));
             return;
         }
+        
         Contender contender = _findContenderByName(contenderName);
-        if (!_formNameFromContender(_contenders[_currentContender - 1]).Equals(_formNameFromContender(contender)))
+        
+        // Throw when princess has chosen not the last assessed contender
+        if (!_formNameFromContender(_contenders[_nextContender - 1]).Equals(_formNameFromContender(contender)))
         {
             throw new ApplicationException("Princess is trying to cheat!");
         }
@@ -114,10 +118,9 @@ public class HallImpl : IHall
             ) ?? 
                throw new ArgumentException("No contender with such name!");
     }
-
+    
     private ContenderName _formNameFromContender(Contender contender)
     {
         return new ContenderName(contender.Name, contender.Surname);
     }
-    
 }

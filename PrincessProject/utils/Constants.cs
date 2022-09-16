@@ -1,4 +1,6 @@
-﻿namespace PrincessProject.utils;
+﻿using PrincessProject.Princess.Strategy;
+
+namespace PrincessProject.utils;
 
 public static class Constants
 {
@@ -16,11 +18,16 @@ public static class Constants
     public const int OutputFileNumberPadding = 6;
     
     // Configurable contenders count
-    public const int DefaultContendersCount = 900;
+    public const int DefaultContendersCount = 100;
+    
     // Configurable contenders count starting from which alternative strategy is to be used
     public const int ManyCandidatesStrategyCandidatesLowerBorder = 1000;
+    
     // Debug mode, which enables some logs
     public const bool DebugMode = true;
+    
+    // Fully qualified name of IStrategy implementation used by princess
+    public static Type PrincessStrategyClassType = typeof(CandidatePositionAnalysisStrategy);
 
     // Non configurable constants
     public const double IdiotHusbandTopBorderPercentage = 0.5;

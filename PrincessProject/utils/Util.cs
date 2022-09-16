@@ -1,4 +1,6 @@
-﻿namespace PrincessProject.utils;
+﻿using PrincessProject.PrincessClasses.Strategy;
+
+namespace PrincessProject.utils;
 
 public static class Util
 {
@@ -15,10 +17,10 @@ public static class Util
         writer.WriteLine("----------");
     }
 
-    public static string GetProjectBasedir()
+    public static string GetProjectBaseDirectory()
     {
         var currentDirectory = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
         return currentDirectory.Parent!.Parent!.Parent!.FullName;
     }
-    
+
 }

@@ -31,7 +31,7 @@ public class CsvLoader : ITableLoader
         {
             throw new ArgumentException("Csv filepath is not set!");
         }
-        string absoluteCsvPath = Path.Join(Util.GetProjectBasedir(), this._filepath);
+        string absoluteCsvPath = Path.Join(Util.GetProjectBaseDirectory(), this._filepath);
         if (!File.Exists(absoluteCsvPath))
         {
             throw new ArgumentException("Bad csv filepath!");

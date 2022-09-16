@@ -4,13 +4,13 @@ using PrincessProject.Princess.Strategy;
 
 namespace PrincessProject.PrincessClasses.Strategy;
 
-public class ContenderChainImpl : IContenderChain
+public class ContenderChain : IContenderChain
 {
     private int _size = 0;
     private readonly IHall _hall;
     private readonly List<ContenderName> _contenderChain;
 
-    public ContenderChainImpl(IHall hall, int capacity)
+    public ContenderChain(IHall hall, int capacity)
     {
         _hall = hall;
         _contenderChain = new List<ContenderName>(capacity);
