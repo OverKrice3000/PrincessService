@@ -1,6 +1,5 @@
 ﻿using PrincessProject.Hall;
 using PrincessProject.model;
-using PrincessProject.Princess;
 using PrincessProject.Princess.Strategy;
 using PrincessProject.PrincessClasses.Strategy;
 using PrincessProject.utils;
@@ -39,16 +38,16 @@ public class Princess : IPrincess
             Console.WriteLine("Her happiness level: {0}", Constants.NoHusbandHappinessLevel);
             return Constants.NoHusbandHappinessLevel;
         }
-        
+
         int contenderValue = _hall.ChooseContender(chosen);
-        
+
         if (contenderValue <= size * Constants.IdiotHusbandTopBorderPercentage)
         {
             Console.WriteLine("Princess has chosen an idiot husband: {0}", chosen);
             Console.WriteLine("Her happiness level: {0}", Constants.IdiotHusbandHappinessLevel);
             return Constants.IdiotHusbandHappinessLevel;
         }
-        
+
         Console.WriteLine("Princess has chosen a worthy contender: {0}", chosen);
         Console.WriteLine("Her happiness level: {0}", contenderValue);
         return contenderValue;
