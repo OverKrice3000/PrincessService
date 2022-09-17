@@ -15,8 +15,7 @@ public static class Constants
     public const string FromProjectRootOutputFolderPath = "output";
     public const string OutputFileBasename = "attempt";
     public const string OutputFileExtension = ".txt";
-    public const int OutputFileNumberPadding = 6;
-    
+
     // Configurable contenders count
     public const int DefaultContendersCount = 100;
     

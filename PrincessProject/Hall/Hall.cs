@@ -7,37 +7,42 @@ using PrincessProject.utils.AttemptLoader;
 
 namespace PrincessProject.Hall;
 
-public class HallImpl : IHall
+public class Hall : IHall
 {
     private readonly int _size;
-    private readonly Contender[] _contenders;
-    private int _nextContender = 0;
+    private readonly IContenderGenerator _contenderGenerator;
     private readonly IFriend _friend;
-    private IAttemptSaver _attemptSaver = new VoidAttemptSaver();
+    private Contender[] _contenders;
+    private int _nextContender = 0;
+    private IAttemptSaver _attemptSaver;
+
     
-    public HallImpl(
+    public Hall(
         IContenderGenerator generator,
         IFriend friend,
+        IAttemptSaver attemptSaver,
         int size = Constants.DefaultContendersCount
     )
     {
         _size = size;
         _friend = friend;
+        _contenderGenerator = generator;
         var random = new Random();
-        _contenders = generator.Generate(size)
+        _contenders = _contenderGenerator.Generate(size)
             .OrderBy(item => random.Next())
             .ToArray();
+        _nextContender = 0;
+        _attemptSaver = attemptSaver;
     }
 
-    public HallImpl WithAttemptSaver(IAttemptSaver attemptSaver)
+    public void SetAttemptSaver(IAttemptSaver attemptSaver)
     {
         _attemptSaver = attemptSaver;
-        return this;
     }
     
     public int GetTotalCandidates()
     {
-        return this._size;
+        return _size;
     }
 
     public ContenderName GetNextContender()
@@ -64,22 +69,18 @@ public class HallImpl : IHall
                 )
             );
     }
-    
-    public void ChooseContenderAndCalculateHappiness(ContenderName? contenderName)
+
+    public void Reset()
     {
-        if (contenderName is null)
-        {
-            Console.WriteLine("Princess hasn't chosen anyone!");
-            Console.WriteLine("Her happiness level: " + Constants.NoHusbandHappinessLevel);
-            _attemptSaver.Save(new Attempt(
-                _size,
-                Mappers.ContenderToContenderData(_contenders),
-                null,
-                Constants.NoHusbandHappinessLevel
-                ));
-            return;
-        }
-        
+        var random = new Random();
+        _contenders = _contenderGenerator.Generate(_size)
+            .OrderBy(item => random.Next())
+            .ToArray();
+        _nextContender = 0;
+    }
+    
+    public int ChooseContender(ContenderName contenderName)
+    {
         Contender contender = _findContenderByName(contenderName);
         
         // Throw when princess has chosen not the last assessed contender
@@ -87,26 +88,17 @@ public class HallImpl : IHall
         {
             throw new ApplicationException("Princess is trying to cheat!");
         }
+        
+        return contender.Value;
+    }
 
-        if (contender.Value <= _size * Constants.IdiotHusbandTopBorderPercentage)
-        {
-            Console.WriteLine("Princess has chosen an idiot husband: " + contenderName.Name + " " + contenderName.Surname);
-            Console.WriteLine("Her happiness level: " + Constants.IdiotHusbandHappinessLevel);
-            _attemptSaver.Save(new Attempt(
-                _size,
-                Mappers.ContenderToContenderData(_contenders),
-                null,
-                Constants.IdiotHusbandHappinessLevel
-            ));
-            return;
-        }
-        Console.WriteLine("Princess has chosen a worthy contender: " + contenderName.Name + " " + contenderName.Surname);
-        Console.WriteLine("Her happiness level: " + contender.Value);
+    public void SaveAttempt(int happiness)
+    {
         _attemptSaver.Save(new Attempt(
-            _size,
+            Constants.DefaultContendersCount,
             Mappers.ContenderToContenderData(_contenders),
             null,
-            contender.Value
+            happiness
         ));
     }
 

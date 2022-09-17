@@ -11,5 +11,5 @@ public interface IPrincess
      * Method, which makes princess assess all the contenders,
      * and optionally choose one
      */
-    ContenderName? ChooseHusband();
+    int ChooseHusband();
 }

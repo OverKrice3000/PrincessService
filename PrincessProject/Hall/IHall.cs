@@ -19,4 +19,16 @@ public interface IHall
      * Method, which compares contenders
      */
     ContenderName CompareContenders(ContenderName first, ContenderName second);
+
+    /*
+     * Method, which makes hall regenerate contenders and set initial state
+     */
+    void Reset();
+
+    /*
+     * Method for princess to choose contender
+     */
+    int ChooseContender(ContenderName contenderName);
+
+    void SaveAttempt(int happiness);
 }
