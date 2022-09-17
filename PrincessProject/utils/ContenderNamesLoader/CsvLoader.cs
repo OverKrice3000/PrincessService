@@ -2,35 +2,18 @@
 
 public class CsvLoader : ITableLoader
 {
-    
-    private string? _filepath;
     private string[]? _columns;
+
+    private string _filepath;
     private char _separator = ',';
 
-    public CsvLoader WithFilepath(in string filepath)
+    public CsvLoader(string filepath)
     {
         _filepath = filepath;
-        return this;
-    }
-    
-    public CsvLoader WithColumns(in string[] columns)
-    {
-        _columns = columns;
-        return this;
     }
 
-    public CsvLoader WithSeparator(char separator)
-    {
-        _separator = separator;
-        return this;
-    }
-    
     public Dictionary<string, List<string>> Load()
     {
-        if (this._filepath is null)
-        {
-            throw new ArgumentException("Csv filepath is not set!");
-        }
         string absoluteCsvPath = Path.Join(Util.GetProjectBaseDirectory(), this._filepath);
         if (!File.Exists(absoluteCsvPath))
         {
@@ -50,6 +33,7 @@ public class CsvLoader : ITableLoader
             {
                 csvArrays[i] = new List<string>();
             }
+
             while (!reader.EndOfStream)
             {
                 var nextStr = reader.ReadLine()?.Split(this._separator);
@@ -69,5 +53,23 @@ public class CsvLoader : ITableLoader
 
             return table;
         }
+    }
+
+    public CsvLoader WithFilepath(in string filepath)
+    {
+        _filepath = filepath;
+        return this;
+    }
+
+    public CsvLoader WithColumns(in string[] columns)
+    {
+        _columns = columns;
+        return this;
+    }
+
+    public CsvLoader WithSeparator(char separator)
+    {
+        _separator = separator;
+        return this;
     }
 }

@@ -22,14 +22,12 @@ class Program
         return Host.CreateDefaultBuilder(args)
             .ConfigureServices((hostContext, services) =>
             {
-                var namesLoader = new CsvLoader()
+                var namesLoader = new CsvLoader(Constants.FromProjectRootCsvNamesFilepath)
                     .WithSeparator(';')
                     .WithColumns(new string[1] { Constants.CsvNamesColumn })
-                    .WithFilepath(Constants.FromProjectRootCsvNamesFilepath);
-                var surnamesLoader = new CsvLoader()
+                var surnamesLoader = new CsvLoader(Constants.FromProjectRootCsvSurnamesFilepath)
                     .WithSeparator(';')
                     .WithColumns(new string[1] { Constants.CsvSurnamesColumn })
-                    .WithFilepath(Constants.FromProjectRootCsvSurnamesFilepath);
                 services.AddSingleton<IAttemptSaver, FileAttemptSaver>();
                 services.AddSingleton<IContenderGenerator, ContenderGenerator>((s) =>
                     new ContenderGenerator(namesLoader, surnamesLoader));
