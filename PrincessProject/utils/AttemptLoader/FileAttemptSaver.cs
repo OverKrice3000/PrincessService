@@ -7,6 +7,12 @@ public class FileAttemptSaver : IAttemptSaver
     public void Save(Attempt attempt)
     {
         string projectPath = Util.GetProjectBaseDirectory();
+        var outputDirectory = new DirectoryInfo(Path.Join(projectPath, Constants.FromProjectRootOutputFolderPath));
+        if (!outputDirectory.Exists)
+        {
+            outputDirectory.Create();
+        }
+
         int outputFilesExists = new DirectoryInfo(Path.Join(projectPath, Constants.FromProjectRootOutputFolderPath))
             .EnumerateFiles().Count();
         var nextFile = new FileInfo(Path.Join(projectPath, Constants.FromProjectRootOutputFolderPath,
@@ -19,6 +25,7 @@ public class FileAttemptSaver : IAttemptSaver
             {
                 writer.WriteLine(candidate.ToString());
             }
+
             Util.WriteSectionSeparator(writer);
             writer.Write(attempt.Happiness);
         }
