@@ -8,11 +8,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="output" />
+      <PackageReference Include="radj307.BigFloat" Version="1.2.1"/>
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="radj307.BigFloat" Version="1.2.1" />
+        <Folder Include="output"/>
     </ItemGroup>
 
     <ItemGroup>
