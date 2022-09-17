@@ -1,20 +1,17 @@
 ﻿using PrincessProject.ContenderGenerator;
 using PrincessProject.Friend;
 using PrincessProject.Hall;
-using PrincessProject.model;
 using PrincessProject.PrincessClasses;
 using PrincessProject.utils;
 using PrincessProject.utils.AttemptLoader;
 using PrincessProject.utils.ContenderNamesLoader;
 
-var namesLoader = new CsvLoader()
+var namesLoader = new CsvLoader(Constants.FromProjectRootCsvNamesFilepath)
     .WithSeparator(';')
-    .WithColumns(new string[1] { Constants.CsvNamesColumn })
-    .WithFilepath(Constants.FromProjectRootCsvNamesFilepath);
-var surnamesLoader = new CsvLoader()
+    .WithColumns(new string[1] { Constants.CsvNamesColumn });
+var surnamesLoader = new CsvLoader(Constants.FromProjectRootCsvSurnamesFilepath)
     .WithSeparator(';')
-    .WithColumns(new string[1] { Constants.CsvSurnamesColumn })
-    .WithFilepath(Constants.FromProjectRootCsvSurnamesFilepath);
+    .WithColumns(new string[1] { Constants.CsvSurnamesColumn });
 var contenderGenerator = new ContenderGenerator(namesLoader, surnamesLoader);
 var friend = new Friend();
 var attemptSaver = new FileAttemptSaver();
@@ -23,4 +20,3 @@ var princess = new Princess(hall);
 
 var happiness = princess.ChooseHusband();
 hall.SaveAttempt(happiness);
-    
