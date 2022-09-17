@@ -4,10 +4,8 @@ public static class Util
 {
     public static string DeriveOutputFileName(int outputFilesExists)
     {
-        return Constants.OutputFileBasename 
-               + "_" + new Random().Next(Constants.First7DigitInteger).ToString("D" + Constants.OutputFileNumberPadding)
-               + "_" + outputFilesExists.ToString("D" + Constants.OutputFileNumberPadding)
-               + Constants.OutputFileExtension;
+        return
+            $"{Constants.OutputFileBasename}_{new Random().Next(Constants.First7DigitInteger)}_{outputFilesExists:D6}{Constants.OutputFileExtension}";
     }
 
     public static void WriteSectionSeparator(StreamWriter writer)
@@ -15,10 +13,9 @@ public static class Util
         writer.WriteLine("----------");
     }
 
-    public static string GetProjectBasedir()
+    public static string GetProjectBaseDirectory()
     {
         var currentDirectory = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
         return currentDirectory.Parent!.Parent!.Parent!.FullName;
     }
-    
 }
