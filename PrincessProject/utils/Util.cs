@@ -1,6 +1,4 @@
-﻿using PrincessProject.PrincessClasses.Strategy;
-
-namespace PrincessProject.utils;
+﻿namespace PrincessProject.utils;
 
 public static class Util
 {
@@ -20,5 +18,4 @@ public static class Util
         var currentDirectory = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
         return currentDirectory.Parent!.Parent!.Parent!.FullName;
     }
-
 }

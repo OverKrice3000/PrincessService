@@ -1,5 +1,4 @@
-﻿using System.Security.AccessControl;
-using PrincessProject.ContenderGenerator;
+﻿using PrincessProject.ContenderGenerator;
 using PrincessProject.Friend;
 using PrincessProject.model;
 using PrincessProject.utils;
@@ -9,14 +8,14 @@ namespace PrincessProject.Hall;
 
 public class Hall : IHall
 {
-    private readonly int _size;
     private readonly IContenderGenerator _contenderGenerator;
     private readonly IFriend _friend;
+    private readonly int _size;
+    private IAttemptSaver _attemptSaver;
     private Contender[] _contenders;
     private int _nextContender = 0;
-    private IAttemptSaver _attemptSaver;
 
-    
+
     public Hall(
         IContenderGenerator generator,
         IFriend friend,
@@ -35,11 +34,6 @@ public class Hall : IHall
         _attemptSaver = attemptSaver;
     }
 
-    public void SetAttemptSaver(IAttemptSaver attemptSaver)
-    {
-        _attemptSaver = attemptSaver;
-    }
-    
     public int GetTotalCandidates()
     {
         return _size;
@@ -54,20 +48,21 @@ public class Hall : IHall
             Console.WriteLine("NEXT CONTENDER IS:");
             Console.WriteLine(_contenders[_nextContender].Value);
         }
+
         Contender nextContender = _contenders[_nextContender++];
         nextContender.SetHasVisited();
         return _formNameFromContender(nextContender);
     }
 
-    public ContenderName CompareContenders(ContenderName first, ContenderName second)
+    public ContenderName AskFriendToCompareContenders(ContenderName first, ContenderName second)
     {
         return _formNameFromContender(
             _friend.CompareContenders
-                (
-                    _findContenderByName(first),
-                    _findContenderByName(second)
-                )
-            );
+            (
+                _findContenderByName(first),
+                _findContenderByName(second)
+            )
+        );
     }
 
     public void Reset()
@@ -78,17 +73,17 @@ public class Hall : IHall
             .ToArray();
         _nextContender = 0;
     }
-    
+
     public int ChooseContender(ContenderName contenderName)
     {
         Contender contender = _findContenderByName(contenderName);
-        
+
         // Throw when princess has chosen not the last assessed contender
         if (!_formNameFromContender(_contenders[_nextContender - 1]).Equals(_formNameFromContender(contender)))
         {
             throw new ApplicationException("Princess is trying to cheat!");
         }
-        
+
         return contender.Value;
     }
 
@@ -102,15 +97,20 @@ public class Hall : IHall
         ));
     }
 
+    public void SetAttemptSaver(IAttemptSaver attemptSaver)
+    {
+        _attemptSaver = attemptSaver;
+    }
+
     private Contender _findContenderByName(ContenderName contenderName)
     {
         return Array.Find(
-                   _contenders, 
-              contender => contender.Name == contenderName.Name && contender.Surname == contenderName.Surname
-            ) ?? 
+                   _contenders,
+                   contender => contender.Name == contenderName.Name && contender.Surname == contenderName.Surname
+               ) ??
                throw new ArgumentException("No contender with such name!");
     }
-    
+
     private ContenderName _formNameFromContender(Contender contender)
     {
         return new ContenderName(contender.Name, contender.Surname);
