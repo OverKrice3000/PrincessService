@@ -24,10 +24,10 @@ class Program
             {
                 var namesLoader = new CsvLoader(Constants.FromProjectRootCsvNamesFilepath)
                     .WithSeparator(';')
-                    .WithColumns(new string[1] { Constants.CsvNamesColumn })
+                    .WithColumns(new string[1] { Constants.CsvNamesColumn });
                 var surnamesLoader = new CsvLoader(Constants.FromProjectRootCsvSurnamesFilepath)
                     .WithSeparator(';')
-                    .WithColumns(new string[1] { Constants.CsvSurnamesColumn })
+                    .WithColumns(new string[1] { Constants.CsvSurnamesColumn });
                 services.AddSingleton<IAttemptSaver, FileAttemptSaver>();
                 services.AddSingleton<IContenderGenerator, ContenderGenerator>((s) =>
                     new ContenderGenerator(namesLoader, surnamesLoader));

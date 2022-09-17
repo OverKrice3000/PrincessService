@@ -6,9 +6,9 @@ namespace PrincessProject;
 
 public class PrincessService : IHostedService
 {
+    private readonly IHostApplicationLifetime _applicationLifetime;
     private readonly IHall _hall;
     private readonly IPrincess _princess;
-    private IHostApplicationLifetime _applicationLifetime;
 
     public PrincessService(IHostApplicationLifetime applicationLifetime, IPrincess princess, IHall hall)
     {
