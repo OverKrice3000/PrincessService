@@ -14,6 +14,7 @@ public class Contender
         Value = value;
         HasVisited = false;
     }
+    
     public void SetHasVisited()
     {
         HasVisited = true;

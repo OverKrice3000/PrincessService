@@ -1,7 +1,6 @@
-﻿using System.Collections.Specialized;
-using System.Numerics;
+﻿using System.Numerics;
 
-namespace PrincessProject.utils;
+namespace PrincessProject.utils.PrincessMath;
 
 public static class BigIntegerCache
 {
@@ -98,5 +97,4 @@ public static class BigIntegerCache
             return nextBinomialCoefficient;
         }
     }
-
 }

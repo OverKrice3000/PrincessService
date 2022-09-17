@@ -1,4 +1,4 @@
-﻿namespace PrincessProject.Princess.Strategy;
+﻿namespace PrincessProject.PrincessClasses.Strategy.LargeNumbersLawStrategy;
 
 public class LargeNumbersLawStrategyConfig
 {

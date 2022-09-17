@@ -6,7 +6,7 @@ public class FileAttemptSaver : IAttemptSaver
 {
     public void Save(Attempt attempt)
     {
-        string projectPath = Util.GetProjectBasedir();
+        string projectPath = Util.GetProjectBaseDirectory();
         int outputFilesExists = new DirectoryInfo(Path.Join(projectPath, Constants.FromProjectRootOutputFolderPath))
             .EnumerateFiles().Count();
         var nextFile = new FileInfo(Path.Join(projectPath, Constants.FromProjectRootOutputFolderPath,

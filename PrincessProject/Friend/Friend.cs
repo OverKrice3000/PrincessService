@@ -2,7 +2,7 @@
 
 namespace PrincessProject.Friend;
 
-public class FriendImpl : IFriend
+public class Friend : IFriend
 {
     public Contender CompareContenders(Contender first, Contender second)
     {
