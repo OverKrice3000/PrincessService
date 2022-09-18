@@ -11,8 +11,8 @@ public interface IContenderChain
      * Method, containing custom logic to add contender to chain
      * and return position he has been inserted to
      */
-    int Add(ContenderName contender);
-    
+    int Add(VisitingContender visitingContender);
+
     /*
      * Method, which returns size of the chain
      */

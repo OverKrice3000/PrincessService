@@ -1,6 +1,6 @@
 ﻿namespace PrincessProject.model;
 
-public record ContenderData(string Name, string Surname, int Value)
+public record VisitingContender(string Name, string Surname)
 {
     public string FullName => $"{Name} {Surname}";
 }
