@@ -1,4 +1,6 @@
-﻿namespace PrincessProject.utils.ContenderNamesLoader;
+﻿using Csv;
+
+namespace PrincessProject.utils.ContenderNamesLoader;
 
 public class CsvLoader : ITableLoader
 {
@@ -22,9 +24,8 @@ public class CsvLoader : ITableLoader
 
         using (var reader = new StreamReader(File.Open(absoluteCsvPath, FileMode.Open)))
         {
-            var csvColumns = reader.ReadLine()?.Split(this._separator);
-            if (csvColumns is null)
-                throw new ArgumentException("Could not read csv file!");
+            var lines = CsvReader.Read(reader);
+            var csvColumns = lines.First().Headers;
             _columns ??= csvColumns;
             var csvIndices = _columns.Select(
                 columnName => Array.FindIndex(csvColumns, csvColumnName => csvColumnName == columnName)).ToArray();
@@ -34,14 +35,11 @@ public class CsvLoader : ITableLoader
                 csvArrays[i] = new List<string>();
             }
 
-            while (!reader.EndOfStream)
+            foreach (var line in lines)
             {
-                var nextStr = reader.ReadLine()?.Split(this._separator);
-                if (nextStr is null)
-                    break;
-                for (int i = 0; i < _columns.Length; i++)
+                for (int i = 0; i < csvIndices.Length; i++)
                 {
-                    csvArrays[i].Add(nextStr[csvIndices[i]]);
+                    csvArrays[i].Add(line[csvIndices[i]]);
                 }
             }
 
