@@ -27,7 +27,7 @@ public class CandidatePositionAnalysisStrategy : IStrategy
         // Calculate how many contenders are better / worse than current one
         // And use those numbers to calculate probability that current contender
         // Is from top <N> of all the contenders
-        BigFloat probabilityOfSuccess = PrincessMath.CurrentCandidatePositionAnalysisStrategy(
+        BigFloat probabilityOfSuccess = PrincessMath.CurrentCandidatePositionAnalysisStrategyProbability(
             (uint)(_contenderChain.Size() - position - 1),
             (uint)(position),
             (uint)(_contendersCount),

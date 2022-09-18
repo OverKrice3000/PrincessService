@@ -7,10 +7,10 @@ using PrincessProject.utils.AttemptLoader;
 using PrincessProject.utils.ContenderNamesLoader;
 
 var namesLoader = new CsvLoader(Constants.FromProjectRootCsvNamesFilepath)
-    .WithSeparator(';')
+    .WithSeparator(Constants.CsvNamesSurnamesSeparator)
     .WithColumns(new string[1] { Constants.CsvNamesColumn });
 var surnamesLoader = new CsvLoader(Constants.FromProjectRootCsvSurnamesFilepath)
-    .WithSeparator(';')
+    .WithSeparator(Constants.CsvNamesSurnamesSeparator)
     .WithColumns(new string[1] { Constants.CsvSurnamesColumn });
 var contenderGenerator = new ContenderGenerator(namesLoader, surnamesLoader);
 var friend = new Friend();

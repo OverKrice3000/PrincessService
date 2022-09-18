@@ -4,8 +4,6 @@ namespace PrincessProject.utils.PrincessMath;
 
 public static class BigIntegerCache
 {
-    private record BinomialCoefficientInput(uint n, uint m);
-    
     private static Dictionary<uint, BigInteger> _factorialsCached = new();
     private static Dictionary<uint, SortedDictionary<int, BigInteger>> _binomialCoefficientsCached = new();
 
@@ -28,7 +26,7 @@ public static class BigIntegerCache
             if (_factorialsCached.ContainsKey((leftBorder + rightBorder) / 2 + 1))
                 leftBorder = (leftBorder + rightBorder) / 2 + 1;
             else
-                rightBorder = (leftBorder + rightBorder) / 2 ;
+                rightBorder = (leftBorder + rightBorder) / 2;
         }
 
         return leftBorder;
@@ -41,7 +39,7 @@ public static class BigIntegerCache
         else
             return _binomialCoefficientsCached[n].Keys.ElementAt(_binomialCoefficientsCached[n].Count - 1);
     }
-    
+
     public static BigInteger CalculateFactorialCacheOptimized(uint n)
     {
         uint closestFactorialCachedKey = _findClosestFactorialCached(n);
@@ -57,19 +55,26 @@ public static class BigIntegerCache
 
     public static BigInteger CalculateBinomialCoefficientCacheOptimized(uint n, uint m)
     {
+        if (m > n)
+        {
+            return BigInteger.Zero;
+        }
+
         if (n == m)
         {
             return BigInteger.One;
         }
+
         if (!_binomialCoefficientsCached.ContainsKey(n))
         {
             _binomialCoefficientsCached.Add(n, new SortedDictionary<int, BigInteger>());
-            BigInteger binomialCoefficient = CalculateFactorialCacheOptimized(n) 
-                                             / CalculateFactorialCacheOptimized(m) 
+            BigInteger binomialCoefficient = CalculateFactorialCacheOptimized(n)
+                                             / CalculateFactorialCacheOptimized(m)
                                              / CalculateFactorialCacheOptimized(n - m);
             _binomialCoefficientsCached[n].Add((int)m, binomialCoefficient);
             return binomialCoefficient;
         }
+
         int closestM = _findClosestBinomialCoefficientCached(n, m);
         BigInteger nextBinomialCoefficient = _binomialCoefficientsCached[n][closestM];
         if (closestM == m)
@@ -84,17 +89,21 @@ public static class BigIntegerCache
                 closestM++;
                 _binomialCoefficientsCached[n].Add(closestM, nextBinomialCoefficient);
             }
+
             return nextBinomialCoefficient;
         }
         else
         {
             while (closestM != m)
             {
-                nextBinomialCoefficient = BigInteger.Multiply(nextBinomialCoefficient,  closestM + 1) / (n - closestM);
+                nextBinomialCoefficient = BigInteger.Multiply(nextBinomialCoefficient, closestM) / (n - closestM + 1);
                 closestM--;
                 _binomialCoefficientsCached[n].Add(closestM, nextBinomialCoefficient);
             }
+
             return nextBinomialCoefficient;
         }
     }
+
+    private record BinomialCoefficientInput(uint n, uint m);
 }

@@ -6,5 +6,14 @@
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=b70ec463_002Dc5ea_002D42fc_002D85f1_002D35da88c01ac2/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="CorrectComparison" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;TestAncestor&gt;&#xD;
     &lt;TestId&gt;NUnit3x::AF913C8C-5D27-419A-B7AB-1F5EF176A364::net6.0::PrincessTestProject.FriendTests&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::AF913C8C-5D27-419A-B7AB-1F5EF176A364::net6.0::PrincessTestProject.ContenderGeneratorTests.GeneratesUniqueNames&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::AF913C8C-5D27-419A-B7AB-1F5EF176A364::net6.0::PrincessTestProject.ContenderGeneratorTests&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::AF913C8C-5D27-419A-B7AB-1F5EF176A364::net6.0::PrincessTestProject.HallsTests.HallTests&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::AF913C8C-5D27-419A-B7AB-1F5EF176A364::net6.0::PrincessTestProject.UtilClassesTests.PrincessMathTests.PrincessMathTests.FactorialCorrectnessTest&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::AF913C8C-5D27-419A-B7AB-1F5EF176A364::net6.0::PrincessTestProject.UtilClassesTests.PrincessMathTests.PrincessMathTests.BinomialCoefficientsCalculationCorrectnessTest&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::AF913C8C-5D27-419A-B7AB-1F5EF176A364::net6.0::PrincessTestProject.UtilClassesTests.PrincessMathTests.PrincessMathTests&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::AF913C8C-5D27-419A-B7AB-1F5EF176A364::net6.0::PrincessTestProject.UtilClassesTests.PrincessMathTests.BigIntegerCacheOptimizedMathTests.FactorialCalculationCorrectnessTest&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::AF913C8C-5D27-419A-B7AB-1F5EF176A364::net6.0::PrincessTestProject.UtilClassesTests.PrincessMathTests.BigIntegerCacheOptimizedMathTests.BinomialCoefficientsCalculationCorrectnessTest&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::AF913C8C-5D27-419A-B7AB-1F5EF176A364::net6.0::PrincessTestProject.UtilClassesTests.PrincessMathTests.BigIntegerCacheOptimizedMathTests&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
