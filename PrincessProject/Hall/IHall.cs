@@ -15,12 +15,12 @@ public interface IHall
     /*
      * Method, which gives away next contender
      */
-    ContenderName GetNextContender();
+    VisitingContender GetNextContender();
 
     /*
      * Method, which compares contenders
      */
-    ContenderName AskFriendToCompareContenders(ContenderName first, ContenderName second);
+    VisitingContender AskFriendToCompareContenders(VisitingContender first, VisitingContender second);
 
     /*
      * Method, which makes hall regenerate contenders and set initial state
@@ -30,7 +30,7 @@ public interface IHall
     /*
      * Method for princess to choose contender
      */
-    int ChooseContender(ContenderName contenderName);
+    int ChooseContender(VisitingContender visitingContender);
 
     void SaveAttempt(int happiness);
 }

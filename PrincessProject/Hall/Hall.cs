@@ -39,7 +39,7 @@ public class Hall : IHall
         return _size;
     }
 
-    public ContenderName GetNextContender()
+    public VisitingContender GetNextContender()
     {
         if (_size == _nextContender)
             throw new ApplicationException("No more contenders!");
@@ -51,12 +51,12 @@ public class Hall : IHall
 
         Contender nextContender = _contenders[_nextContender++];
         nextContender.SetHasVisited();
-        return _formNameFromContender(nextContender);
+        return Mappers.ContenderToVisitingContender(nextContender);
     }
 
-    public ContenderName AskFriendToCompareContenders(ContenderName first, ContenderName second)
+    public VisitingContender AskFriendToCompareContenders(VisitingContender first, VisitingContender second)
     {
-        return _formNameFromContender(
+        return Mappers.ContenderToVisitingContender(
             _friend.CompareContenders
             (
                 _findContenderByName(first),
@@ -74,12 +74,13 @@ public class Hall : IHall
         _nextContender = 0;
     }
 
-    public int ChooseContender(ContenderName contenderName)
+    public int ChooseContender(VisitingContender visitingContender)
     {
-        Contender contender = _findContenderByName(contenderName);
+        Contender contender = _findContenderByName(visitingContender);
 
         // Throw when princess has chosen not the last assessed contender
-        if (!_formNameFromContender(_contenders[_nextContender - 1]).Equals(_formNameFromContender(contender)))
+        if (!Mappers.ContenderToContenderName(_contenders[_nextContender - 1])
+                .Equals(Mappers.ContenderToContenderName(contender)))
         {
             throw new ApplicationException("Princess is trying to cheat!");
         }
@@ -102,17 +103,12 @@ public class Hall : IHall
         _attemptSaver = attemptSaver;
     }
 
-    private Contender _findContenderByName(ContenderName contenderName)
+    private Contender _findContenderByName(VisitingContender visitingContender)
     {
         return Array.Find(
                    _contenders,
-                   contender => contender.Name == contenderName.Name && contender.Surname == contenderName.Surname
+                   contender => contender.FullName.Equals(visitingContender.FullName)
                ) ??
                throw new ArgumentException("No contender with such name!");
-    }
-
-    private ContenderName _formNameFromContender(Contender contender)
-    {
-        return new ContenderName(contender.Name, contender.Surname);
     }
 }

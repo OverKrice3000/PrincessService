@@ -21,13 +21,13 @@ public class Princess : IPrincess
         int size = _hall.GetTotalCandidates();
         _strategy = new CandidatePositionAnalysisStrategy(_hall);
 
-        ContenderName? chosen = null;
+        VisitingContender? chosen = null;
         for (int i = 0; i < size; i++)
         {
-            ContenderName nextContender = _hall.GetNextContender();
-            if (_strategy.AssessNextContender(nextContender))
+            VisitingContender nextVisitingContender = _hall.GetNextContender();
+            if (_strategy.AssessNextContender(nextVisitingContender))
             {
-                chosen = nextContender;
+                chosen = nextVisitingContender;
                 break;
             }
         }
@@ -43,12 +43,12 @@ public class Princess : IPrincess
 
         if (contenderValue <= size * Constants.IdiotHusbandTopBorderPercentage)
         {
-            Console.WriteLine("Princess has chosen an idiot husband: {0}", chosen);
+            Console.WriteLine("Princess has chosen an idiot husband: {0}", chosen.FullName);
             Console.WriteLine("Her happiness level: {0}", Constants.IdiotHusbandHappinessLevel);
             return Constants.IdiotHusbandHappinessLevel;
         }
 
-        Console.WriteLine("Princess has chosen a worthy contender: {0}", chosen);
+        Console.WriteLine("Princess has chosen a worthy contender: {0}", chosen.FullName);
         Console.WriteLine("Her happiness level: {0}", contenderValue);
         return contenderValue;
     }

@@ -5,7 +5,6 @@ public class Contender
     public readonly string Name;
     public readonly string Surname;
     public readonly int Value;
-    public bool HasVisited { get; private set; }
 
     public Contender(string name, string surname, int value)
     {
@@ -14,7 +13,10 @@ public class Contender
         Value = value;
         HasVisited = false;
     }
-    
+
+    public string FullName => $"{Name} {Surname}";
+    public bool HasVisited { get; private set; }
+
     public void SetHasVisited()
     {
         HasVisited = true;

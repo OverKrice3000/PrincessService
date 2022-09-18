@@ -10,5 +10,5 @@ public interface IStrategy
     /*
      * Method, which either approves or rejects a contender by his name
      */
-    bool AssessNextContender(ContenderName contender);
+    bool AssessNextContender(VisitingContender visitingContender);
 }
