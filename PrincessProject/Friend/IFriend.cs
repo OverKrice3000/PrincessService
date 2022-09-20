@@ -7,5 +7,5 @@ namespace PrincessProject.Friend;
  */
 public interface IFriend
 {
-    Contender CompareContenders(Contender first, Contender second);
+    VisitingContender CompareContenders(VisitingContender first, VisitingContender second);
 }

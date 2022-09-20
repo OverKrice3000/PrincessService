@@ -1,4 +1,7 @@
-﻿namespace PrincessProject.utils;
+﻿using PrincessProject.ContenderContainer;
+using PrincessProject.model;
+
+namespace PrincessProject.utils;
 
 public static class Util
 {
@@ -17,5 +20,17 @@ public static class Util
     {
         var currentDirectory = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
         return currentDirectory.Parent!.Parent!.Parent!.FullName;
+    }
+
+    public static Contender FindContenderByName(
+        IContenderContainer contenderContainer,
+        VisitingContender visitingContender
+    )
+    {
+        return Array.Find(
+                   contenderContainer.Contenders,
+                   contender => contender.FullName.Equals(visitingContender.FullName)
+               ) ??
+               throw new ArgumentException("No contender with such name!");
     }
 }
