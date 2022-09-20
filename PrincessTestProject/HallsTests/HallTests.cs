@@ -13,7 +13,6 @@ public class HallTests
     private IAttemptSaver _attemptSaver;
     private IContenderContainer _contenderContainer;
     private IFriend _friend;
-    private IContenderGenerator _generator;
 
     [SetUp]
     public void InitializeHallDependencies()
@@ -24,8 +23,8 @@ public class HallTests
         var surnamesLoader = new CsvLoader(Constants.FromProjectRootCsvSurnamesFilepath)
             .WithSeparator(Constants.CsvNamesSurnamesSeparator)
             .WithColumns(new string[1] { Constants.CsvSurnamesColumn });
-        _generator = new ContenderGenerator(namesLoader, surnamesLoader);
-        _contenderContainer = new ContenderContainer(_generator, Constants.PossibleToGenerateContendersAmount);
+        _contenderContainer = new ContenderContainer(new ContenderGenerator(namesLoader, surnamesLoader),
+            Constants.PossibleToGenerateContendersAmount);
         _friend = new Friend(_contenderContainer);
         _attemptSaver = new VoidAttemptSaver();
     }
@@ -33,7 +32,7 @@ public class HallTests
     [Test]
     public void ReturnsNextContenderIfExists()
     {
-        IHall hall = new Hall(_generator, _friend, _attemptSaver, _contenderContainer,
+        IHall hall = new Hall(_friend, _attemptSaver, _contenderContainer,
             Constants.PossibleToGenerateContendersAmount);
         for (int i = 0; i < Constants.PossibleToGenerateContendersAmount; i++)
         {
@@ -44,7 +43,7 @@ public class HallTests
     [Test]
     public void ThrowsWhenContenderDoesNotExists()
     {
-        IHall hall = new Hall(_generator, _friend, _attemptSaver, _contenderContainer,
+        IHall hall = new Hall(_friend, _attemptSaver, _contenderContainer,
             Constants.PossibleToGenerateContendersAmount);
         for (int i = 0; i < Constants.PossibleToGenerateContendersAmount; i++)
         {
