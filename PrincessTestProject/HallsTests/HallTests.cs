@@ -1,4 +1,5 @@
-﻿using PrincessProject.ContenderGenerator;
+﻿using PrincessProject.ContenderContainer;
+using PrincessProject.ContenderGenerator;
 using PrincessProject.Friend;
 using PrincessProject.Hall;
 using PrincessProject.utils.AttemptLoader;
@@ -10,6 +11,7 @@ namespace PrincessTestProject.HallsTests;
 public class HallTests
 {
     private IAttemptSaver _attemptSaver;
+    private IContenderContainer _contenderContainer;
     private IFriend _friend;
     private IContenderGenerator _generator;
 
@@ -23,14 +25,16 @@ public class HallTests
             .WithSeparator(Constants.CsvNamesSurnamesSeparator)
             .WithColumns(new string[1] { Constants.CsvSurnamesColumn });
         _generator = new ContenderGenerator(namesLoader, surnamesLoader);
-        _friend = new Friend();
+        _contenderContainer = new ContenderContainer(_generator, Constants.PossibleToGenerateContendersAmount);
+        _friend = new Friend(_contenderContainer);
         _attemptSaver = new VoidAttemptSaver();
     }
 
     [Test]
     public void ReturnsNextContenderIfExists()
     {
-        IHall hall = new Hall(_generator, _friend, _attemptSaver, Constants.PossibleToGenerateContendersAmount);
+        IHall hall = new Hall(_generator, _friend, _attemptSaver, _contenderContainer,
+            Constants.PossibleToGenerateContendersAmount);
         for (int i = 0; i < Constants.PossibleToGenerateContendersAmount; i++)
         {
             Assert.DoesNotThrow(() => hall.GetNextContender());
@@ -40,7 +44,8 @@ public class HallTests
     [Test]
     public void ThrowsWhenContenderDoesNotExists()
     {
-        IHall hall = new Hall(_generator, _friend, _attemptSaver, Constants.PossibleToGenerateContendersAmount);
+        IHall hall = new Hall(_generator, _friend, _attemptSaver, _contenderContainer,
+            Constants.PossibleToGenerateContendersAmount);
         for (int i = 0; i < Constants.PossibleToGenerateContendersAmount; i++)
         {
             hall.GetNextContender();

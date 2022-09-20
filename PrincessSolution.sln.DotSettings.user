@@ -3,6 +3,19 @@
 	<s:String x:Key="/Default/Environment/AssemblyExplorer/XmlDocument/@EntryValue">&lt;AssemblyExplorer&gt;&#xD;
   &lt;Assembly Path="C:\Users\Igor\RiderProjects\PrincessService\PrincessProject\recourses\BigInteger.dll" /&gt;&#xD;
 &lt;/AssemblyExplorer&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=5346554a_002D92ba_002D4a45_002Db66a_002D9389ed22d939/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="ThrowsWhenContenderHasNotVisited" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::AF913C8C-5D27-419A-B7AB-1F5EF176A364::net6.0::PrincessTestProject.FriendTests.ThrowsWhenContenderHasNotVisited&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=820c6314_002Dca0b_002D4d7f_002Dbc4f_002D9a618e3a7c2d/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="ContenderGeneratorTests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::AF913C8C-5D27-419A-B7AB-1F5EF176A364::net6.0::PrincessTestProject.ContenderGeneratorTests&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=9c15e5e7_002Dced2_002D40d3_002D84f0_002Debdb748cb378/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="All tests from &amp;lt;PrincessTestProject&amp;gt;" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;Project Location="C:\Users\user\RiderProjects\PrincessService\PrincessTestProject" Presentation="&amp;lt;PrincessTestProject&amp;gt;" /&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=b70ec463_002Dc5ea_002D42fc_002D85f1_002D35da88c01ac2/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="CorrectComparison" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;TestAncestor&gt;&#xD;
     &lt;TestId&gt;NUnit3x::AF913C8C-5D27-419A-B7AB-1F5EF176A364::net6.0::PrincessTestProject.FriendTests&lt;/TestId&gt;&#xD;
