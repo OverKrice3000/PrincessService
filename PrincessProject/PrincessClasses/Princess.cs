@@ -18,6 +18,7 @@ public class Princess : IPrincess
 
     public int ChooseHusband()
     {
+        _hall.Reset();
         int size = _hall.GetTotalCandidates();
         _strategy = new CandidatePositionAnalysisStrategy(_hall);
 
