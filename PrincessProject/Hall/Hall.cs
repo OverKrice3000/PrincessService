@@ -1,5 +1,4 @@
 ﻿using PrincessProject.ContenderContainer;
-using PrincessProject.ContenderGenerator;
 using PrincessProject.Friend;
 using PrincessProject.model;
 using PrincessProject.utils;
@@ -9,14 +8,12 @@ namespace PrincessProject.Hall;
 
 public class Hall : IHall
 {
-    private readonly IContenderGenerator _contenderGenerator;
     private readonly int _size;
     private IAttemptSaver _attemptSaver;
     private IContenderContainer _contenderContainer;
     private int _nextContender;
 
     public Hall(
-        IContenderGenerator generator,
         IFriend friend,
         IAttemptSaver attemptSaver,
         IContenderContainer contenderContainer,
@@ -27,7 +24,6 @@ public class Hall : IHall
         _size = size;
         Friend = friend;
         _contenderContainer = contenderContainer;
-        _contenderGenerator = generator;
         _contenderContainer.Reset(size);
         _nextContender = 0;
         _attemptSaver = attemptSaver;
