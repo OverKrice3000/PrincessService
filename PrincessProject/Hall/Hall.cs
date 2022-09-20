@@ -20,11 +20,9 @@ public class Hall : IHall
         int size = Constants.DefaultContendersCount
     )
     {
-        var random = new Random();
         _size = size;
         Friend = friend;
         _contenderContainer = contenderContainer;
-        _contenderContainer.Reset(size);
         _nextContender = 0;
         _attemptSaver = attemptSaver;
     }

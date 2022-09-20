@@ -10,10 +10,7 @@ public class ContenderContainer : IContenderContainer
     public ContenderContainer(IContenderGenerator generator, int initialSize)
     {
         _generator = generator;
-        var random = new Random();
-        Contenders = _generator.Generate(initialSize)
-            .OrderBy(item => random.Next())
-            .ToArray();
+        Contenders = Array.Empty<Contender>();
     }
 
     public Contender[] Contenders { get; private set; }
