@@ -32,7 +32,7 @@ class Program
                 services.AddSingleton<IAttemptSaver, FileAttemptSaver>();
                 services.AddSingleton<IContenderGenerator, ContenderGenerator>((s) =>
                     new ContenderGenerator(namesLoader, surnamesLoader));
-                services.AddSingleton<IContenderContainer, ContenderContainer>()
+                services.AddSingleton<IContenderContainer, ContenderContainer>();
                 services.AddSingleton<IFriend, Friend>();
                 services.AddSingleton<IHall, Hall>();
                 services.AddSingleton<IPrincess, Princess>();
