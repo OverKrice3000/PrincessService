@@ -24,14 +24,14 @@ public class ContenderChain : IContenderChain
             return 0;
         }
 
-        bool comparisonResult =
-            _hall.AskFriendToCompareContenders(visitingContender, _contenderChain[_size / 2]).Equals(visitingContender);
+        bool comparisonResult = _hall.Friend.CompareContenders(visitingContender, _contenderChain[_size / 2])
+            .Equals(visitingContender);
         int leftBorder = comparisonResult ? 0 : _size / 2 + 1;
         int rightBorder = comparisonResult ? _size / 2 : _size;
         while (leftBorder != rightBorder)
         {
             comparisonResult = _hall
-                .AskFriendToCompareContenders(visitingContender, _contenderChain[(leftBorder + rightBorder) / 2])
+                .Friend.CompareContenders(visitingContender, _contenderChain[(leftBorder + rightBorder) / 2])
                 .Equals(visitingContender);
             rightBorder = comparisonResult ? (leftBorder + rightBorder) / 2 : rightBorder;
             leftBorder = comparisonResult ? leftBorder : (leftBorder + rightBorder) / 2 + 1;
