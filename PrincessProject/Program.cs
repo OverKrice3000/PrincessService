@@ -1,6 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using PrincessProject;
+using PrincessProject.ContenderContainer;
 using PrincessProject.ContenderGenerator;
 using PrincessProject.Friend;
 using PrincessProject.Hall;
@@ -31,6 +32,7 @@ class Program
                 services.AddSingleton<IAttemptSaver, FileAttemptSaver>();
                 services.AddSingleton<IContenderGenerator, ContenderGenerator>((s) =>
                     new ContenderGenerator(namesLoader, surnamesLoader));
+                services.AddSingleton<IContenderContainer, ContenderContainer>()
                 services.AddSingleton<IFriend, Friend>();
                 services.AddSingleton<IHall, Hall>();
                 services.AddSingleton<IPrincess, Princess>();
