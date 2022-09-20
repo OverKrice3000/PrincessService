@@ -2,10 +2,16 @@
 
 namespace PrincessProject.Friend;
 
-/*
- * Defines friend abstraction, which is able to compare contenders
- */
+/// <summary>
+/// Defines friend abstraction, which is able to compare contenders
+/// </summary>
 public interface IFriend
 {
-    Contender CompareContenders(Contender first, Contender second);
+    /// <summary>
+    /// Method, which compares contenders
+    /// </summary>
+    /// <param name="first">first contender to compare</param>
+    /// <param name="second">second contender to compare</param>
+    /// <returns>contender, which has more value</returns>
+    VisitingContender CompareContenders(VisitingContender first, VisitingContender second);
 }

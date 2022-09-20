@@ -1,11 +1,14 @@
-﻿namespace PrincessProject.utils;
+﻿using PrincessProject.ContenderContainer;
+using PrincessProject.model;
+
+namespace PrincessProject.utils;
 
 public static class Util
 {
     public static string DeriveOutputFileName(int outputFilesExists)
     {
         return
-            $"{Constants.OutputFileBasename}_{new Random().Next(Constants.First7DigitInteger)}_{outputFilesExists:D6}{Constants.OutputFileExtension}";
+            $"{Constants.OutputFileBasename}_{outputFilesExists:D6}_{new Random().Next(Constants.First7DigitInteger):D6}{Constants.OutputFileExtension}";
     }
 
     public static void WriteSectionSeparator(StreamWriter writer)
@@ -17,5 +20,17 @@ public static class Util
     {
         var currentDirectory = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
         return currentDirectory.Parent!.Parent!.Parent!.FullName;
+    }
+
+    public static Contender FindContenderByName(
+        IContenderContainer contenderContainer,
+        VisitingContender visitingContender
+    )
+    {
+        return Array.Find(
+                   contenderContainer.Contenders,
+                   contender => contender.FullName.Equals(visitingContender.FullName)
+               ) ??
+               throw new ArgumentException("No contender with such name!");
     }
 }
