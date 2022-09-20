@@ -17,7 +17,7 @@ var contenderGenerator = new ContenderGenerator(namesLoader, surnamesLoader);
 var contenderContainer = new ContenderContainer(contenderGenerator, Constants.DefaultContendersCount);
 var friend = new Friend(contenderContainer);
 var attemptSaver = new FileAttemptSaver();
-var hall = new Hall(contenderGenerator, friend, attemptSaver, contenderContainer);
+var hall = new Hall(friend, attemptSaver, contenderContainer);
 var princess = new Princess(hall);
 
 var happiness = princess.ChooseHusband();
