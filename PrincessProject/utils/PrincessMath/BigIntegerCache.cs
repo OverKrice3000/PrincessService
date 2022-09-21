@@ -51,7 +51,6 @@ public static class BigIntegerCache
             currentFactorial = BigInteger.Multiply(currentFactorial, i + 1);
             _factorialsCached.Add(i + 1, currentFactorial);
         }
-
         return currentFactorial;
     }
 
@@ -82,7 +81,7 @@ public static class BigIntegerCache
             {
                 nextBinomialCoefficient = BigInteger.Multiply(nextBinomialCoefficient, n - closestM) / (closestM + 1);
                 closestM++;
-                _binomialCoefficientsCached[n].Add(closestM, nextBinomialCoefficient);
+                _binomialCoefficientsCached[n].TryAdd(closestM, nextBinomialCoefficient);
             }
             return nextBinomialCoefficient;
         }
@@ -90,9 +89,9 @@ public static class BigIntegerCache
         {
             while (closestM != m)
             {
-                nextBinomialCoefficient = BigInteger.Multiply(nextBinomialCoefficient,  closestM + 1) / (n - closestM);
+                nextBinomialCoefficient = BigInteger.Multiply(nextBinomialCoefficient,  closestM ) / (n - closestM + 1);
                 closestM--;
-                _binomialCoefficientsCached[n].Add(closestM, nextBinomialCoefficient);
+                _binomialCoefficientsCached[n].TryAdd(closestM, nextBinomialCoefficient);
             }
             return nextBinomialCoefficient;
         }
