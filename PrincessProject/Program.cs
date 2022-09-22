@@ -6,11 +6,10 @@ using PrincessProject.PrincessClasses;
 using PrincessProject.utils;
 using PrincessProject.utils.AttemptLoader;
 using PrincessProject.utils.ContenderNamesLoader;
-using PrincessProject.utils.PrincessMath;
 
-Console.WriteLine(PrincessMath.ProbabilityOfSuccess());
+//Console.WriteLine(PrincessMath.ProbabilityOfSuccess());
 
-/*var namesLoader = new CsvLoader(Constants.FromProjectRootCsvNamesFilepath)
+var namesLoader = new CsvLoader(Constants.FromProjectRootCsvNamesFilepath)
     .WithSeparator(';')
     .WithColumns(new string[1] { Constants.CsvNamesColumn });
 var surnamesLoader = new CsvLoader(Constants.FromProjectRootCsvSurnamesFilepath)
@@ -23,5 +22,13 @@ var attemptSaver = new FileAttemptSaver();
 var hall = new Hall(friend, attemptSaver, contenderContainer);
 var princess = new Princess(hall);
 
-var happiness = princess.ChooseHusband();
-hall.SaveAttempt(happiness);*/
+var totalHappiness = 0;
+for (int i = 0; i < 1000; i++)
+{
+    var happiness = princess.ChooseHusband();
+    totalHappiness += happiness;
+}
+
+Console.WriteLine((double)totalHappiness / 1000);
+
+//hall.SaveAttempt(happiness);

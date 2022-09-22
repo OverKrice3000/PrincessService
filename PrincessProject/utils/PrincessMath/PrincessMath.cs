@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System.Globalization;
+using System.Numerics;
 using PrincessProject.PrincessClasses.Strategy.CandidatePositionAnalysisStrategy;
 using radj307;
 
@@ -13,6 +14,7 @@ public static class PrincessMath
         {
             result *= i + 1;
         }
+
         return result;
     }
 
@@ -36,15 +38,17 @@ public static class PrincessMath
                        * BigIntegerCache.CalculateBinomialCoefficientCacheOptimized(l - 1, n);
             //cases[i] = BinomialCoefficient(s - l, m) * BinomialCoefficient(l - 1, n);
         }
+
         uint lowerBorderI = lowerBorderL - n - 1;
         BigInteger totalCases = 0;
         BigInteger fromLowerBorderCases = 0;
         for (uint i = 0; i <= s - m - n - 1; i++)
         {
             totalCases += cases[i];
-            if(i >= lowerBorderI)
+            if (i >= lowerBorderI)
                 fromLowerBorderCases += cases[i];
         }
+
         return new BigFloat(fromLowerBorderCases, totalCases);
     }
 
@@ -52,48 +56,121 @@ public static class PrincessMath
     {
         int s = Constants.DefaultContendersCount;
         BigFloat[] lChosenProbabilities = new BigFloat[100];
-        BigFloat chosenProbability = new BigFloat(BigFloat.Zero);
-        for (int n = (int)(s * CandidatePositionAnalysisStrategyConfig.FirstContendersRejectedPercentage) + 1;
-             n <= 100;
+        for (int l = 0; l < 100; l++)
+        {
+            lChosenProbabilities[l] = new BigFloat(BigFloat.Zero);
+        }
+
+        BigFloat notChosenProbability = new BigFloat(BigFloat.One);
+        for (int n = (int)(s *
+                           CandidatePositionAnalysisStrategyConfig.FirstContendersRejectedPercentage) + 1;
+             n < 100;
              n++)
         {
+            Console.WriteLine(n);
+            Console.WriteLine($"NOT CHOSEN PROBABILITY {notChosenProbability}");
             BigFloat nChosenProbability = new BigFloat(BigFloat.Zero);
             for (int l = 100; l >= 1; l--)
             {
-                BigFloat lChosenProbablity = new BigFloat(BigFloat.Zero);
+                BigFloat lChosenProbability = new BigFloat(0, 1);
                 for (int m = 1; m <= 100; m++)
                 {
-                    if (!CanHaveSuchPositionWithSuchValue(s, m, l))
+                    if (!CanHaveSuchPositionWithSuchValue(s, n, m, l))
                         continue;
                     if (!DoWeChooseContender(n, m, s))
+                    {
                         continue;
+                    }
+
                     BigFloat innerProbability = new BigFloat(
                         BigIntegerCache.CalculateBinomialCoefficientCacheOptimized((uint)(l - 1), (uint)(n - m)) *
-                        BigIntegerCache.CalculateBinomialCoefficientCacheOptimized((uint)(m - 1), (uint)(n - 1)) *
-                        BigIntegerCache.CalculateBinomialCoefficientCacheOptimized((uint)(s - l), (uint)(m - 1)) *
-                        BigIntegerCache.CalculateFactorialCacheOptimized((uint)(n - m)) *
-                        BigIntegerCache.CalculateFactorialCacheOptimized((uint)(m - 1)),
-                        BigIntegerCache.CalculateFactorialCacheOptimized((uint)n))
-                        .Multiply(new BigFloat(BigFloat.One).Subtract(chosenProbability));
-                    lChosenProbablity.Add(innerProbability);
-                    Console.WriteLine(innerProbability);
+                        BigIntegerCache.CalculateBinomialCoefficientCacheOptimized((uint)(s - l), (uint)(m - 1))
+                        ,
+                        new BigInteger(n) *
+                        BigIntegerCache.CalculateBinomialCoefficientCacheOptimized((uint)s, (uint)n));
+                    lChosenProbability.Add(innerProbability);
                 }
 
-                lChosenProbabilities[l - 1].Add(lChosenProbablity);
-                nChosenProbability.Add(lChosenProbablity);
+                nChosenProbability.Add(lChosenProbability);
+                lChosenProbabilities[l - 1].Add(lChosenProbability.Multiply(notChosenProbability));
             }
 
-            chosenProbability.Add(nChosenProbability);
+            notChosenProbability.Multiply(new BigFloat(BigFloat.One).Subtract(nChosenProbability));
         }
+
+        BigFloat n100ChosenProbability = new BigFloat(BigFloat.Zero);
+        for (int l = 51; l <= 100; l++)
+        {
+            BigFloat lChosenProbability = new BigFloat(1, s);
+            n100ChosenProbability.Add(lChosenProbability);
+            lChosenProbabilities[l - 1].Add(lChosenProbability.Multiply(notChosenProbability));
+        }
+
+        notChosenProbability.Multiply(new BigFloat(BigFloat.One).Subtract(n100ChosenProbability));
+        var lChosenProbabilitiesString = new string[s];
+        var lChosenProbabilitiesDouble = new decimal[s];
         Console.WriteLine("L CHOSEN PROBABILITIES: ");
         for (int i = 0; i < 100; i++)
         {
-            Console.WriteLine($"L = {i}, PROB = {lChosenProbabilities[i]}");
+            lChosenProbabilitiesString[i] = lChosenProbabilities[i].ToString();
+            lChosenProbabilitiesDouble[i] = decimal.Parse(lChosenProbabilitiesString[i], CultureInfo.InvariantCulture);
         }
-        Console.WriteLine("CHOSEN PROBABILITY {c}");
-        return chosenProbability;
+
+        Console.WriteLine($"NOT CHOSEN PROBABILITY {notChosenProbability}");
+        for (int i = 98; i >= 0; i--)
+        {
+            if (lChosenProbabilitiesDouble[i + 1] < lChosenProbabilitiesDouble[i])
+            {
+                for (int j = i; j >= 0; j--)
+                {
+                    lChosenProbabilitiesDouble[j] /= 10;
+                }
+            }
+        }
+
+        while (true)
+        {
+            decimal sumOfProbabilities = 0;
+            for (int i = 0; i < 100; i++)
+            {
+                sumOfProbabilities += lChosenProbabilitiesDouble[i];
+            }
+
+            Console.WriteLine(sumOfProbabilities);
+
+            if (sumOfProbabilities > 1)
+            {
+                for (int i = 0; i < 100; i++)
+                {
+                    lChosenProbabilitiesDouble[i] /= 10;
+                }
+
+                continue;
+            }
+
+            break;
+        }
+
+        decimal chosenProbability = 0;
+        for (int i = 0; i < 100; i++)
+        {
+            Console.WriteLine($"L = {i + 1}, PROB = {lChosenProbabilitiesDouble[i]}");
+            chosenProbability += lChosenProbabilitiesDouble[i];
+        }
+
+        Console.WriteLine($"TOTAL PROBABILITY {chosenProbability}");
+        decimal averageScore = 0;
+        for (int i = 50; i < 100; i++)
+        {
+            averageScore += (i + 1) * lChosenProbabilitiesDouble[i];
+        }
+
+        averageScore += 10 * (1 - chosenProbability);
+        Console.WriteLine($"AVERAGE CONTENDER SCORE {averageScore}");
+
+        return BigFloat.One;
     }
-    
+
     // n person's order
     // m his position 
     // l his number
@@ -109,9 +186,9 @@ public static class PrincessMath
         ) >= CandidatePositionAnalysisStrategyConfig.WorthyContenderSatisfactoryProbability;
     }
 
-    public static bool CanHaveSuchPositionWithSuchValue(int size, int m, int l)
+    public static bool CanHaveSuchPositionWithSuchValue(int size, int n, int m, int l)
     {
-        return size - l + 1 <= m;
+        return m <= n && size - l + 1 >= m && n - l + 1 <= m;
     }
 
     public static int ContendersBeforePosition(int n)
@@ -128,7 +205,7 @@ public static class PrincessMath
     {
         return l - 1;
     }
-    
+
     public static int ContendersWithHigherValue(int size, int l)
     {
         return size - l;

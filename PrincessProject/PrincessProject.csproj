@@ -13,8 +13,4 @@
         <PackageReference Include="radj307.BigFloat" Version="1.2.1"/>
     </ItemGroup>
 
-    <ItemGroup>
-        <Folder Include="output"/>
-    </ItemGroup>
-
 </Project>
