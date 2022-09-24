@@ -7,7 +7,7 @@ using PrincessProject.utils;
 using PrincessProject.utils.AttemptLoader;
 using PrincessProject.utils.ContenderNamesLoader;
 
-//Console.WriteLine(PrincessMath.ProbabilityOfSuccess());
+//Console.WriteLine(QualityMetrics.ProbabilityOfSuccess());
 
 var namesLoader = new CsvLoader(Constants.FromProjectRootCsvNamesFilepath)
     .WithSeparator(';')
@@ -22,13 +22,5 @@ var attemptSaver = new FileAttemptSaver();
 var hall = new Hall(friend, attemptSaver, contenderContainer);
 var princess = new Princess(hall);
 
-var totalHappiness = 0;
-for (int i = 0; i < 1000; i++)
-{
-    var happiness = princess.ChooseHusband();
-    totalHappiness += happiness;
-}
-
-Console.WriteLine((double)totalHappiness / 1000);
-
-//hall.SaveAttempt(happiness);
+var happiness = princess.ChooseHusband();
+hall.SaveAttempt(happiness);
