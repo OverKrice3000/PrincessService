@@ -2,6 +2,10 @@
 
 namespace PrincessTestProject.Mocks.ContenderNamesLoaders;
 
+/// <summary>
+/// Mock implementation for ITableLoader, which loads single column
+/// with preconfigured name and amount of values
+/// </summary>
 public class MSingleColumnLoader : ITableLoader
 {
     private string _column;
