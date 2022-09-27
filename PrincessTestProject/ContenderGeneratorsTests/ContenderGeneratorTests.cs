@@ -1,5 +1,6 @@
 ﻿using PrincessProject.ContenderGenerator;
 using PrincessProject.utils.ContenderNamesLoader;
+using PrincessTestProject.Mocks.ContenderNamesLoaders;
 using PrincessTestProject.utils;
 
 namespace PrincessTestProject;
@@ -12,12 +13,10 @@ public class ContenderGeneratorTests
     [SetUp]
     public void InitializeLoaders()
     {
-        _namesLoader = new CsvLoader(Constants.FromProjectRootCsvNamesFilepath)
-            .WithSeparator(Constants.CsvNamesSurnamesSeparator)
-            .WithColumns(new string[1] { Constants.CsvNamesColumn });
-        _surnamesLoader = new CsvLoader(Constants.FromProjectRootCsvSurnamesFilepath)
-            .WithSeparator(Constants.CsvNamesSurnamesSeparator)
-            .WithColumns(new string[1] { Constants.CsvSurnamesColumn });
+        _namesLoader = new MSingleColumnLoader(PrincessProject.utils.Constants.CsvNamesColumn,
+            Constants.PossibleToGenerateContendersAmount);
+        _surnamesLoader = new MSingleColumnLoader(PrincessProject.utils.Constants.CsvSurnamesColumn,
+            Constants.PossibleToGenerateContendersAmount);
     }
 
     [Test]

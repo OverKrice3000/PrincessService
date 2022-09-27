@@ -3,6 +3,9 @@
 	<s:String x:Key="/Default/Environment/AssemblyExplorer/XmlDocument/@EntryValue">&lt;AssemblyExplorer&gt;&#xD;
   &lt;Assembly Path="C:\Users\Igor\RiderProjects\PrincessService\PrincessProject\recourses\BigInteger.dll" /&gt;&#xD;
 &lt;/AssemblyExplorer&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=36ecf5e4_002Dc2fe_002D4712_002D8a36_002D10f12fb566df/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="All tests from &amp;lt;PrincessTestProject&amp;gt;" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;Project Location="C:\Users\user\RiderProjects\PrincessService\PrincessTestProject" Presentation="&amp;lt;PrincessTestProject&amp;gt;" /&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=5346554a_002D92ba_002D4a45_002Db66a_002D9389ed22d939/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="ThrowsWhenContenderHasNotVisited" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;TestAncestor&gt;&#xD;
     &lt;TestId&gt;NUnit3x::AF913C8C-5D27-419A-B7AB-1F5EF176A364::net6.0::PrincessTestProject.FriendTests.ThrowsWhenContenderHasNotVisited&lt;/TestId&gt;&#xD;

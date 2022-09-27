@@ -3,27 +3,20 @@ using PrincessProject.ContenderGenerator;
 using PrincessProject.Friend;
 using PrincessProject.model;
 using PrincessProject.utils;
-using PrincessProject.utils.ContenderNamesLoader;
-using Constants = PrincessTestProject.utils.Constants;
+using PrincessTestProject.Mocks.ContenderContainer;
 
 namespace PrincessTestProject;
 
 public class FriendTests
 {
+    private const int ContendersInContainer = 100;
     private IContenderContainer _contenderContainer;
     private IContenderGenerator _generator;
 
     [SetUp]
     public void InitializeFriendDependencies()
     {
-        var namesLoader = new CsvLoader(Constants.FromProjectRootCsvNamesFilepath)
-            .WithSeparator(Constants.CsvNamesSurnamesSeparator)
-            .WithColumns(new string[1] { Constants.CsvNamesColumn });
-        var surnamesLoader = new CsvLoader(Constants.FromProjectRootCsvSurnamesFilepath)
-            .WithSeparator(Constants.CsvNamesSurnamesSeparator)
-            .WithColumns(new string[1] { Constants.CsvSurnamesColumn });
-        _generator = new ContenderGenerator(namesLoader, surnamesLoader);
-        _contenderContainer = new ContenderContainer(_generator, Constants.PossibleToGenerateContendersAmount);
+        _contenderContainer = new MContenderContainer(ContendersInContainer);
     }
 
     [Test]
