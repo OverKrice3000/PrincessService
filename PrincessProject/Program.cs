@@ -1,4 +1,7 @@
-﻿using PrincessProject.ContenderContainer;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using PrincessProject;
+using PrincessProject.ContenderContainer;
 using PrincessProject.ContenderGenerator;
 using PrincessProject.Friend;
 using PrincessProject.Hall;
@@ -7,18 +10,33 @@ using PrincessProject.utils;
 using PrincessProject.utils.AttemptLoader;
 using PrincessProject.utils.ContenderNamesLoader;
 
-var namesLoader = new CsvLoader(Constants.FromProjectRootCsvNamesFilepath)
-    .WithSeparator(Constants.CsvNamesSurnamesSeparator)
-    .WithColumns(new string[1] { Constants.CsvNamesColumn });
-var surnamesLoader = new CsvLoader(Constants.FromProjectRootCsvSurnamesFilepath)
-    .WithSeparator(Constants.CsvNamesSurnamesSeparator)
-    .WithColumns(new string[1] { Constants.CsvSurnamesColumn });
-var contenderGenerator = new ContenderGenerator(namesLoader, surnamesLoader);
-var contenderContainer = new ContenderContainer(contenderGenerator, Constants.DefaultContendersCount);
-var friend = new Friend(contenderContainer);
-var attemptSaver = new FileAttemptSaver();
-var hall = new Hall(friend, attemptSaver, contenderContainer);
-var princess = new Princess(hall);
+class Program
+{
+    public static void Main(string[] args)
 
-var happiness = princess.ChooseHusband();
-hall.SaveAttempt(happiness);
+    {
+        CreateHostBuilder(args).Build().Run();
+    }
+
+    public static IHostBuilder CreateHostBuilder(string[] args)
+    {
+        return Host.CreateDefaultBuilder(args)
+            .ConfigureServices((hostContext, services) =>
+            {
+                var namesLoader = new CsvLoader(Constants.FromProjectRootCsvNamesFilepath)
+                    .WithSeparator(';')
+                    .WithColumns(new string[1] { Constants.CsvNamesColumn });
+                var surnamesLoader = new CsvLoader(Constants.FromProjectRootCsvSurnamesFilepath)
+                    .WithSeparator(';')
+                    .WithColumns(new string[1] { Constants.CsvSurnamesColumn });
+                services.AddSingleton<IAttemptSaver, FileAttemptSaver>();
+                services.AddSingleton<IContenderGenerator, ContenderGenerator>((s) =>
+                    new ContenderGenerator(namesLoader, surnamesLoader));
+                services.AddSingleton<IContenderContainer, ContenderContainer>();
+                services.AddSingleton<IFriend, Friend>();
+                services.AddSingleton<IHall, Hall>();
+                services.AddSingleton<IPrincess, Princess>();
+                services.AddHostedService<PrincessService>();
+            });
+    }
+}
