@@ -132,7 +132,7 @@ public static class QualityMetrics
     // contender has not yet been chosen
     public static bool DoWeChooseContender(int n, int m, int s)
     {
-        return PrincessMath.CurrentCandidatePositionAnalysisStrategy(
+        return PrincessMath.CurrentCandidatePositionAnalysisStrategyProbability(
             (uint)(n - m - 1),
             (uint)(m),
             (uint)(s),
