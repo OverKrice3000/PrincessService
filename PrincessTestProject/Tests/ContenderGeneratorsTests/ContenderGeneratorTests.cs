@@ -1,4 +1,5 @@
-﻿using PrincessProject.ContenderGenerator;
+﻿using FluentAssertions;
+using PrincessProject.ContenderGenerator;
 using PrincessProject.utils.ContenderNamesLoader;
 using PrincessTestProject.Builder;
 
@@ -43,7 +44,7 @@ public class ContenderGeneratorTests
     public void GeneratesAsMuchAsRequestedWhenPossible(int countToGenerate)
     {
         var contenders = _generator.Generate(countToGenerate);
-        Assert.That(contenders.Length, Is.EqualTo(countToGenerate));
+        countToGenerate.Should().Be(contenders.Length);
     }
 
     [
@@ -53,19 +54,14 @@ public class ContenderGeneratorTests
     ]
     public void ThrowsWhenImpossibleToGenerate(int countToGenerate)
     {
-        Assert.Throws<ArgumentException>(() => _generator.Generate(countToGenerate));
+        Action act = () => _generator.Generate(countToGenerate);
+        act.Should().Throw<ArgumentException>();
     }
 
     [Test]
     public void GeneratesUniqueNames()
     {
-        var contenders = _generator.Generate(LoadedFieldsCount);
-        for (int i = 0; i < contenders.Length; i++)
-        {
-            for (int j = i + 1; j < contenders.Length; j++)
-            {
-                Assert.That(contenders[j].FullName, Is.Not.EqualTo(contenders[i].FullName));
-            }
-        }
+        var contenders = _generator.Generate(LoadedFieldsCount).Select((contender) => contender.FullName);
+        contenders.Should().OnlyHaveUniqueItems();
     }
 }

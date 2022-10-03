@@ -1,4 +1,5 @@
-﻿using PrincessProject.ContenderContainer;
+﻿using FluentAssertions;
+using PrincessProject.ContenderContainer;
 using PrincessProject.Friend;
 using PrincessProject.Hall;
 using PrincessTestProject.Builder;
@@ -37,20 +38,23 @@ public class HallTests
     [Test]
     public void ReturnsNextContenderIfExists()
     {
+        Action act = () => _hall.GetNextContender();
         for (int i = 0; i < ContendersInContainerCount; i++)
         {
-            Assert.DoesNotThrow(() => _hall.GetNextContender());
+            act.Should().NotThrow();
         }
     }
 
     [Test]
     public void ThrowsWhenContenderDoesNotExists()
     {
+        Action act = () => _hall.GetNextContender();
+
         for (int i = 0; i < ContendersInContainerCount; i++)
         {
-            _hall.GetNextContender();
+            act.Should().NotThrow();
         }
 
-        Assert.Throws<ApplicationException>(() => _hall.GetNextContender());
+        act.Should().Throw<ApplicationException>();
     }
 }

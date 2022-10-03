@@ -1,3 +1,4 @@
+using FluentAssertions;
 using PrincessProject.ContenderContainer;
 using PrincessProject.Friend;
 using PrincessProject.model;
@@ -44,22 +45,26 @@ public class FriendTests
     {
         _contender1.SetHasVisited();
         _contender2.SetHasVisited();
-        Assert.True(_friend.CompareContenders(_visitingContender1, _visitingContender2).Equals(_best));
-        Assert.True(_friend.CompareContenders(_visitingContender2, _visitingContender1).Equals(_best));
+        _friend.CompareContenders(_visitingContender1, _visitingContender2).Should().BeEquivalentTo(_best);
+        _friend.CompareContenders(_visitingContender2, _visitingContender1).Should().BeEquivalentTo(_best);
     }
 
     [Test]
     public void ThrowsWhenBothHasNotVisited()
     {
-        Assert.Throws<ApplicationException>(() => _friend.CompareContenders(_visitingContender1, _visitingContender2));
-        Assert.Throws<ApplicationException>(() => _friend.CompareContenders(_visitingContender2, _visitingContender1));
+        Action act1 = () => _friend.CompareContenders(_visitingContender1, _visitingContender2);
+        Action act2 = () => _friend.CompareContenders(_visitingContender2, _visitingContender1);
+        act1.Should().Throw<ApplicationException>();
+        act2.Should().Throw<ApplicationException>();
     }
 
     [Test]
     public void ThrowsWhenOneHasNotVisited()
     {
         _contender1.SetHasVisited();
-        Assert.Throws<ApplicationException>(() => _friend.CompareContenders(_visitingContender1, _visitingContender2));
-        Assert.Throws<ApplicationException>(() => _friend.CompareContenders(_visitingContender2, _visitingContender1));
+        Action act1 = () => _friend.CompareContenders(_visitingContender1, _visitingContender2);
+        Action act2 = () => _friend.CompareContenders(_visitingContender2, _visitingContender1);
+        act1.Should().Throw<ApplicationException>();
+        act2.Should().Throw<ApplicationException>();
     }
 }
