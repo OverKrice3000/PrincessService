@@ -8,7 +8,7 @@ namespace PrincessTestProject.HallsTests;
 
 public class HallTests
 {
-    private const int ContendersInContainer = 100;
+    private const int ContendersInContainerCount = 100;
     private IContenderContainer _contenderContainer;
     private IFriend _friend;
     private IHall _hall;
@@ -19,7 +19,7 @@ public class HallTests
         _contenderContainer = TestBuilder
             .BuildIContenderContainer()
             .BuildMContenderContainer()
-            .WithNumberOfContenders(ContendersInContainer)
+            .WithNumberOfContenders(ContendersInContainerCount)
             .Build();
         _friend = TestBuilder
             .BuildIFriend()
@@ -31,7 +31,7 @@ public class HallTests
             .BuildHall()
             .WithContainer(_contenderContainer)
             .WithFriend(_friend)
-            .WithSize(ContendersInContainer)
+            .WithSize(ContendersInContainerCount)
             .Build();
     }
 

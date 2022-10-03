@@ -1,5 +1,4 @@
-﻿using PrincessProject.ContenderGenerator;
-using PrincessProject.utils.ContenderNamesLoader;
+﻿using PrincessProject.utils.ContenderNamesLoader;
 using PrincessTestProject.Builder;
 using PrincessTestProject.utils;
 
@@ -30,7 +29,7 @@ public class ContenderGeneratorTests
     [Test]
     public void GeneratesAsMuchAsRequestedWhenPossible()
     {
-        IContenderGenerator generator = TestBuilder
+        var generator = TestBuilder
             .BuildIContenderGenerator()
             .BuildContenderGenerator()
             .WithNamesLoader(_namesLoader)
@@ -43,7 +42,7 @@ public class ContenderGeneratorTests
     [Test]
     public void ThrowsWhenImpossibleToGenerate()
     {
-        IContenderGenerator generator = TestBuilder
+        var generator = TestBuilder
             .BuildIContenderGenerator()
             .BuildContenderGenerator()
             .WithNamesLoader(_namesLoader)
@@ -55,7 +54,7 @@ public class ContenderGeneratorTests
     [Test]
     public void GeneratesUniqueNames()
     {
-        IContenderGenerator generator = TestBuilder
+        var generator = TestBuilder
             .BuildIContenderGenerator()
             .BuildContenderGenerator()
             .WithNamesLoader(_namesLoader)

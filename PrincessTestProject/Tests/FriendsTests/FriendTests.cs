@@ -8,7 +8,7 @@ namespace PrincessTestProject;
 
 public class FriendTests
 {
-    private const int ContendersInContainer = 100;
+    private const int ContendersInContainerCount = 100;
     private VisitingContender _best;
 
     private Contender _contender1;
@@ -24,7 +24,7 @@ public class FriendTests
         _contenderContainer = TestBuilder
             .BuildIContenderContainer()
             .BuildMContenderContainer()
-            .WithNumberOfContenders(ContendersInContainer)
+            .WithNumberOfContenders(ContendersInContainerCount)
             .Build();
         _friend = TestBuilder
             .BuildIFriend()
