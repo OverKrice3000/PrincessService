@@ -1,39 +1,39 @@
 ﻿using System.Numerics;
+using FluentAssertions;
 using PrincessProject.utils.PrincessMath;
 
 namespace PrincessTestProject.UtilClassesTests.PrincessMathTests;
 
 public class BigIntegerCacheOptimizedMathTests
 {
-    [Test]
-    public void FactorialCalculationCorrectnessTest()
+    static object[] FactorialCases =
     {
-        Assert.That(BigIntegerCache.CalculateFactorialCacheOptimized(0), Is.EqualTo(new BigInteger(1)));
-        Assert.That(BigIntegerCache.CalculateFactorialCacheOptimized(0), Is.EqualTo(new BigInteger(1)));
-        Assert.That(BigIntegerCache.CalculateFactorialCacheOptimized(1), Is.EqualTo(new BigInteger(1)));
-        Assert.That(BigIntegerCache.CalculateFactorialCacheOptimized(1), Is.EqualTo(new BigInteger(1)));
-        Assert.That(BigIntegerCache.CalculateFactorialCacheOptimized(5), Is.EqualTo(new BigInteger(120)));
-        Assert.That(BigIntegerCache.CalculateFactorialCacheOptimized(5), Is.EqualTo(new BigInteger(120)));
-        Assert.That(BigIntegerCache.CalculateFactorialCacheOptimized(10), Is.EqualTo(new BigInteger(3628800)));
-        Assert.That(BigIntegerCache.CalculateFactorialCacheOptimized(10), Is.EqualTo(new BigInteger(3628800)));
+        new object[] { (uint)0, new BigInteger(1) },
+        new object[] { (uint)1, new BigInteger(1) },
+        new object[] { (uint)5, new BigInteger(120) },
+        new object[] { (uint)10, new BigInteger(3628800) },
+    };
+
+    static object[] BinomialCoefficientCases =
+    {
+        new object[] { (uint)20, (uint)20, new BigInteger(1) },
+        new object[] { (uint)20, (uint)1, new BigInteger(20) },
+        new object[] { (uint)1, (uint)20, new BigInteger(0) },
+        new object[] { (uint)5, (uint)3, new BigInteger(10) },
+        new object[] { (uint)10, (uint)2, new BigInteger(45) },
+    };
+
+    [TestCaseSource(nameof(FactorialCases))]
+    public void FactorialCalculationCorrectnessTest(in uint input, in BigInteger expected)
+    {
+        expected.Should().Be(BigIntegerCache.CalculateFactorialCacheOptimized(input));
+        expected.Should().Be(BigIntegerCache.CalculateFactorialCacheOptimized(input));
     }
 
-    [Test]
-    public void BinomialCoefficientsCalculationCorrectnessTest()
+    [TestCaseSource(nameof(BinomialCoefficientCases))]
+    public void BinomialCoefficientsCalculationCorrectnessTest(in uint n, in uint m, in BigInteger expected)
     {
-        Assert.That(BigIntegerCache.CalculateBinomialCoefficientCacheOptimized(20, 20), Is.EqualTo(new BigInteger(1)));
-        Assert.That(BigIntegerCache.CalculateBinomialCoefficientCacheOptimized(20, 20), Is.EqualTo(new BigInteger(1)));
-        Assert.That(BigIntegerCache.CalculateBinomialCoefficientCacheOptimized(1, 20), Is.EqualTo(new BigInteger(0)));
-        Assert.That(BigIntegerCache.CalculateBinomialCoefficientCacheOptimized(1, 20), Is.EqualTo(new BigInteger(0)));
-        Assert.That(BigIntegerCache.CalculateBinomialCoefficientCacheOptimized(20, 1), Is.EqualTo(new BigInteger(20)));
-        Assert.That(BigIntegerCache.CalculateBinomialCoefficientCacheOptimized(20, 1), Is.EqualTo(new BigInteger(20)));
-        Assert.That(BigIntegerCache.CalculateBinomialCoefficientCacheOptimized(5, 3), Is.EqualTo(new BigInteger(10)));
-        Assert.That(BigIntegerCache.CalculateBinomialCoefficientCacheOptimized(5, 3), Is.EqualTo(new BigInteger(10)));
-        Assert.That(BigIntegerCache.CalculateBinomialCoefficientCacheOptimized(5, 2), Is.EqualTo(new BigInteger(10)));
-        Assert.That(BigIntegerCache.CalculateBinomialCoefficientCacheOptimized(5, 2), Is.EqualTo(new BigInteger(10)));
-        Assert.That(BigIntegerCache.CalculateBinomialCoefficientCacheOptimized(10, 2), Is.EqualTo(new BigInteger(45)));
-        Assert.That(BigIntegerCache.CalculateBinomialCoefficientCacheOptimized(10, 2), Is.EqualTo(new BigInteger(45)));
-        Assert.That(BigIntegerCache.CalculateBinomialCoefficientCacheOptimized(10, 3), Is.EqualTo(new BigInteger(120)));
-        Assert.That(BigIntegerCache.CalculateBinomialCoefficientCacheOptimized(10, 3), Is.EqualTo(new BigInteger(120)));
+        expected.Should().Be(PrincessMath.BinomialCoefficient(n, m));
+        expected.Should().Be(PrincessMath.BinomialCoefficient(n, m));
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using FluentAssertions;
 using PrincessProject.utils.PrincessMath;
 using radj307;
 
@@ -6,36 +7,59 @@ namespace PrincessTestProject.UtilClassesTests.PrincessMathTests;
 
 public class PrincessMathTests
 {
-    [Test]
-    public void FactorialCalculationCorrectnessTest()
+    static object[] FactorialCases =
     {
-        Assert.That(PrincessMath.Factorial(0), Is.EqualTo(new BigInteger(1)));
-        Assert.That(PrincessMath.Factorial(1), Is.EqualTo(new BigInteger(1)));
-        Assert.That(PrincessMath.Factorial(5), Is.EqualTo(new BigInteger(120)));
-        Assert.That(PrincessMath.Factorial(10), Is.EqualTo(new BigInteger(3628800)));
+        new object[] { (uint)0, new BigInteger(1) },
+        new object[] { (uint)1, new BigInteger(1) },
+        new object[] { (uint)5, new BigInteger(120) },
+        new object[] { (uint)10, new BigInteger(3628800) },
+    };
+
+    static object[] BinomialCoefficientCases =
+    {
+        new object[] { (uint)20, (uint)20, new BigInteger(1) },
+        new object[] { (uint)20, (uint)1, new BigInteger(20) },
+        new object[] { (uint)1, (uint)20, new BigInteger(0) },
+        new object[] { (uint)5, (uint)3, new BigInteger(10) },
+        new object[] { (uint)10, (uint)2, new BigInteger(45) },
+    };
+
+    static object[] ProbabilityCorrectCalculationCases =
+    {
+        new object[] { (uint)1, (uint)1, (uint)5, (uint)3, new BigFloat("0.7") },
+    };
+
+    static object[] ProbabilitySumsToOneCases =
+    {
+        new object[] { (uint)2, (uint)3, (uint)20, (uint)1 },
+        new object[] { (uint)2, (uint)3, (uint)20, (uint)3 },
+    };
+
+    [
+        TestCaseSource(nameof(FactorialCases)),
+    ]
+    public void FactorialCalculationCorrectnessTest(in uint input, in BigInteger expected)
+    {
+        expected.Should().Be(PrincessMath.Factorial(input));
     }
 
-    [Test]
-    public void BinomialCoefficientsCalculationCorrectnessTest()
+    [TestCaseSource(nameof(BinomialCoefficientCases))]
+    public void BinomialCoefficientsCalculationCorrectnessTest(in uint n, in uint m, in BigInteger expected)
     {
-        Assert.That(PrincessMath.BinomialCoefficient(20, 20), Is.EqualTo(new BigInteger(1)));
-        Assert.That(PrincessMath.BinomialCoefficient(20, 1), Is.EqualTo(new BigInteger(20)));
-        Assert.That(PrincessMath.BinomialCoefficient(1, 20), Is.EqualTo(new BigInteger(0)));
-        Assert.That(PrincessMath.BinomialCoefficient(5, 3), Is.EqualTo(new BigInteger(10)));
-        Assert.That(PrincessMath.BinomialCoefficient(10, 2), Is.EqualTo(new BigInteger(45)));
+        expected.Should().Be(PrincessMath.BinomialCoefficient(n, m));
     }
 
-    [Test]
-    public void CurrentCandidatePositionAnalysisStrategyProbabilityCalculationCorrectnessTest()
+    [TestCaseSource(nameof(ProbabilityCorrectCalculationCases))]
+    public void CurrentCandidatePositionAnalysisStrategyProbabilityCalculationCorrectnessTest(in uint n, in uint m,
+        in uint s, in uint lowerBorderL, in BigFloat expected)
     {
-        Assert.That(
-            PrincessMath.CurrentCandidatePositionAnalysisStrategyProbability(2, 3, 20, 1),
-            Is.GreaterThan(new BigFloat("0.99")));
-        Assert.That(
-            PrincessMath.CurrentCandidatePositionAnalysisStrategyProbability(2, 3, 20, 3),
-            Is.GreaterThan(new BigFloat("0.99")));
-        Assert.That(
-            PrincessMath.CurrentCandidatePositionAnalysisStrategyProbability(1, 1, 5, 3),
-            Is.EqualTo(new BigFloat("0.7")));
+        expected.Should().Be(PrincessMath.CurrentCandidatePositionAnalysisStrategyProbability(n, m, s, lowerBorderL));
+    }
+
+    [TestCaseSource(nameof(ProbabilitySumsToOneCases))]
+    public void ProbabilitySumsToOneTest(in uint n, in uint m, in uint s, in uint lowerBorderL)
+    {
+        PrincessMath.CurrentCandidatePositionAnalysisStrategyProbability(n, m, s, lowerBorderL).Should()
+            .BeGreaterThan(new BigFloat("0.99"));
     }
 }
