@@ -1,11 +1,13 @@
-﻿using PrincessProject.utils.ContenderNamesLoader;
+﻿using PrincessProject.ContenderGenerator;
+using PrincessProject.utils.ContenderNamesLoader;
 using PrincessTestProject.Builder;
-using PrincessTestProject.utils;
 
 namespace PrincessTestProject;
 
 public class ContenderGeneratorTests
 {
+    private const int LoadedFieldsCount = 100;
+    private IContenderGenerator _generator;
     private ITableLoader _namesLoader;
     private ITableLoader _surnamesLoader;
 
@@ -15,52 +17,49 @@ public class ContenderGeneratorTests
         _namesLoader = TestBuilder.BuildITableLoader()
             .BuildMTableLoader()
             .WithLoadedColumnName(PrincessProject.utils.Constants.CsvNamesColumn)
-            .WithLoadedFieldsCount(Constants.PossibleToGenerateContendersAmount)
+            .WithLoadedFieldsCount(LoadedFieldsCount)
             .Build();
 
         _surnamesLoader = TestBuilder
             .BuildITableLoader()
             .BuildMTableLoader()
             .WithLoadedColumnName(PrincessProject.utils.Constants.CsvSurnamesColumn)
-            .WithLoadedFieldsCount(Constants.PossibleToGenerateContendersAmount)
+            .WithLoadedFieldsCount(LoadedFieldsCount)
             .Build();
-    }
 
-    [Test]
-    public void GeneratesAsMuchAsRequestedWhenPossible()
-    {
-        var generator = TestBuilder
+        _generator = TestBuilder
             .BuildIContenderGenerator()
             .BuildContenderGenerator()
             .WithNamesLoader(_namesLoader)
             .WithSurnamesLoader(_surnamesLoader)
             .Build();
-        var contenders = generator.Generate(Constants.PossibleToGenerateContendersAmount);
-        Assert.That(contenders.Length, Is.EqualTo(Constants.PossibleToGenerateContendersAmount));
     }
 
-    [Test]
-    public void ThrowsWhenImpossibleToGenerate()
+    [
+        TestCase(10),
+        TestCase(50),
+        TestCase(100)
+    ]
+    public void GeneratesAsMuchAsRequestedWhenPossible(int countToGenerate)
     {
-        var generator = TestBuilder
-            .BuildIContenderGenerator()
-            .BuildContenderGenerator()
-            .WithNamesLoader(_namesLoader)
-            .WithSurnamesLoader(_surnamesLoader)
-            .Build();
-        Assert.Throws<ArgumentException>(() => generator.Generate(Constants.ImpossibleToGenerateContendersAmount));
+        var contenders = _generator.Generate(countToGenerate);
+        Assert.That(contenders.Length, Is.EqualTo(countToGenerate));
+    }
+
+    [
+        TestCase(101),
+        TestCase(501),
+        TestCase(1001)
+    ]
+    public void ThrowsWhenImpossibleToGenerate(int countToGenerate)
+    {
+        Assert.Throws<ArgumentException>(() => _generator.Generate(countToGenerate));
     }
 
     [Test]
     public void GeneratesUniqueNames()
     {
-        var generator = TestBuilder
-            .BuildIContenderGenerator()
-            .BuildContenderGenerator()
-            .WithNamesLoader(_namesLoader)
-            .WithSurnamesLoader(_surnamesLoader)
-            .Build();
-        var contenders = generator.Generate(Constants.PossibleToGenerateContendersAmount);
+        var contenders = _generator.Generate(LoadedFieldsCount);
         for (int i = 0; i < contenders.Length; i++)
         {
             for (int j = i + 1; j < contenders.Length; j++)

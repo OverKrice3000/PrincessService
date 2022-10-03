@@ -2,7 +2,6 @@
 using PrincessProject.Friend;
 using PrincessProject.Hall;
 using PrincessTestProject.Builder;
-using PrincessTestProject.utils;
 
 namespace PrincessTestProject.HallsTests;
 
@@ -38,7 +37,7 @@ public class HallTests
     [Test]
     public void ReturnsNextContenderIfExists()
     {
-        for (int i = 0; i < Constants.PossibleToGenerateContendersAmount; i++)
+        for (int i = 0; i < ContendersInContainerCount; i++)
         {
             Assert.DoesNotThrow(() => _hall.GetNextContender());
         }
@@ -47,7 +46,7 @@ public class HallTests
     [Test]
     public void ThrowsWhenContenderDoesNotExists()
     {
-        for (int i = 0; i < Constants.PossibleToGenerateContendersAmount; i++)
+        for (int i = 0; i < ContendersInContainerCount; i++)
         {
             _hall.GetNextContender();
         }
