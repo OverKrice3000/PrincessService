@@ -4,6 +4,12 @@ using PrincessProject.utils.PrincessMath;
 
 namespace PrincessTestProject.UtilClassesTests.PrincessMathTests;
 
+/// <summary>
+/// This class tests math methods of BigIntegerCache, which caches results of calculations
+/// This means, that in every test every calculation should be done at least twice
+/// First time cache does calculation by itself
+/// Second time it returns value from cache
+/// </summary>
 public class BigIntegerCacheOptimizedMathTests
 {
     static object[] FactorialCases =

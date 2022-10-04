@@ -37,9 +37,8 @@ public class ContenderGeneratorTests
     }
 
     [
-        TestCase(10),
-        TestCase(50),
-        TestCase(100)
+        TestCase(0),
+        TestCase(LoadedFieldsCount)
     ]
     public void ShouldGenerateAsMuchAsRequestedWhenPossible(int countToGenerate)
     {
@@ -48,9 +47,8 @@ public class ContenderGeneratorTests
     }
 
     [
-        TestCase(101),
-        TestCase(501),
-        TestCase(1001)
+        TestCase(LoadedFieldsCount + 1),
+        TestCase(-1)
     ]
     public void ShouldThrowWhenImpossibleToGenerate(int countToGenerate)
     {

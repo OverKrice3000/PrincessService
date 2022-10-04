@@ -35,9 +35,7 @@ public class PrincessMathTests
         new object[] { (uint)2, (uint)3, (uint)20, (uint)3 },
     };
 
-    [
-        TestCaseSource(nameof(FactorialCases)),
-    ]
+    [TestCaseSource(nameof(FactorialCases))]
     public void ShouldCalculateFactorialsCorrectly(in uint input, in BigInteger expected)
     {
         expected.Should().Be(PrincessMath.Factorial(input));
@@ -49,6 +47,14 @@ public class PrincessMathTests
         expected.Should().Be(PrincessMath.BinomialCoefficient(n, m));
     }
 
+    /// <summary>
+    /// Testing correctness of CandidatePositionAnalysisStrategy probability calculation
+    /// </summary>
+    /// <param name="n">Count of contenders worse than current one</param>
+    /// <param name="m">Count of contenders better than current one</param>
+    /// <param name="s">Total count of contenders</param>
+    /// <param name="lowerBorderL">Lower border for candidate score</param>
+    /// <param name="expected">Expected probability</param>
     [TestCaseSource(nameof(ProbabilityCorrectCalculationCases))]
     public void ShouldCalculateStrategyProbabilityCorrectly(in uint n, in uint m,
         in uint s, in uint lowerBorderL, in BigFloat expected)
@@ -56,6 +62,17 @@ public class PrincessMathTests
         expected.Should().Be(PrincessMath.CurrentCandidatePositionAnalysisStrategyProbability(n, m, s, lowerBorderL));
     }
 
+    /// <summary>
+    /// Given special inputs, probability should be 1
+    /// For example if total count of candidates equals 100
+    /// Count of contenders worse than current one equals 99
+    /// Count of contenders better than current one equals 0
+    /// Then probability, that current candidate has maximum score is 1
+    /// </summary>
+    /// <param name="n">Count of contenders worse than current one</param>
+    /// <param name="m">Count of contenders better than current one</param>
+    /// <param name="s">Total count of contenders</param>
+    /// <param name="lowerBorderL">Lower border for candidate score</param>
     [TestCaseSource(nameof(ProbabilitySumsToOneCases))]
     public void StrategyProbabilityShouldSumToOne(in uint n, in uint m, in uint s, in uint lowerBorderL)
     {

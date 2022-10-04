@@ -53,8 +53,9 @@ public class FriendTests
     public void ShouldThrowWhenBothHasNotVisited()
     {
         Action act1 = () => _friend.CompareContenders(_visitingContender1, _visitingContender2);
-        Action act2 = () => _friend.CompareContenders(_visitingContender2, _visitingContender1);
         act1.Should().Throw<ApplicationException>();
+
+        Action act2 = () => _friend.CompareContenders(_visitingContender2, _visitingContender1);
         act2.Should().Throw<ApplicationException>();
     }
 
@@ -62,9 +63,11 @@ public class FriendTests
     public void ShouldThrowWhenOneHasNotVisited()
     {
         _contender1.SetHasVisited();
+
         Action act1 = () => _friend.CompareContenders(_visitingContender1, _visitingContender2);
-        Action act2 = () => _friend.CompareContenders(_visitingContender2, _visitingContender1);
         act1.Should().Throw<ApplicationException>();
+
+        Action act2 = () => _friend.CompareContenders(_visitingContender2, _visitingContender1);
         act2.Should().Throw<ApplicationException>();
     }
 }
