@@ -6,7 +6,9 @@ namespace PrincessProject.ContenderGenerator;
 
 public class ContenderGenerator : IContenderGenerator
 {
+    private List<string>? _names;
     private ITableLoader _namesLoader;
+    private List<string>? _surnames;
     private ITableLoader _surnamesLoader;
 
     public ContenderGenerator(ITableLoader namesLoader, ITableLoader surnamesLoader)
@@ -14,23 +16,22 @@ public class ContenderGenerator : IContenderGenerator
         _namesLoader = namesLoader;
         _surnamesLoader = surnamesLoader;
     }
-    
-    public void SetNamesLoader(ITableLoader loader)
-    {
-        _namesLoader = loader;
-    }
-    
-    public void SetSurnamesLoader(ITableLoader loader)
-    {
-        _surnamesLoader = loader;
-    }
 
     public Contender[] Generate(int size = Constants.DefaultContendersCount)
     {
-        var names = this._namesLoader
-            .Load()[Constants.CsvNamesColumn];
-        var surnames = this._surnamesLoader
-            .Load()[Constants.CsvSurnamesColumn];
+        if (size < 0)
+        {
+            throw new ArgumentException($"Bad size: {size}");
+        }
+
+        if (_names is null)
+            _names = this._namesLoader
+                .Load()[Constants.CsvNamesColumn];
+        if (_surnames is null)
+            _surnames = this._surnamesLoader
+                .Load()[Constants.CsvSurnamesColumn];
+        var names = new List<string>(_names);
+        var surnames = new List<string>(_surnames);
         if (names.Count < size || surnames.Count < size)
         {
             throw new ArgumentException("Cannot generate given amount of candidate names!");
@@ -46,7 +47,7 @@ public class ContenderGenerator : IContenderGenerator
                 names[random.Next(namesNextIndex)],
                 surnames[surnamesNextIndex],
                 i + 1
-                );
+            );
             names.RemoveAt(namesNextIndex);
             surnames.RemoveAt(surnamesNextIndex);
         }

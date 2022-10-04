@@ -18,6 +18,7 @@ public class Princess : IPrincess
 
     public int ChooseHusband()
     {
+        _hall.Reset();
         int size = _hall.GetTotalCandidates();
         _strategy = new CandidatePositionAnalysisStrategy(_hall);
 
@@ -32,6 +33,11 @@ public class Princess : IPrincess
             }
         }
 
+        return _calculateHappinessAndCommentOnTopic(chosen);
+    }
+
+    private int _calculateHappinessAndCommentOnTopic(VisitingContender? chosen)
+    {
         if (chosen is null)
         {
             Console.WriteLine("Princess hasn't chosen anyone!");
@@ -41,7 +47,7 @@ public class Princess : IPrincess
 
         int contenderValue = _hall.ChooseContender(chosen);
 
-        if (contenderValue <= size * Constants.IdiotHusbandTopBorderPercentage)
+        if (contenderValue <= _hall.GetTotalCandidates() * Constants.IdiotHusbandTopBorderPercentage)
         {
             Console.WriteLine("Princess has chosen an idiot husband: {0}", chosen.FullName);
             Console.WriteLine("Her happiness level: {0}", Constants.IdiotHusbandHappinessLevel);

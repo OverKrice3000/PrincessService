@@ -65,6 +65,11 @@ public static class BigIntegerCache
             return BigInteger.One;
         }
 
+        if (m > n)
+        {
+            return BigInteger.Zero;
+        }
+
         if (!_binomialCoefficientsCached.ContainsKey(n))
         {
             _binomialCoefficientsCached.Add(n, new SortedDictionary<int, BigInteger>());
@@ -87,7 +92,8 @@ public static class BigIntegerCache
             {
                 nextBinomialCoefficient = BigInteger.Multiply(nextBinomialCoefficient, n - closestM) / (closestM + 1);
                 closestM++;
-                _binomialCoefficientsCached[n].Add(closestM, nextBinomialCoefficient);
+                if (m - closestM % 4 == 0)
+                    _binomialCoefficientsCached[n].TryAdd(closestM, nextBinomialCoefficient);
             }
 
             return nextBinomialCoefficient;
@@ -98,9 +104,11 @@ public static class BigIntegerCache
             {
                 nextBinomialCoefficient = BigInteger.Multiply(nextBinomialCoefficient, closestM) / (n - closestM + 1);
                 closestM--;
-                _binomialCoefficientsCached[n].Add(closestM, nextBinomialCoefficient);
+                if (closestM - m % 4 == 0)
+                    _binomialCoefficientsCached[n].TryAdd(closestM, nextBinomialCoefficient);
             }
 
+            _binomialCoefficientsCached[n].TryAdd((int)m, nextBinomialCoefficient);
             return nextBinomialCoefficient;
         }
     }

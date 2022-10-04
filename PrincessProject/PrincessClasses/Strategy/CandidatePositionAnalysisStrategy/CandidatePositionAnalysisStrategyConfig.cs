@@ -4,7 +4,7 @@ namespace PrincessProject.PrincessClasses.Strategy.CandidatePositionAnalysisStra
 
 public static class CandidatePositionAnalysisStrategyConfig
 {
-    public const double FirstContendersRejectedPercentage = 0.1;
-    public const double WorthyContenderSatisfactoryLowerBorderPercentage = 0.95;
-    public static readonly BigFloat WorthyContenderSatisfactoryProbability = new BigFloat("0.9");
+    public const double FirstContendersRejectedPercentage = 0.3;
+    public const double WorthyContenderSatisfactoryLowerBorderPercentage = 0.90;
+    public static readonly BigFloat WorthyContenderSatisfactoryProbability = new BigFloat("0.92");
 }

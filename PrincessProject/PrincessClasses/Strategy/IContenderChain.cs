@@ -2,19 +2,22 @@
 
 namespace PrincessProject.PrincessClasses.Strategy;
 
-/*
- * Custom queue of contenders
- */
+/// <summary>
+/// Custom queue of contenders
+/// </summary>
 public interface IContenderChain
 {
-    /*
-     * Method, containing custom logic to add contender to chain
-     * and return position he has been inserted to
-     */
+    /// <summary>
+    /// Method, containing custom logic to add contender to chain
+    /// and return position he has been inserted to
+    /// </summary>
+    /// <param name="visitingContender">contender to add to chain</param>
+    /// <returns>position of added contender in chain</returns>
     int Add(VisitingContender visitingContender);
 
-    /*
-     * Method, which returns size of the chain
-     */
+    /// <summary>
+    /// Method, which returns size of the chain
+    /// </summary>
+    /// <returns>size of the chain</returns>
     int Size();
 }
