@@ -41,7 +41,7 @@ public class ContenderGeneratorTests
         TestCase(50),
         TestCase(100)
     ]
-    public void GeneratesAsMuchAsRequestedWhenPossible(int countToGenerate)
+    public void ShouldGenerateAsMuchAsRequestedWhenPossible(int countToGenerate)
     {
         var contenders = _generator.Generate(countToGenerate);
         countToGenerate.Should().Be(contenders.Length);
@@ -52,14 +52,14 @@ public class ContenderGeneratorTests
         TestCase(501),
         TestCase(1001)
     ]
-    public void ThrowsWhenImpossibleToGenerate(int countToGenerate)
+    public void ShouldThrowWhenImpossibleToGenerate(int countToGenerate)
     {
         Action act = () => _generator.Generate(countToGenerate);
         act.Should().Throw<ArgumentException>();
     }
 
     [Test]
-    public void GeneratesUniqueNames()
+    public void ShouldGenerateUniqueItems()
     {
         var contenders = _generator.Generate(LoadedFieldsCount).Select((contender) => contender.FullName);
         contenders.Should().OnlyHaveUniqueItems();

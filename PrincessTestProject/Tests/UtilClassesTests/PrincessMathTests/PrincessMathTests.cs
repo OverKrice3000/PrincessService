@@ -38,26 +38,26 @@ public class PrincessMathTests
     [
         TestCaseSource(nameof(FactorialCases)),
     ]
-    public void FactorialCalculationCorrectnessTest(in uint input, in BigInteger expected)
+    public void ShouldCalculateFactorialsCorrectly(in uint input, in BigInteger expected)
     {
         expected.Should().Be(PrincessMath.Factorial(input));
     }
 
     [TestCaseSource(nameof(BinomialCoefficientCases))]
-    public void BinomialCoefficientsCalculationCorrectnessTest(in uint n, in uint m, in BigInteger expected)
+    public void ShouldCalculateBinomialCoefficientsCorrectly(in uint n, in uint m, in BigInteger expected)
     {
         expected.Should().Be(PrincessMath.BinomialCoefficient(n, m));
     }
 
     [TestCaseSource(nameof(ProbabilityCorrectCalculationCases))]
-    public void CurrentCandidatePositionAnalysisStrategyProbabilityCalculationCorrectnessTest(in uint n, in uint m,
+    public void ShouldCalculateStrategyProbabilityCorrectly(in uint n, in uint m,
         in uint s, in uint lowerBorderL, in BigFloat expected)
     {
         expected.Should().Be(PrincessMath.CurrentCandidatePositionAnalysisStrategyProbability(n, m, s, lowerBorderL));
     }
 
     [TestCaseSource(nameof(ProbabilitySumsToOneCases))]
-    public void ProbabilitySumsToOneTest(in uint n, in uint m, in uint s, in uint lowerBorderL)
+    public void StrategyProbabilityShouldSumToOne(in uint n, in uint m, in uint s, in uint lowerBorderL)
     {
         PrincessMath.CurrentCandidatePositionAnalysisStrategyProbability(n, m, s, lowerBorderL).Should()
             .BeGreaterThan(new BigFloat("0.99"));

@@ -41,7 +41,7 @@ public class FriendTests
     }
 
     [Test]
-    public void CorrectComparison()
+    public void ShouldCompareContendersCorrectly()
     {
         _contender1.SetHasVisited();
         _contender2.SetHasVisited();
@@ -50,7 +50,7 @@ public class FriendTests
     }
 
     [Test]
-    public void ThrowsWhenBothHasNotVisited()
+    public void ShouldThrowWhenBothHasNotVisited()
     {
         Action act1 = () => _friend.CompareContenders(_visitingContender1, _visitingContender2);
         Action act2 = () => _friend.CompareContenders(_visitingContender2, _visitingContender1);
@@ -59,7 +59,7 @@ public class FriendTests
     }
 
     [Test]
-    public void ThrowsWhenOneHasNotVisited()
+    public void ShouldThrowWhenOneHasNotVisited()
     {
         _contender1.SetHasVisited();
         Action act1 = () => _friend.CompareContenders(_visitingContender1, _visitingContender2);

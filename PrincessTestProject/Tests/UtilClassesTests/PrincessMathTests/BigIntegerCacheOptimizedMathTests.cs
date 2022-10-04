@@ -24,14 +24,14 @@ public class BigIntegerCacheOptimizedMathTests
     };
 
     [TestCaseSource(nameof(FactorialCases))]
-    public void FactorialCalculationCorrectnessTest(in uint input, in BigInteger expected)
+    public void ShouldCalculateFactorialsCorrectly(in uint input, in BigInteger expected)
     {
         expected.Should().Be(BigIntegerCache.CalculateFactorialCacheOptimized(input));
         expected.Should().Be(BigIntegerCache.CalculateFactorialCacheOptimized(input));
     }
 
     [TestCaseSource(nameof(BinomialCoefficientCases))]
-    public void BinomialCoefficientsCalculationCorrectnessTest(in uint n, in uint m, in BigInteger expected)
+    public void ShouldCalculateBinomialCoefficientsCorrectly(in uint n, in uint m, in BigInteger expected)
     {
         expected.Should().Be(PrincessMath.BinomialCoefficient(n, m));
         expected.Should().Be(PrincessMath.BinomialCoefficient(n, m));

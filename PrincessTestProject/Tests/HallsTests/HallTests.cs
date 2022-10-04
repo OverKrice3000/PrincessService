@@ -36,7 +36,7 @@ public class HallTests
     }
 
     [Test]
-    public void ReturnsNextContenderIfExists()
+    public void ShouldReturnNextContenderIfExists()
     {
         Action act = () => _hall.GetNextContender();
         for (int i = 0; i < ContendersInContainerCount; i++)
@@ -46,7 +46,7 @@ public class HallTests
     }
 
     [Test]
-    public void ThrowsWhenContenderDoesNotExists()
+    public void ShouldThrowWhenContenderDoesNotExist()
     {
         Action act = () => _hall.GetNextContender();
 
