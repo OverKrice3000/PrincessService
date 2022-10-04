@@ -27,7 +27,7 @@ public class FileAttemptSaver : IAttemptSaver
             }
 
             Util.WriteSectionSeparator(writer);
-            writer.Write(attempt.Happiness);
+            writer.Write(attempt.ChosenContenderValue);
         }
     }
 }

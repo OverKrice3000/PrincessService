@@ -34,7 +34,6 @@ public class PrincessService : IHostedService
     {
         Console.WriteLine("Running Activity!");
         var happiness = _princess.ChooseHusband();
-        _hall.SaveAttempt(happiness);
         _applicationLifetime.StopApplication();
     }
 }

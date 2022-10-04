@@ -52,6 +52,6 @@ public class ContenderGenerator : IContenderGenerator
             surnames.RemoveAt(surnamesNextIndex);
         }
 
-        return contenders;
+        return contenders.OrderBy(item => random.Next()).ToArray();
     }
 }

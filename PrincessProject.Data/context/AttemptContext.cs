@@ -5,6 +5,10 @@ namespace PrincessProject.Data.context;
 
 public class AttemptContext : DbContext
 {
+    public AttemptContext()
+    {
+    }
+
     public AttemptContext(DbContextOptions<AttemptContext> options)
         : base(options)
     {
