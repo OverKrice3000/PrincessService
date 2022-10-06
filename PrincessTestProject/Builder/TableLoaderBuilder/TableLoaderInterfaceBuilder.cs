@@ -1,6 +1,6 @@
 ﻿namespace PrincessTestProject.Builder.TableLoaderBuilder;
 
-public class ITableLoaderBuilder
+public class TableLoaderInterfaceBuilder
 {
     public MSingleColumnLoaderBuilder BuildMTableLoader()
     {

@@ -8,28 +8,28 @@ namespace PrincessTestProject.Builder;
 
 public static class TestBuilder
 {
-    public static IContenderContainerBuilder BuildIContenderContainer()
+    public static ContenderContainerInterfaceBuilder BuildIContenderContainer()
     {
-        return new IContenderContainerBuilder();
+        return new ContenderContainerInterfaceBuilder();
     }
 
-    public static ITableLoaderBuilder BuildITableLoader()
+    public static TableLoaderInterfaceBuilder BuildITableLoader()
     {
-        return new ITableLoaderBuilder();
+        return new TableLoaderInterfaceBuilder();
     }
 
-    public static IContenderGeneratorBuilder BuildIContenderGenerator()
+    public static ContenderGeneratorInterfaceBuilder BuildIContenderGenerator()
     {
-        return new IContenderGeneratorBuilder();
+        return new ContenderGeneratorInterfaceBuilder();
     }
 
-    public static IHallBuilder BuildIHall()
+    public static HallInterfaceBuilder BuildIHall()
     {
-        return new IHallBuilder();
+        return new HallInterfaceBuilder();
     }
 
-    public static IFriendBuilder BuildIFriend()
+    public static FriendInterfaceBuilder BuildIFriend()
     {
-        return new IFriendBuilder();
+        return new FriendInterfaceBuilder();
     }
 }

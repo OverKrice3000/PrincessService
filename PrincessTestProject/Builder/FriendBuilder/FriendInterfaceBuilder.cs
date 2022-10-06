@@ -1,6 +1,6 @@
 ﻿namespace PrincessTestProject.Builder.FriendBuilder;
 
-public class IFriendBuilder
+public class FriendInterfaceBuilder
 {
     public FriendBuilder BuildFriend()
     {

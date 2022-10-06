@@ -1,6 +1,6 @@
 ﻿namespace PrincessTestProject.Builder.HallBuilder;
 
-public class IHallBuilder
+public class HallInterfaceBuilder
 {
     public HallBuilder BuildHall()
     {
