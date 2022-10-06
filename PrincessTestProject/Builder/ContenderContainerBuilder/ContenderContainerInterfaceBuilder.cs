@@ -1,6 +1,6 @@
 ﻿namespace PrincessTestProject.Builder.ContenderContainerBuilder;
 
-public class IContenderContainerBuilder
+public class ContenderContainerInterfaceBuilder
 {
     public MContenderContainerBuilder BuildMContenderContainer()
     {

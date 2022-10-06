@@ -1,6 +1,6 @@
 ﻿namespace PrincessTestProject.Builder.ContenderGeneratorBuilder;
 
-public class IContenderGeneratorBuilder
+public class ContenderGeneratorInterfaceBuilder
 {
     public ContenderGeneratorBuilder BuildContenderGenerator()
     {
