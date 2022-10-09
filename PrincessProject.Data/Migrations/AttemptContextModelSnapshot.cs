@@ -21,7 +21,7 @@ namespace PrincessProject.Data.Migrations
 
             NpgsqlModelBuilderExtensions.UseSerialColumns(modelBuilder);
 
-            modelBuilder.Entity("PrincessProject.Data.model.AttemptDataDto", b =>
+            modelBuilder.Entity("PrincessProject.Data.model.AttemptDto", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -48,41 +48,7 @@ namespace PrincessProject.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AttemptId");
-
                     b.ToTable("AttemptData");
-                });
-
-            modelBuilder.Entity("PrincessProject.Data.model.AttemptDto", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseSerialColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ChosenValue")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Attempts");
-                });
-
-            modelBuilder.Entity("PrincessProject.Data.model.AttemptDataDto", b =>
-                {
-                    b.HasOne("PrincessProject.Data.model.AttemptDto", "AttemptDto")
-                        .WithMany("AttemptDataDtos")
-                        .HasForeignKey("AttemptId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("AttemptDto");
-                });
-
-            modelBuilder.Entity("PrincessProject.Data.model.AttemptDto", b =>
-                {
-                    b.Navigation("AttemptDataDtos");
                 });
 #pragma warning restore 612, 618
         }

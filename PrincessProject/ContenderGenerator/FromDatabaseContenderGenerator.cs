@@ -16,7 +16,7 @@ public class FromDatabaseContenderGenerator : IContenderGenerator
 
     public Contender[] Generate(int size)
     {
-        if (_context.Attempts.Find(_attemptId) is null)
+        if (_context.AttemptData.Find(_attemptId) is null)
         {
             throw new ArgumentException("No attempt with such id!");
         }

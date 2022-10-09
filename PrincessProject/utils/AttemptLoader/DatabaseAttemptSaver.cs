@@ -15,18 +15,12 @@ public class DatabaseAttemptSaver : IAttemptSaver
 
     public void Save(Attempt attempt)
     {
-        var entity = _context.Add(new AttemptDto()
-        {
-            ChosenValue = attempt.ChosenContenderValue
-        }).Entity;
-
-        _context.SaveChanges();
-
+        int attemptId = _context.FindLastAttemptId() + 1;
         for (int i = 0; i < attempt.ContendersCount; i++)
         {
-            _context.Add(new AttemptDataDto()
+            _context.Add(new AttemptDto()
             {
-                AttemptId = entity.Id,
+                AttemptId = attemptId,
                 CandidateName = attempt.Contenders[i].Name,
                 CandidateSurname = attempt.Contenders[i].Surname,
                 CandidateValue = attempt.Contenders[i].Value,

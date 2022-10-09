@@ -9,7 +9,13 @@ public class AttemptDto
     [Key]
     public int Id { get; set; }
 
-    [Required] public int ChosenValue { get; set; }
+    public int AttemptId { get; set; }
 
-    public ICollection<AttemptDataDto> AttemptDataDtos { get; set; }
+    [Required] public string CandidateName { get; set; }
+
+    [Required] public string CandidateSurname { get; set; }
+
+    [Required] public int CandidateValue { get; set; }
+
+    [Required] public int CandidateOrder { get; set; }
 }
