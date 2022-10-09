@@ -19,6 +19,11 @@ public class ContenderGenerator : IContenderGenerator
 
     public Contender[] Generate(int size = Constants.DefaultContendersCount)
     {
+        if (size < 0)
+        {
+            throw new ArgumentException($"Bad size: {size}");
+        }
+
         if (_names is null)
             _names = this._namesLoader
                 .Load()[Constants.CsvNamesColumn];

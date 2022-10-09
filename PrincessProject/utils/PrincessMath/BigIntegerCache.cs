@@ -55,6 +55,11 @@ public static class BigIntegerCache
 
     public static BigInteger CalculateBinomialCoefficientCacheOptimized(uint n, uint m)
     {
+        if (m > n)
+        {
+            return BigInteger.Zero;
+        }
+
         if (n == m)
         {
             return BigInteger.One;

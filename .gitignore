@@ -1,5 +1,7 @@
 # Folder with application output files
 PrincessProject/output
+# Something
+PrincessSolution.sln.DotSettings.user
 
 # User specific
 **/.idea/**/workspace.xml
