@@ -26,6 +26,11 @@ public class FileAttemptSaver : IAttemptSaver
                 writer.WriteLine(candidate.ToString());
             }
 
+            if (attempt.ChosenContenderValue is null)
+            {
+                return;
+            }
+
             Util.WriteSectionSeparator(writer);
             writer.Write(attempt.ChosenContenderValue);
         }

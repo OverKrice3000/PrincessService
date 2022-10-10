@@ -34,6 +34,7 @@ class Program
                 var surnamesLoader = new CsvLoader(Constants.FromProjectRootCsvSurnamesFilepath)
                     .WithSeparator(';')
                     .WithColumns(new string[1] { Constants.CsvSurnamesColumn });
+                services.AddSingleton<IAttemptSaver, DatabaseAttemptSaver>();
                 services.AddSingleton<IAttemptSaver, VoidAttemptSaver>();
                 services.AddSingleton<IContenderGenerator, ContenderGenerator>((s) =>
                     new ContenderGenerator(namesLoader, surnamesLoader));

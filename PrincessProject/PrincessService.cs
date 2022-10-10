@@ -2,16 +2,18 @@
 using Microsoft.Extensions.Hosting;
 using PrincessProject.ContenderGeneratorClasses;
 using PrincessProject.Data.context;
-using PrincessProject.Data.model;
 using PrincessProject.Hall;
+using PrincessProject.model;
 using PrincessProject.PrincessClasses;
 using PrincessProject.utils;
+using PrincessProject.utils.AttemptLoader;
 
 namespace PrincessProject;
 
 public class PrincessService : IHostedService
 {
     private readonly IHostApplicationLifetime _applicationLifetime;
+    private readonly IAttemptSaver _attemptSaver;
     private readonly IContenderGenerator _generator;
     private readonly IHall _hall;
     private readonly IPrincess _princess;
@@ -20,7 +22,6 @@ public class PrincessService : IHostedService
     public PrincessService(
         IServiceScopeFactory scopeFactory,
         IHostApplicationLifetime applicationLifetime,
-        IContenderGenerator generator,
         IPrincess princess,
         IHall hall
     )
@@ -29,11 +30,16 @@ public class PrincessService : IHostedService
         _applicationLifetime = applicationLifetime;
         _princess = princess;
         _hall = hall;
-        _generator = scopeFactory
-            .CreateScope()
+        var scope = scopeFactory
+            .CreateScope();
+        _generator = scope
             .ServiceProvider
             .GetServices<IContenderGenerator>()
             .First(o => o.GetType() == typeof(ContenderGenerator));
+        _attemptSaver = scope
+            .ServiceProvider
+            .GetServices<IAttemptSaver>()
+            .First(o => o.GetType() == typeof(DatabaseAttemptSaver));
     }
 
     public Task StartAsync(CancellationToken cancellationToken)
@@ -68,19 +74,11 @@ public class PrincessService : IHostedService
 
         for (int i = 0; i < Constants.DatabaseAttemptsGenerated; i++)
         {
-            var contenders = _generator.Generate(Constants.DefaultContendersCount);
+            var contenders = _generator.Generate(Constants.DefaultContendersCount)
+                .Select(c => new ContenderData(c.Name, c.Surname, c.Value)).ToArray();
             foreach (var tuple in contenders.Select((contender, index) => (contender, index)))
             {
-                context.Attempts.Add(
-                    new AttemptDto()
-                    {
-                        AttemptId = i,
-                        CandidateName = tuple.contender.Name,
-                        CandidateSurname = tuple.contender.Surname,
-                        CandidateValue = tuple.contender.Value,
-                        CandidateOrder = tuple.index
-                    }
-                );
+                _attemptSaver.Save(new Attempt(contenders.Length, contenders, null));
             }
         }
 
