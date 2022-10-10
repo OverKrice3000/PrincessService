@@ -1,5 +1,7 @@
-﻿using PrincessTestProject.Builder.ContenderContainerBuilder;
+﻿using PrincessTestProject.Builder.AttemptSaverBuilder;
+using PrincessTestProject.Builder.ContenderContainerBuilder;
 using PrincessTestProject.Builder.ContenderGeneratorBuilder;
+using PrincessTestProject.Builder.ContextBuilder;
 using PrincessTestProject.Builder.FriendBuilder;
 using PrincessTestProject.Builder.HallBuilder;
 using PrincessTestProject.Builder.TableLoaderBuilder;
@@ -31,5 +33,15 @@ public static class TestBuilder
     public static FriendInterfaceBuilder BuildIFriend()
     {
         return new FriendInterfaceBuilder();
+    }
+
+    public static DatabaseContextBuilder BuildDatabaseContext()
+    {
+        return new DatabaseContextBuilder();
+    }
+
+    public static AttemptSaverInterfaceBuilder BuildIAttemptSaver()
+    {
+        return new AttemptSaverInterfaceBuilder();
     }
 }
