@@ -2,7 +2,7 @@
 using PrincessProject.utils;
 using PrincessProject.utils.ContenderNamesLoader;
 
-namespace PrincessProject.ContenderGenerator;
+namespace PrincessProject.ContenderGeneratorClasses;
 
 public class ContenderGenerator : IContenderGenerator
 {

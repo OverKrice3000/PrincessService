@@ -1,4 +1,4 @@
-﻿using PrincessProject.ContenderGenerator;
+﻿using PrincessProject.ContenderGeneratorClasses;
 using PrincessProject.utils.ContenderNamesLoader;
 
 namespace PrincessTestProject.Builder.ContenderGeneratorBuilder;

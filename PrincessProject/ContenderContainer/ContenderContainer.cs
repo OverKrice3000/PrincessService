@@ -1,4 +1,4 @@
-﻿using PrincessProject.ContenderGenerator;
+﻿using PrincessProject.ContenderGeneratorClasses;
 using PrincessProject.model;
 using PrincessProject.utils;
 

@@ -19,6 +19,9 @@ public static class Constants
     // Configurable contenders count
     public const int DefaultContendersCount = 100;
 
+    // Count of attempts generated at start if database is empty
+    public const int DatabaseAttemptsGenerated = 100;
+
     // Configurable contenders count starting from which alternative strategy is to be used
     public const int ManyCandidatesStrategyCandidatesLowerBorder = 1000;
 

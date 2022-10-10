@@ -1,6 +1,6 @@
 ﻿using PrincessProject.model;
 
-namespace PrincessProject.ContenderGenerator;
+namespace PrincessProject.ContenderGeneratorClasses;
 
 /// <summary>
 /// Defines contender generator abstraction, which is able to generate

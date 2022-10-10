@@ -1,7 +1,7 @@
 ﻿using PrincessProject.Data.context;
 using PrincessProject.model;
 
-namespace PrincessProject.ContenderGenerator;
+namespace PrincessProject.ContenderGeneratorClasses;
 
 public class FromDatabaseContenderGenerator : IContenderGenerator
 {
@@ -16,12 +16,12 @@ public class FromDatabaseContenderGenerator : IContenderGenerator
 
     public Contender[] Generate(int size)
     {
-        if (_context.AttemptData.Find(_attemptId) is null)
+        if (_context.Attempts.Where(a => a.AttemptId == _attemptId) is null)
         {
             throw new ArgumentException("No attempt with such id!");
         }
 
-        return _context.AttemptData.Where(dto => dto.AttemptId == _attemptId).OrderBy(dto => dto.CandidateOrder)
+        return _context.Attempts.Where(dto => dto.AttemptId == _attemptId).OrderBy(dto => dto.CandidateOrder)
             .Select(dto => new Contender(dto.CandidateName, dto.CandidateSurname, dto.CandidateValue)).ToArray();
     }
 

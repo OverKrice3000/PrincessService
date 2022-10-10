@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using PrincessProject;
 using PrincessProject.ContenderContainer;
-using PrincessProject.ContenderGenerator;
+using PrincessProject.ContenderGeneratorClasses;
 using PrincessProject.Data.context;
 using PrincessProject.Friend;
 using PrincessProject.Hall;
@@ -35,8 +35,10 @@ class Program
                     .WithSeparator(';')
                     .WithColumns(new string[1] { Constants.CsvSurnamesColumn });
                 services.AddSingleton<IAttemptSaver, VoidAttemptSaver>();
+                services.AddSingleton<IContenderGenerator, ContenderGenerator>((s) =>
+                    new ContenderGenerator(namesLoader, surnamesLoader));
                 services.AddSingleton<IContenderGenerator, FromDatabaseContenderGenerator>((s) =>
-                    new FromDatabaseContenderGenerator(s.GetRequiredService<AttemptContext>(), 43));
+                    new FromDatabaseContenderGenerator(s.GetRequiredService<AttemptContext>(), int.Parse(args[0])));
                 services.AddSingleton<IContenderContainer, ContenderContainer>();
                 services.AddSingleton<IFriend, Friend>();
                 services.AddSingleton<IHall, Hall>();
