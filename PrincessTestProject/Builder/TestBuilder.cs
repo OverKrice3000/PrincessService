@@ -4,6 +4,7 @@ using PrincessTestProject.Builder.ContenderGeneratorBuilder;
 using PrincessTestProject.Builder.ContextBuilder;
 using PrincessTestProject.Builder.FriendBuilder;
 using PrincessTestProject.Builder.HallBuilder;
+using PrincessTestProject.Builder.PrincessBuilder;
 using PrincessTestProject.Builder.TableLoaderBuilder;
 using PrincessTestProject.Builder.WorldGeneratorBuilder;
 
@@ -49,5 +50,10 @@ public static class TestBuilder
     public static WorldGeneratorInterfaceBuilder BuildIWorldGenerator()
     {
         return new WorldGeneratorInterfaceBuilder();
+    }
+
+    public static PrincessInterfaceBuilder BuildIPrincess()
+    {
+        return new PrincessInterfaceBuilder();
     }
 }

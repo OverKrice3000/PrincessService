@@ -24,6 +24,7 @@ public class WorldGenerator : IWorldGenerator
 
     public void GenerateWorld(int attempts)
     {
+        int k = 0;
         if (_context.Attempts.Any())
         {
             return;
@@ -33,10 +34,7 @@ public class WorldGenerator : IWorldGenerator
         {
             var contenders = _generator.Generate(Constants.DefaultContendersCount)
                 .Select(c => new ContenderData(c.Name, c.Surname, c.Value)).ToArray();
-            foreach (var tuple in contenders.Select((contender, index) => (contender, index)))
-            {
-                _attemptSaver.Save(new Attempt(contenders.Length, contenders, null));
-            }
+            _attemptSaver.Save(new Attempt(contenders.Length, contenders, null));
         }
 
         _context.SaveChanges();

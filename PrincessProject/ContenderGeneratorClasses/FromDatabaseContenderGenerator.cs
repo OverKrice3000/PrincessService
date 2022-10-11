@@ -1,5 +1,6 @@
 ﻿using PrincessProject.Data.context;
 using PrincessProject.model;
+using PrincessProject.utils;
 
 namespace PrincessProject.ContenderGeneratorClasses;
 
@@ -14,7 +15,7 @@ public class FromDatabaseContenderGenerator : IContenderGenerator
         _attemptId = attemptId;
     }
 
-    public Contender[] Generate(int size)
+    public Contender[] Generate(int size = Constants.DefaultContendersCount)
     {
         if (_context.Attempts.Where(a => a.AttemptId == _attemptId) is null)
         {

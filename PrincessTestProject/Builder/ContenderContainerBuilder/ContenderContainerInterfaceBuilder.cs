@@ -6,4 +6,9 @@ public class ContenderContainerInterfaceBuilder
     {
         return new MContenderContainerBuilder();
     }
+
+    public ContenderContainerBuilder BuildContenderContainer()
+    {
+        return new ContenderContainerBuilder();
+    }
 }
