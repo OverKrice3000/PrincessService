@@ -11,6 +11,7 @@ using PrincessProject.PrincessClasses;
 using PrincessProject.utils;
 using PrincessProject.utils.AttemptLoader;
 using PrincessProject.utils.ContenderNamesLoader;
+using PrincessProject.utils.WorldGeneratorClasses;
 
 class Program
 {
@@ -41,6 +42,11 @@ class Program
                 services.AddSingleton<IContenderGenerator, FromDatabaseContenderGenerator>((s) =>
                     new FromDatabaseContenderGenerator(s.GetRequiredService<AttemptContext>(), int.Parse(args[0])));
                 services.AddSingleton<IContenderContainer, ContenderContainer>();
+                services.AddSingleton<IWorldGenerator, WorldGenerator>(sp => new WorldGenerator(
+                    sp.GetServices<IContenderGenerator>().First(s => s.GetType() == typeof(ContenderGenerator)),
+                    sp.GetServices<IAttemptSaver>().First(s => s.GetType() == typeof(DatabaseAttemptSaver)),
+                    sp.GetRequiredService<AttemptContext>()
+                ));
                 services.AddSingleton<IFriend, Friend>();
                 services.AddSingleton<IHall, Hall>();
                 services.AddSingleton<IPrincess, Princess>();
