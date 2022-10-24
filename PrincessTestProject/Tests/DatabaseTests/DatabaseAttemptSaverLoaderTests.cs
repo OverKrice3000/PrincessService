@@ -47,6 +47,20 @@ public class DatabaseAttemptSaverLoaderTests
         worldGenerator.GenerateWorld(Constants.DatabaseAttemptsGenerated);
     }
 
+    [TearDown]
+    public void Cleanup()
+    {
+        _context.Attempts.RemoveRange(_context.Attempts.Where(a => a.AttemptId >= 100).ToArray());
+        _context.SaveChanges();
+    }
+
+    [OneTimeTearDown]
+    public void TotalCleanup()
+    {
+        _context.Attempts.RemoveRange(_context.Attempts.ToArray());
+        _context.SaveChanges();
+    }
+
     [Test]
     public void WorldShouldBeGeneratedCorrectly()
     {
@@ -82,19 +96,5 @@ public class DatabaseAttemptSaverLoaderTests
             .FullName
             .Should()
             .Be(contenders[0].FullName);
-    }
-
-    [TearDown]
-    public void Cleanup()
-    {
-        _context.Attempts.RemoveRange(_context.Attempts.Where(a => a.AttemptId >= 100).ToArray());
-        _context.SaveChanges();
-    }
-
-    [OneTimeTearDown]
-    public void TotalCleanup()
-    {
-        _context.Attempts.RemoveRange(_context.Attempts.ToArray());
-        _context.SaveChanges();
     }
 }

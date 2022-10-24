@@ -12,8 +12,8 @@ public class WorldGenerator : IWorldGenerator
     private IContenderGenerator _generator;
 
     public WorldGenerator(
-        IContenderGenerator generator,
-        IAttemptSaver attemptSaver,
+        ContenderGenerator generator,
+        DatabaseAttemptSaver attemptSaver,
         AttemptContext context
     )
     {
@@ -22,15 +22,14 @@ public class WorldGenerator : IWorldGenerator
         _context = context;
     }
 
-    public void GenerateWorld(int attempts)
+    public void GenerateWorld(int attempts = Constants.DatabaseAttemptsGenerated)
     {
-        int k = 0;
         if (_context.Attempts.Any())
         {
             return;
         }
 
-        for (int i = 0; i < Constants.DatabaseAttemptsGenerated; i++)
+        for (int i = 0; i < attempts; i++)
         {
             var contenders = _generator.Generate(Constants.DefaultContendersCount)
                 .Select(c => new ContenderData(c.Name, c.Surname, c.Value)).ToArray();

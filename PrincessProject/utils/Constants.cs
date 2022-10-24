@@ -1,6 +1,4 @@
-﻿using PrincessProject.Princess.Strategy;
-
-namespace PrincessProject.utils;
+﻿namespace PrincessProject.utils;
 
 public static class Constants
 {
@@ -36,8 +34,4 @@ public static class Constants
 
     // Service behaviour constants
     public const bool RegenerateAttempts = true;
-    public const int AttemptToLoad = 44;
-
-    // Fully qualified name of IStrategy implementation used by princess
-    public static Type PrincessStrategyClassType = typeof(CandidatePositionAnalysisStrategy);
 }

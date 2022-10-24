@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using PrincessProject;
@@ -23,33 +24,29 @@ class Program
     public static IHostBuilder CreateHostBuilder(string[] args)
     {
         return Host.CreateDefaultBuilder(args)
+            .ConfigureHostConfiguration((builder => { builder.AddJsonFile("appsettings.json"); }))
             .ConfigureServices((hostContext, services) =>
             {
-                //services.AddDbContext<AttemptContext>(o => o.UseNpgsql(hostContext.Configuration.GetConnectionString("AttemptsDatabase")));
                 services.AddDbContext<AttemptContext>(o =>
-                    o.UseNpgsql(
-                        "Server=localhost;Database=princess_database;Port=5432;User Id=postgres;Password=361993"));
+                    o.UseNpgsql(hostContext.Configuration.GetConnectionString("AttemptsDatabase")));
                 var namesLoader = new CsvLoader(Constants.FromProjectRootCsvNamesFilepath)
                     .WithSeparator(';')
                     .WithColumns(new string[1] { Constants.CsvNamesColumn });
                 var surnamesLoader = new CsvLoader(Constants.FromProjectRootCsvSurnamesFilepath)
                     .WithSeparator(';')
                     .WithColumns(new string[1] { Constants.CsvSurnamesColumn });
-                services.AddSingleton<IAttemptSaver, DatabaseAttemptSaver>();
-                services.AddSingleton<IAttemptSaver, VoidAttemptSaver>();
-                services.AddSingleton<IContenderGenerator, ContenderGenerator>((s) =>
+                services.AddScoped<DatabaseAttemptSaver>();
+                services.AddScoped<IAttemptSaver, VoidAttemptSaver>();
+                services.AddScoped<ContenderGenerator>((s) =>
                     new ContenderGenerator(namesLoader, surnamesLoader));
-                services.AddSingleton<IContenderGenerator, FromDatabaseContenderGenerator>((s) =>
-                    new FromDatabaseContenderGenerator(s.GetRequiredService<AttemptContext>(), int.Parse(args[0])));
-                services.AddSingleton<IContenderContainer, ContenderContainer>();
-                services.AddSingleton<IWorldGenerator, WorldGenerator>(sp => new WorldGenerator(
-                    sp.GetServices<IContenderGenerator>().First(s => s.GetType() == typeof(ContenderGenerator)),
-                    sp.GetServices<IAttemptSaver>().First(s => s.GetType() == typeof(DatabaseAttemptSaver)),
-                    sp.GetRequiredService<AttemptContext>()
-                ));
-                services.AddSingleton<IFriend, Friend>();
-                services.AddSingleton<IHall, Hall>();
-                services.AddSingleton<IPrincess, Princess>();
+                services.AddScoped<IContenderGenerator, FromDatabaseContenderGenerator>((s) =>
+                    new FromDatabaseContenderGenerator(s.GetRequiredService<AttemptContext>(),
+                        int.Parse(args.Length > 0 ? args[0] : "0")));
+                services.AddScoped<IContenderContainer, ContenderContainer>();
+                services.AddScoped<IWorldGenerator, WorldGenerator>();
+                services.AddScoped<IFriend, Friend>();
+                services.AddScoped<IHall, Hall>();
+                services.AddScoped<IPrincess, Princess>();
                 services.AddHostedService<PrincessService>();
             });
     }

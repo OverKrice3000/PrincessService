@@ -28,6 +28,12 @@
     </ItemGroup>
 
     <ItemGroup>
+        <Content Include="appsettings.json">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+
+    <ItemGroup>
         <ProjectReference Include="..\PrincessProject.Data\PrincessProject.Data.csproj"/>
     </ItemGroup>
 

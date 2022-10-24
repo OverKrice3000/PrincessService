@@ -15,10 +15,4 @@ public class DatabaseContextBuilder
             .Options;
         return new AttemptContext(options);
     }
-
-    public DatabaseContextBuilder WithDatabaseName(string name)
-    {
-        _databaseName = name;
-        return this;
-    }
 }
