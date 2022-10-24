@@ -11,14 +11,14 @@ namespace PrincessTestProject.Tests.DatabaseTests;
 public class DatabaseAttemptSaverLoaderTests
 {
     private IContenderGenerator _attemptLoader;
-    private IAttemptSaver _attemptSaver;
+    private DatabaseAttemptSaver _attemptSaver;
     private AttemptContext _context;
-    private IContenderGenerator _generator;
+    private ContenderGenerator _generator;
 
     [OneTimeSetUp]
     public void SetUp()
     {
-        _generator = TestBuilder
+        _generator = (ContenderGenerator)TestBuilder
             .BuildIContenderGenerator()
             .BuildContenderGenerator()
             .Build();
