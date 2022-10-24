@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using PrincessProject.ContenderGeneratorClasses;
 using PrincessProject.PrincessClasses;
 using PrincessProject.utils;
 using PrincessProject.utils.WorldGeneratorClasses;
@@ -36,6 +37,32 @@ public class PrincessService : IHostedService
     private void Run()
     {
         Console.WriteLine("Running Activity!");
+        CalculateAverageHappiness();
+        _applicationLifetime.StopApplication();
+    }
+
+    private void CalculateAverageHappiness()
+    {
+        using (var scope = _scopeFactory.CreateScope())
+        {
+            var generator =
+                (FromDatabaseContenderGenerator)scope.ServiceProvider.GetRequiredService<IContenderGenerator>();
+            var princess = scope.ServiceProvider.GetRequiredService<IPrincess>();
+            var worldGenerator = scope.ServiceProvider.GetRequiredService<IWorldGenerator>();
+            worldGenerator.GenerateWorld(Constants.DatabaseAttemptsGenerated);
+            double totalHappiness = 0;
+            for (int i = 0; i < 100; i++)
+            {
+                generator.SetAttemptId(i);
+                totalHappiness += princess.ChooseHusband();
+            }
+
+            Console.WriteLine(totalHappiness / 100);
+        }
+    }
+
+    private void ChooseHusbandForAttempt()
+    {
         using (var scope = _scopeFactory.CreateScope())
         {
             var princess = scope.ServiceProvider.GetRequiredService<IPrincess>();
@@ -43,7 +70,5 @@ public class PrincessService : IHostedService
             worldGenerator.GenerateWorld(Constants.DatabaseAttemptsGenerated);
             princess.ChooseHusband();
         }
-
-        _applicationLifetime.StopApplication();
     }
 }
