@@ -13,20 +13,29 @@ public class DatabaseAttemptSaver : IAttemptSaver
         _context = context;
     }
 
-    public Task Save(Attempt attempt)
+    public async Task Save(Attempt attempt)
     {
-        int attemptId = _context.FindLastAttemptId() + 1;
-        for (int i = 0; i < attempt.ContendersCount; i++)
+        await using var transaction = _context.Database.BeginTransaction();
+        try
         {
-            _context.Add(new AttemptEntity(
-                attemptId,
-                attempt.Contenders[i].Name,
-                attempt.Contenders[i].Surname,
-                attempt.Contenders[i].Value,
-                i
-            ));
-        }
+            int attemptId = _context.FindLastAttemptId() + 1;
+            for (int i = 0; i < attempt.ContendersCount; i++)
+            {
+                _context.Add(new AttemptEntity(
+                    attemptId,
+                    attempt.Contenders[i].Name,
+                    attempt.Contenders[i].Surname,
+                    attempt.Contenders[i].Value,
+                    i
+                ));
+            }
 
-        return _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
+            await transaction.CommitAsync();
+        }
+        catch (Exception ex)
+        {
+            await transaction.RollbackAsync();
+        }
     }
 }
