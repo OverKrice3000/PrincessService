@@ -41,6 +41,7 @@ public class PrincessService : IHostedService
         _applicationLifetime.StopApplication();
     }
 
+    //TODO move to hall web application
     private async Task CalculateAverageHappiness()
     {
         using var scope = _scopeFactory.CreateScope();
@@ -48,6 +49,7 @@ public class PrincessService : IHostedService
             (FromDatabaseContenderGenerator)scope.ServiceProvider.GetRequiredService<IContenderGenerator>();
         var princess = scope.ServiceProvider.GetRequiredService<IPrincess>();
         var worldGenerator = scope.ServiceProvider.GetRequiredService<IWorldGenerator>();
+        //TODO move world generator to hall web application
         await worldGenerator.GenerateWorld(Constants.DatabaseAttemptsGenerated);
         double totalHappiness = 0;
         for (int i = 0; i < 100; i++)
