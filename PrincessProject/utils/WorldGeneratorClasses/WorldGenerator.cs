@@ -22,7 +22,7 @@ public class WorldGenerator : IWorldGenerator
         _context = context;
     }
 
-    public void GenerateWorld(int attempts = Constants.DatabaseAttemptsGenerated)
+    public async Task GenerateWorld(int attempts = Constants.DatabaseAttemptsGenerated)
     {
         if (_context.Attempts.Any())
         {
@@ -33,9 +33,7 @@ public class WorldGenerator : IWorldGenerator
         {
             var contenders = _generator.Generate(Constants.DefaultContendersCount)
                 .Select(c => new ContenderData(c.Name, c.Surname, c.Value)).ToArray();
-            _attemptSaver.Save(new Attempt(contenders.Length, contenders, null));
+            await _attemptSaver.Save(new Attempt(contenders.Length, contenders, null));
         }
-
-        _context.SaveChanges();
     }
 }

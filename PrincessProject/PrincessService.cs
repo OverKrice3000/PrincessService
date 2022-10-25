@@ -34,41 +34,37 @@ public class PrincessService : IHostedService
         return Task.CompletedTask;
     }
 
-    private void Run()
+    private async void Run()
     {
         Console.WriteLine("Running Activity!");
-        CalculateAverageHappiness();
+        await CalculateAverageHappiness();
         _applicationLifetime.StopApplication();
     }
 
-    private void CalculateAverageHappiness()
+    private async Task CalculateAverageHappiness()
     {
-        using (var scope = _scopeFactory.CreateScope())
+        using var scope = _scopeFactory.CreateScope();
+        var generator =
+            (FromDatabaseContenderGenerator)scope.ServiceProvider.GetRequiredService<IContenderGenerator>();
+        var princess = scope.ServiceProvider.GetRequiredService<IPrincess>();
+        var worldGenerator = scope.ServiceProvider.GetRequiredService<IWorldGenerator>();
+        await worldGenerator.GenerateWorld(Constants.DatabaseAttemptsGenerated);
+        double totalHappiness = 0;
+        for (int i = 0; i < 100; i++)
         {
-            var generator =
-                (FromDatabaseContenderGenerator)scope.ServiceProvider.GetRequiredService<IContenderGenerator>();
-            var princess = scope.ServiceProvider.GetRequiredService<IPrincess>();
-            var worldGenerator = scope.ServiceProvider.GetRequiredService<IWorldGenerator>();
-            worldGenerator.GenerateWorld(Constants.DatabaseAttemptsGenerated);
-            double totalHappiness = 0;
-            for (int i = 0; i < 100; i++)
-            {
-                generator.SetAttemptId(i);
-                totalHappiness += princess.ChooseHusband();
-            }
-
-            Console.WriteLine(totalHappiness / 100);
+            generator.SetAttemptId(i);
+            totalHappiness += princess.ChooseHusband();
         }
+
+        Console.WriteLine(totalHappiness / 100);
     }
 
-    private void ChooseHusbandForAttempt()
+    private async Task ChooseHusbandForAttempt()
     {
-        using (var scope = _scopeFactory.CreateScope())
-        {
-            var princess = scope.ServiceProvider.GetRequiredService<IPrincess>();
-            var worldGenerator = scope.ServiceProvider.GetRequiredService<IWorldGenerator>();
-            worldGenerator.GenerateWorld(Constants.DatabaseAttemptsGenerated);
-            princess.ChooseHusband();
-        }
+        using var scope = _scopeFactory.CreateScope();
+        var princess = scope.ServiceProvider.GetRequiredService<IPrincess>();
+        var worldGenerator = scope.ServiceProvider.GetRequiredService<IWorldGenerator>();
+        await worldGenerator.GenerateWorld(Constants.DatabaseAttemptsGenerated);
+        princess.ChooseHusband();
     }
 }

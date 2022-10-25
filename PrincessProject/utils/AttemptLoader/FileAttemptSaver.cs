@@ -4,7 +4,7 @@ namespace PrincessProject.utils.AttemptLoader;
 
 public class FileAttemptSaver : IAttemptSaver
 {
-    public void Save(Attempt attempt)
+    public Task Save(Attempt attempt)
     {
         string projectPath = Util.GetProjectBaseDirectory();
         var outputDirectory = new DirectoryInfo(Path.Join(projectPath, Constants.FromProjectRootOutputFolderPath));
@@ -28,11 +28,13 @@ public class FileAttemptSaver : IAttemptSaver
 
             if (attempt.ChosenContenderValue is null)
             {
-                return;
+                return Task.CompletedTask;
             }
 
             Util.WriteSectionSeparator(writer);
             writer.Write(attempt.ChosenContenderValue);
+
+            return Task.CompletedTask;
         }
     }
 }

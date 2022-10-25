@@ -9,5 +9,5 @@ public interface IWorldGenerator
     /// Method, which generates set of attempts
     /// </summary>
     /// <param name="attempts">Amount of attempts to generate</param>
-    void GenerateWorld(int attempts);
+    Task GenerateWorld(int attempts);
 }

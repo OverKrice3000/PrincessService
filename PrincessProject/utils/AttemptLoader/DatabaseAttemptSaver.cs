@@ -13,21 +13,20 @@ public class DatabaseAttemptSaver : IAttemptSaver
         _context = context;
     }
 
-    public void Save(Attempt attempt)
+    public Task Save(Attempt attempt)
     {
         int attemptId = _context.FindLastAttemptId() + 1;
         for (int i = 0; i < attempt.ContendersCount; i++)
         {
-            _context.Add(new AttemptDto()
-            {
-                AttemptId = attemptId,
-                CandidateName = attempt.Contenders[i].Name,
-                CandidateSurname = attempt.Contenders[i].Surname,
-                CandidateValue = attempt.Contenders[i].Value,
-                CandidateOrder = i
-            });
+            _context.Add(new AttemptEntity(
+                attemptId,
+                attempt.Contenders[i].Name,
+                attempt.Contenders[i].Surname,
+                attempt.Contenders[i].Value,
+                i
+            ));
         }
 
-        _context.SaveChanges();
+        return _context.SaveChangesAsync();
     }
 }

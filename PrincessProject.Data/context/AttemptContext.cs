@@ -14,13 +14,13 @@ public class AttemptContext : DbContext
     {
     }
 
-    public DbSet<AttemptDto> Attempts { get; set; }
+    public DbSet<AttemptEntity> Attempts { get; set; }
 
     public int FindLastAttemptId()
     {
         if (!Attempts.Any())
             return -1;
-        return Attempts.Max<AttemptDto>((data) => data.AttemptId);
+        return Attempts.Max<AttemptEntity>((data) => data.AttemptId);
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
