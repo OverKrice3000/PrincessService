@@ -64,6 +64,9 @@ public class PrincessSimulationTests
             .Build();
     }
 
+    /// <summary>
+    /// Algorithm for choosing husband should return consistent results
+    /// </summary>
     [Test]
     public void ResultsOfChoosingHusbandShouldBeConsistent()
     {

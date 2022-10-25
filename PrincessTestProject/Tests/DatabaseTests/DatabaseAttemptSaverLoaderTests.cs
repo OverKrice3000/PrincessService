@@ -68,16 +68,25 @@ public class DatabaseAttemptSaverLoaderTests
                                               PrincessProject.utils.Constants.DefaultContendersCount);
     }
 
+    /// <summary>
+    /// Mock generator returns equal attempts
+    /// Therefore we load attempt from database and compare it to newly generated attempt
+    /// </summary>
     [Test]
     public void ExistentAttemptCanBeLoadedFromDatabase()
     {
-        var attempt = _context.Attempts.Where(a => a.AttemptId == 0).ToList()
-            .MinBy(a => a.CandidateOrder);
-        var contenders = _attemptLoader.Generate();
-        new Contender(attempt.CandidateName, attempt.CandidateSurname, attempt.CandidateValue)
-            .FullName
-            .Should()
-            .Be(contenders[0].FullName);
+        var contendersDb = _context.Attempts.Where(a => a.AttemptId == 0).OrderBy(a => a.CandidateOrder).ToList();
+        var contendersLoader = _attemptLoader.Generate();
+        for (int i = 0; i < contendersLoader.Length; i++)
+        {
+            var contenderDb =
+                new Contender(contendersDb[i].CandidateName, contendersDb[i].CandidateSurname,
+                    contendersDb[i].CandidateValue);
+            contenderDb.FullName
+                .Should()
+                .Be(contendersLoader[i].FullName);
+            contenderDb.Value.Should().Be(contendersLoader[i].Value);
+        }
     }
 
     [Test]
