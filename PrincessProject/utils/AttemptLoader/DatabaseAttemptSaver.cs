@@ -15,7 +15,7 @@ public class DatabaseAttemptSaver : IAttemptSaver
 
     public async Task Save(Attempt attempt)
     {
-        await using var transaction = _context.Database.BeginTransaction();
+        await using var transaction = await _context.Database.BeginTransactionAsync();
         try
         {
             int attemptId = _context.FindLastAttemptId() + 1;

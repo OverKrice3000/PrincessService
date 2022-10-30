@@ -64,6 +64,13 @@ public class PrincessSimulationTests
             .Build();
     }
 
+    [OneTimeTearDown]
+    public void TotalCleanup()
+    {
+        _context.Attempts.RemoveRange(_context.Attempts.ToArray());
+        _context.SaveChanges();
+    }
+
     /// <summary>
     /// Algorithm for choosing husband should return consistent results
     /// </summary>
@@ -71,12 +78,5 @@ public class PrincessSimulationTests
     public void ResultsOfChoosingHusbandShouldBeConsistent()
     {
         _princess.ChooseHusband().Should().Be(_princess.ChooseHusband());
-    }
-
-    [OneTimeTearDown]
-    public void TotalCleanup()
-    {
-        _context.Attempts.RemoveRange(_context.Attempts.ToArray());
-        _context.SaveChanges();
     }
 }

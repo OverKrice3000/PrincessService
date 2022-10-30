@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using PrincessProject.Data.context;
 using PrincessTestProject.utils;
 
@@ -12,6 +13,7 @@ public class DatabaseContextBuilder
     {
         var options = new DbContextOptionsBuilder<AttemptContext>()
             .UseInMemoryDatabase(databaseName: _databaseName)
+            .ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning))
             .Options;
         return new AttemptContext(options);
     }

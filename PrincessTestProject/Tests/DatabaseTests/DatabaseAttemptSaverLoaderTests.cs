@@ -44,7 +44,7 @@ public class DatabaseAttemptSaverLoaderTests
             .WithContendersGenerator(_generator)
             .Build();
 
-        worldGenerator.GenerateWorld(Constants.DatabaseAttemptsGenerated);
+        worldGenerator.GenerateWorld(Constants.DatabaseAttemptsGenerated).Wait();
     }
 
     [TearDown]
@@ -82,10 +82,7 @@ public class DatabaseAttemptSaverLoaderTests
             var contenderDb =
                 new Contender(contendersDb[i].CandidateName, contendersDb[i].CandidateSurname,
                     contendersDb[i].CandidateValue);
-            contenderDb.FullName
-                .Should()
-                .Be(contendersLoader[i].FullName);
-            contenderDb.Value.Should().Be(contendersLoader[i].Value);
+            contenderDb.Should().BeEquivalentTo(contendersLoader[i]);
         }
     }
 
@@ -95,13 +92,13 @@ public class DatabaseAttemptSaverLoaderTests
         var nextAttemptId = _context.FindLastAttemptId() + 1;
         var contenders = _generator.Generate()
             .Select(c => new ContenderData(c.Name, c.Surname, c.Value)).ToArray();
-        ;
-        _attemptSaver.Save(new Attempt(contenders.Length, contenders, null));
+        _attemptSaver.Save(new Attempt(contenders.Length, contenders, null)).Wait();
         _context.Attempts
             .Count(a => a.AttemptId == nextAttemptId).Should().Be(contenders.Length);
         var attempt = _context.Attempts.Where(a => a.AttemptId == nextAttemptId).ToList()
             .MinBy(a => a.CandidateOrder);
-        new Contender(attempt.CandidateName, attempt.CandidateSurname, attempt.CandidateValue)
+        attempt.Should().NotBeNull();
+        new Contender(attempt!.CandidateName, attempt.CandidateSurname, attempt.CandidateValue)
             .FullName
             .Should()
             .Be(contenders[0].FullName);
