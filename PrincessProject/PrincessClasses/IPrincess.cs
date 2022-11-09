@@ -10,5 +10,11 @@ public interface IPrincess
     /// and optionally choose one
     /// </summary>
     /// <returns>happiness of princess</returns>
-    int ChooseHusband();
+    Task<int> ChooseHusband();
+
+    /// <summary>
+    /// Sets attempt id used to interact with hall web application
+    /// </summary>
+    /// <param name="attemptId">attempt id</param>
+    public void SetAttemptId(int attemptId);
 }

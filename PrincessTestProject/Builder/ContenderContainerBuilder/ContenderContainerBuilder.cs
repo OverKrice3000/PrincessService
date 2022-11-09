@@ -1,5 +1,5 @@
-﻿using PrincessProject.ContenderContainer;
-using PrincessProject.ContenderGeneratorClasses;
+﻿using HallWeb.ContenderContainer;
+using HallWeb.ContenderGeneratorClasses;
 
 namespace PrincessTestProject.Builder.ContenderContainerBuilder;
 

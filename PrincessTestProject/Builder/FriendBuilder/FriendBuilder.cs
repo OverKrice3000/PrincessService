@@ -1,5 +1,5 @@
-﻿using PrincessProject.ContenderContainer;
-using PrincessProject.Friend;
+﻿using HallWeb.ContenderContainer;
+using HallWeb.Friend;
 
 namespace PrincessTestProject.Builder.FriendBuilder;
 

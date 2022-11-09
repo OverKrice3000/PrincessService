@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
-using PrincessProject.ContenderContainer;
-using PrincessProject.Friend;
-using PrincessProject.Hall;
+using HallWeb.ContenderContainer;
+using HallWeb.Friend;
+using HallWeb.Hall;
 using PrincessTestProject.Builder;
 
 namespace PrincessTestProject.HallsTests;

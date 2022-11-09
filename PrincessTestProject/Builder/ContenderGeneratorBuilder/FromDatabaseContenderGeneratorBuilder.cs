@@ -1,4 +1,4 @@
-﻿using PrincessProject.ContenderGeneratorClasses;
+﻿using HallWeb.ContenderGeneratorClasses;
 using PrincessProject.Data.context;
 
 namespace PrincessTestProject.Builder.ContenderGeneratorBuilder;
@@ -22,6 +22,8 @@ public class FromDatabaseContenderGeneratorBuilder
 
     public FromDatabaseContenderGenerator Build()
     {
-        return new FromDatabaseContenderGenerator(_context, _attemptId);
+        var generator = new FromDatabaseContenderGenerator(_context);
+        generator.SetAttemptId(_attemptId);
+        return generator;
     }
 }

@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
-using PrincessProject.ContenderGeneratorClasses;
-using PrincessProject.utils.ContenderNamesLoader;
+using HallWeb.ContenderGeneratorClasses;
+using HallWeb.utils.ContenderNamesLoader;
 using PrincessTestProject.Builder;
 
 namespace PrincessTestProject;
@@ -17,14 +17,14 @@ public class ContenderGeneratorTests
     {
         _namesLoader = TestBuilder.BuildITableLoader()
             .BuildMTableLoader()
-            .WithLoadedColumnName(PrincessProject.utils.Constants.CsvNamesColumn)
+            .WithLoadedColumnName(HallWeb.utils.Constants.CsvNamesColumn)
             .WithLoadedFieldsCount(LoadedFieldsCount)
             .Build();
 
         _surnamesLoader = TestBuilder
             .BuildITableLoader()
             .BuildMTableLoader()
-            .WithLoadedColumnName(PrincessProject.utils.Constants.CsvSurnamesColumn)
+            .WithLoadedColumnName(HallWeb.utils.Constants.CsvSurnamesColumn)
             .WithLoadedFieldsCount(LoadedFieldsCount)
             .Build();
 

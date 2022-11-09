@@ -1,7 +1,7 @@
-﻿using PrincessProject.ContenderGeneratorClasses;
+﻿using HallWeb.ContenderGeneratorClasses;
+using HallWeb.utils.AttemptSaver;
+using HallWeb.utils.WorldGeneratorClasses;
 using PrincessProject.Data.context;
-using PrincessProject.utils.AttemptLoader;
-using PrincessProject.utils.WorldGeneratorClasses;
 
 namespace PrincessTestProject.Builder.WorldGeneratorBuilder;
 

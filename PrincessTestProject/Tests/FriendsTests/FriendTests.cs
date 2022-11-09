@@ -1,11 +1,10 @@
 using FluentAssertions;
-using PrincessProject.ContenderContainer;
-using PrincessProject.Friend;
-using PrincessProject.model;
-using PrincessProject.utils;
+using HallWeb.ContenderContainer;
+using HallWeb.Friend;
+using PrincessProject.Data.model;
 using PrincessTestProject.Builder;
 
-namespace PrincessTestProject;
+namespace PrincessTestProject.Tests.FriendsTests;
 
 public class FriendTests
 {
@@ -34,10 +33,12 @@ public class FriendTests
             .Build();
         _contender1 = _contenderContainer[0];
         _contender2 = _contenderContainer[1];
-        _visitingContender1 = Mappers.ContenderToVisitingContender(_contender1);
-        _visitingContender2 = Mappers.ContenderToVisitingContender(_contender2);
+        _visitingContender1 = HallWeb.utils.Mappers.ContenderToVisitingContender(_contender1);
+        _visitingContender2 = HallWeb.utils.Mappers.ContenderToVisitingContender(_contender2);
         _best =
-            Mappers.ContenderToVisitingContender((_contender1.Value < _contender2.Value) ? _contender2 : _contender1);
+            HallWeb.utils.Mappers.ContenderToVisitingContender((_contender1.Value < _contender2.Value)
+                ? _contender2
+                : _contender1);
     }
 
     [Test]

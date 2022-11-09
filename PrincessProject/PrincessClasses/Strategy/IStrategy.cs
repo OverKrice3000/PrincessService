@@ -1,4 +1,4 @@
-﻿using PrincessProject.model;
+﻿using PrincessProject.Data.model;
 
 namespace PrincessProject.PrincessClasses.Strategy;
 
@@ -12,5 +12,5 @@ public interface IStrategy
     /// </summary>
     /// <param name="visitingContender">contender to be assessed</param>
     /// <returns>recommendation whether to choose contender or not</returns>
-    bool AssessNextContender(VisitingContender visitingContender);
+    Task<bool> AssessNextContender(VisitingContender visitingContender);
 }

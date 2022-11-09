@@ -1,5 +1,5 @@
-﻿using PrincessProject.ContenderContainer;
-using PrincessProject.model;
+﻿using HallWeb.ContenderContainer;
+using PrincessProject.Data.model;
 
 namespace PrincessTestProject.Mocks.ContenderContainer;
 

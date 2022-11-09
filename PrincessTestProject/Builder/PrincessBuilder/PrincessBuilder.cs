@@ -1,4 +1,4 @@
-﻿using PrincessProject.Hall;
+﻿using HallWeb.Hall;
 using PrincessProject.PrincessClasses;
 
 namespace PrincessTestProject.Builder.PrincessBuilder;
@@ -15,6 +15,7 @@ public class PrincessBuilder
 
     public IPrincess Build()
     {
-        return new Princess(_hall);
+        // TODO fix tests
+        return new Princess();
     }
 }

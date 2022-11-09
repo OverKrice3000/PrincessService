@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrincessTestProject", "Prin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrincessProject.Data", "PrincessProject.Data\PrincessProject.Data.csproj", "{DA7C8986-0218-4742-B923-0B48AA8067F2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HallWeb", "HallWeb\HallWeb.csproj", "{87CDBB64-62E3-4303-9EA4-5BFA3DA9DB01}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{DA7C8986-0218-4742-B923-0B48AA8067F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DA7C8986-0218-4742-B923-0B48AA8067F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DA7C8986-0218-4742-B923-0B48AA8067F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{87CDBB64-62E3-4303-9EA4-5BFA3DA9DB01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87CDBB64-62E3-4303-9EA4-5BFA3DA9DB01}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87CDBB64-62E3-4303-9EA4-5BFA3DA9DB01}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87CDBB64-62E3-4303-9EA4-5BFA3DA9DB01}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

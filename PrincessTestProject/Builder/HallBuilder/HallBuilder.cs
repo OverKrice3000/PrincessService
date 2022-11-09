@@ -1,7 +1,7 @@
-﻿using PrincessProject.ContenderContainer;
-using PrincessProject.Friend;
-using PrincessProject.Hall;
-using PrincessProject.utils.AttemptLoader;
+﻿using HallWeb.ContenderContainer;
+using HallWeb.Friend;
+using HallWeb.Hall;
+using HallWeb.utils.AttemptSaver;
 
 namespace PrincessTestProject.Builder.HallBuilder;
 

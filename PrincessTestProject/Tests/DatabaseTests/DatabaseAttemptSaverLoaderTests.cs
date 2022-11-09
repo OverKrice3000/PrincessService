@@ -1,8 +1,8 @@
 ﻿using FluentAssertions;
-using PrincessProject.ContenderGeneratorClasses;
+using HallWeb.ContenderGeneratorClasses;
+using HallWeb.utils.AttemptSaver;
 using PrincessProject.Data.context;
-using PrincessProject.model;
-using PrincessProject.utils.AttemptLoader;
+using PrincessProject.Data.model;
 using PrincessTestProject.Builder;
 using PrincessTestProject.utils;
 
@@ -65,7 +65,7 @@ public class DatabaseAttemptSaverLoaderTests
     public void WorldShouldBeGeneratedCorrectly()
     {
         _context.Attempts.Count().Should().Be(Constants.DatabaseAttemptsGenerated *
-                                              PrincessProject.utils.Constants.DefaultContendersCount);
+                                              PrincessProject.Data.Constants.DefaultContendersCount);
     }
 
     /// <summary>
