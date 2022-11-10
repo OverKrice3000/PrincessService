@@ -38,7 +38,7 @@ public class HallTests
     [Test]
     public void ShouldReturnNextContenderIfExists()
     {
-        Action act = () => _hall.GetNextContender();
+        Action act = () => _hall.GetNextContender(0);
         for (int i = 0; i < ContendersInContainerCount; i++)
         {
             act.Should().NotThrow();
@@ -48,13 +48,13 @@ public class HallTests
     [Test]
     public void ShouldThrowWhenContenderDoesNotExist()
     {
-        Action act = () => _hall.GetNextContender();
+        Action act = () => _hall.GetNextContender(0);
 
         for (int i = 0; i < ContendersInContainerCount; i++)
         {
             act.Should().NotThrow();
         }
 
-        act.Should().Throw<ApplicationException>();
+        act.Should().Throw<ArgumentException>();
     }
 }

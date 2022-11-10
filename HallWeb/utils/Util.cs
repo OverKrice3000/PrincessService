@@ -24,13 +24,25 @@ public static class Util
 
     public static Contender FindContenderByName(
         IContenderContainer contenderContainer,
+        int attemptId,
         VisitingContender visitingContender
     )
     {
         return Array.Find(
-                   contenderContainer.Contenders,
+                   contenderContainer[attemptId].Contenders,
                    contender => contender.FullName.Equals(visitingContender.FullName)
                ) ??
                throw new ArgumentException("No contender with such name!");
+    }
+
+    public static VisitingContender VisitingContenderFromFullName(string fullName)
+    {
+        var split = fullName.Split(" ");
+        if (split.Length != 2)
+        {
+            throw new ArgumentException("Bad contender name");
+        }
+
+        return new VisitingContender(split[0], split[1]);
     }
 }

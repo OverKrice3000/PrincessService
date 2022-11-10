@@ -8,10 +8,11 @@ namespace HallWeb.Friend;
 public interface IFriend
 {
     /// <summary>
-    /// Method, which compares contenders
+    /// Method, which compares contenders for an attempt id
     /// </summary>
+    /// <param name="attemptId">attempt id</param>
     /// <param name="first">first contender to compare</param>
     /// <param name="second">second contender to compare</param>
     /// <returns>contender, which has more value</returns>
-    VisitingContender CompareContenders(VisitingContender first, VisitingContender second);
+    VisitingContender CompareContenders(int attemptId, VisitingContender first, VisitingContender second);
 }

@@ -32,8 +32,9 @@ public class DatabaseAttemptSaver : IAttemptSaver
             await _context.SaveChangesAsync();
             await transaction.CommitAsync();
         }
-        catch (Exception ex)
+        catch (Exception e)
         {
+            Console.WriteLine(e.Message);
             await transaction.RollbackAsync();
         }
     }

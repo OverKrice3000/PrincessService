@@ -1,6 +1,4 @@
-﻿using PrincessProject.Data.model;
-
-namespace HallWeb.ContenderContainer;
+﻿namespace HallWeb.ContenderContainer;
 
 /// <summary>
 /// Defines container for contenders, which is able to regenerate contenders
@@ -8,19 +6,10 @@ namespace HallWeb.ContenderContainer;
 public interface IContenderContainer
 {
     /// <summary>
-    /// Readonly array of contenders
+    /// Dictionary, which contains all contenders of an attempt as value and attempt id as a key
     /// </summary>
-    Contender[] Contenders { get; }
+    Dictionary<int, AttemptContainerContext> Container { get; }
 
-    /// <summary>
-    /// Indexer, which returns contender from inner array
-    /// </summary>
-    /// <param name="index">index of contender in inner array</param>
-    public Contender this[int index] { get; }
 
-    /// <summary>
-    /// Method, which regenerates inner array of contenders
-    /// </summary>
-    /// <param name="size">size of new contenders array</param>
-    public void Reset(in int size);
+    AttemptContainerContext this[int attemptId] { get; }
 }

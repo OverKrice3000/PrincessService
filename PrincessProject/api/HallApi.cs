@@ -1,4 +1,6 @@
-﻿using System.Web;
+﻿using System.Text;
+using System.Text.Json.Nodes;
+using System.Web;
 using PrincessProject.Data.model;
 using PrincessProject.utils;
 
@@ -15,9 +17,7 @@ public static class HallApi
         query["session"] = Constants.SessionId.ToString();
         builder.Query = query.ToString();
 
-        var content = await client.PostAsync(builder.ToString(), null);
-
-        Console.WriteLine(content);
+        await client.PostAsync(builder.ToString(), null);
     }
 
     public static async Task<VisitingContender> NextContender(int attemptId)
@@ -30,17 +30,14 @@ public static class HallApi
         builder.Query = query.ToString();
 
         var content = await client.PostAsync(builder.ToString(), null);
+        var json = JsonNode.Parse(await content.Content.ReadAsStringAsync());
 
-        Console.WriteLine(content);
-
-        return new VisitingContender("name", "surname");
-
-        /*POST hall/[номер попытки]/next?session=[sessionId]
-        возвращаем следующего претендента для заданной попытки
-        ответ:
+        if (json?["name"] is null)
         {
-            name: "Иван Иванович" ,
-        }*/
+            throw new ApplicationException("Bad http response");
+        }
+
+        return Util.VisitingContenderFromFullName(json!["name"]!.ToString());
     }
 
     public static async Task<int> SelectContender(int attemptId)
@@ -53,16 +50,14 @@ public static class HallApi
         builder.Query = query.ToString();
 
         var content = await client.PostAsync(builder.ToString(), null);
+        var json = JsonNode.Parse(await content.Content.ReadAsStringAsync());
 
-        Console.WriteLine(content);
-
-        return 0;
-
-        /*POST hall/[номер попытки]/select?session=[sessionId]
-        возвращаем уровень выбранного претендента
+        if (json?["rank"] is null)
         {
-            rank: 67
-        }*/
+            throw new ApplicationException("Bad http response");
+        }
+
+        return int.Parse(json!["rank"]!.ToString());
     }
 
     public static async Task<VisitingContender> CompareContenders(int attemptId, VisitingContender first,
@@ -73,24 +68,25 @@ public static class HallApi
 
         var query = HttpUtility.ParseQueryString(builder.Query);
         query["session"] = Constants.SessionId.ToString();
+        query["first"] = first.FullName;
+        query["second"] = second.FullName;
         builder.Query = query.ToString();
 
-        var content = await client.PostAsync(builder.ToString(), null);
-
-        Console.WriteLine(content);
-
-        return new VisitingContender("name", "surname");
-
-        /*POST freind/[номер попытки]/compare?session=[sessionId]
+        var jsonRaw = new JsonObject()
         {
-            name: "Иван Иванович",
-            name: "Никита Данилович"
-        }
-        просим подругу сравнить двух претендентов
-        ответ:
+            ["first"] = first.FullName,
+            ["second"] = second.FullName
+        }.ToString();
+        var content = await client.PostAsync(builder.ToString(),
+            new StringContent(jsonRaw, Encoding.UTF8, "application/json"));
+
+        var json = JsonNode.Parse(await content.Content.ReadAsStringAsync());
+
+        if (json?["name"] is null)
         {
-            "Никита Данилович"
+            throw new ApplicationException("Bad http response");
         }
-        либо ошибку в случае если претенденты не знакомы с принцессой.*/
+
+        return Util.VisitingContenderFromFullName(json!["name"]!.ToString());
     }
 }

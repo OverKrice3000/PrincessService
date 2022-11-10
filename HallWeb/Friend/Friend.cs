@@ -13,12 +13,12 @@ public class Friend : IFriend
         _contenderContainer = contenderContainer;
     }
 
-    public VisitingContender CompareContenders(VisitingContender first, VisitingContender second)
+    public VisitingContender CompareContenders(int attemptId, VisitingContender first, VisitingContender second)
     {
-        Contender firstCondender = Util.FindContenderByName(_contenderContainer, first);
-        Contender secondCondender = Util.FindContenderByName(_contenderContainer, second);
-        if (!firstCondender.HasVisited || !secondCondender.HasVisited)
+        Contender firstContender = Util.FindContenderByName(_contenderContainer, attemptId, first);
+        Contender secondContender = Util.FindContenderByName(_contenderContainer, attemptId, second);
+        if (!firstContender.HasVisited || !secondContender.HasVisited)
             throw new ApplicationException("Not so fast baby!");
-        return (firstCondender.Value < secondCondender.Value) ? second : first;
+        return (firstContender.Value < secondContender.Value) ? second : first;
     }
 }

@@ -9,18 +9,19 @@ namespace PrincessTestProject.Mocks.ContenderContainer;
 /// </summary>
 public class MContenderContainer : IContenderContainer
 {
+    private Contender[] _contenders;
+    private AttemptContainerContext _context;
+
     public MContenderContainer(in int size)
     {
-        Contenders = _generateContenders(size);
+        _contenders = _generateContenders(size);
+        _context = new AttemptContainerContext(_contenders);
+        Container = new Dictionary<int, AttemptContainerContext>();
     }
 
-    public Contender[] Contenders { get; private set; }
-    public Contender this[int index] => Contenders[index];
+    public Dictionary<int, AttemptContainerContext> Container { get; }
 
-    public void Reset(in int size)
-    {
-        Contenders = _generateContenders(size);
-    }
+    public AttemptContainerContext this[int attemptId] => _context;
 
     private Contender[] _generateContenders(in int size)
     {

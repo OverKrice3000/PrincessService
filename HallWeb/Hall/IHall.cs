@@ -20,20 +20,20 @@ public interface IHall
     int GetTotalCandidates();
 
     /// <summary>
-    /// Method, which gives away next contender
+    /// Method, which gives away next contender for an attempt id
     /// </summary>
     /// <returns>next contender</returns>
-    VisitingContender GetNextContender();
+    VisitingContender GetNextContender(int attemptId);
 
     /// <summary>
-    /// Method, which makes hall regenerate contenders and set initial state
+    /// Method, which makes hall regenerate contenders for an attempt id and set initial state
     /// </summary>
-    void Reset();
+    void Reset(int attemptId);
 
     /// <summary>
-    /// Method for princess to choose contender
+    /// Method for princess to choose contender for an attempt id
     /// </summary>
-    /// <param name="visitingContender">chosen contender</param>
+    /// <param name="attemptId">attempt id</param>
     /// <returns>value of chosen contender</returns>
-    int ChooseContender(VisitingContender visitingContender);
+    int ChooseContender(int attemptId);
 }

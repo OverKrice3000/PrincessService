@@ -45,17 +45,18 @@ public class PrincessService : IHostedService
         double totalHappiness = 0;
         for (int i = 0; i < 100; i++)
         {
+            princess.SetAttemptId(i);
             totalHappiness += await princess.ChooseHusband();
         }
 
         Console.WriteLine(totalHappiness / 100);
     }
 
-    //TODO add attempt
-    private void ChooseHusbandForAttempt()
+    private async Task ChooseHusbandForAttempt(int attemptId)
     {
         using var scope = _scopeFactory.CreateScope();
         var princess = scope.ServiceProvider.GetRequiredService<IPrincess>();
-        princess.ChooseHusband();
+        princess.SetAttemptId(attemptId);
+        await princess.ChooseHusband();
     }
 }

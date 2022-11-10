@@ -17,18 +17,9 @@ public static class Constants
     // Count of attempts generated at start if database is empty
     public const int DatabaseAttemptsGenerated = 100;
 
-    // Configurable contenders count starting from which alternative strategy is to be used
-    public const int ManyCandidatesStrategyCandidatesLowerBorder = 1000;
-
     // Debug mode, which enables some logs
     public const bool DebugMode = true;
 
     // Non configurable constants
-    public const double IdiotHusbandTopBorderPercentage = 0.5;
-    public const int IdiotHusbandHappinessLevel = 0;
-    public const int NoHusbandHappinessLevel = 10;
     public const int First7DigitInteger = 1000000;
-
-    // Service behaviour constants
-    public const bool RegenerateAttempts = true;
 }

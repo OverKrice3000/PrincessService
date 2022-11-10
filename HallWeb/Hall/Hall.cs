@@ -1,4 +1,5 @@
 ﻿using HallWeb.ContenderContainer;
+using HallWeb.ContenderGeneratorClasses;
 using HallWeb.Friend;
 using HallWeb.utils;
 using HallWeb.utils.AttemptSaver;
@@ -8,14 +9,15 @@ namespace HallWeb.Hall;
 
 public class Hall : IHall
 {
+    private readonly IContenderContainer _contenderContainer;
     private readonly int _size;
     private IAttemptSaver _attemptSaver;
-    private IContenderContainer _contenderContainer;
-    private int _nextContender;
+    private FromDatabaseContenderGenerator _generator;
 
     public Hall(
         IFriend friend,
         IAttemptSaver attemptSaver,
+        FromDatabaseContenderGenerator generator,
         IContenderContainer contenderContainer,
         int size = PrincessProject.Data.Constants.DefaultContendersCount
     )
@@ -23,8 +25,8 @@ public class Hall : IHall
         _size = size;
         Friend = friend;
         _contenderContainer = contenderContainer;
-        _nextContender = 0;
         _attemptSaver = attemptSaver;
+        _generator = generator;
     }
 
     public IFriend Friend { get; }
@@ -34,41 +36,57 @@ public class Hall : IHall
         return _size;
     }
 
-    public VisitingContender GetNextContender()
+    public VisitingContender GetNextContender(int attemptId)
     {
-        if (_size == _nextContender)
-            throw new ApplicationException("No more contenders!");
+        if (!_contenderContainer.Container.ContainsKey(attemptId))
+        {
+            _generator.SetAttemptId(attemptId);
+            _contenderContainer.Container[attemptId] = new AttemptContainerContext(_generator.Generate());
+        }
+
+        if (_contenderContainer[attemptId].Contenders.Length <=
+            _contenderContainer[attemptId].NextContender)
+        {
+            throw new ArgumentException("No more contenders!");
+        }
+
+        Contender nextContender = _contenderContainer[attemptId][_contenderContainer[attemptId].NextContender++];
         if (Constants.DebugMode)
         {
             Console.WriteLine("NEXT CONTENDER IS:");
-            Console.WriteLine(_contenderContainer[_nextContender].Value);
+            Console.WriteLine(nextContender.Value);
         }
 
-        Contender nextContender = _contenderContainer[_nextContender++];
         nextContender.SetHasVisited();
         return Mappers.ContenderToVisitingContender(nextContender);
     }
 
-    public void Reset()
+    public void Reset(int attemptId)
     {
-        _contenderContainer.Reset(_size);
-        _nextContender = 0;
+        if (!_contenderContainer.Container.ContainsKey(attemptId))
+        {
+            _generator.SetAttemptId(attemptId);
+            _contenderContainer.Container[attemptId] = new AttemptContainerContext(_generator.Generate());
+        }
+        else
+        {
+            _contenderContainer.Container[attemptId].NextContender = 0;
+        }
     }
 
-    public int ChooseContender(VisitingContender visitingContender)
+    public int ChooseContender(int attemptId)
     {
-        Contender contender = Util.FindContenderByName(_contenderContainer, visitingContender);
-
-        // Throw when princess has chosen not the last assessed contender
-        if (!Mappers.ContenderToContenderName(_contenderContainer[_nextContender - 1])
-                .Equals(Mappers.ContenderToContenderName(contender)))
+        if (!_contenderContainer.Container.ContainsKey(attemptId) ||
+            _contenderContainer.Container[attemptId].NextContender == 0)
         {
-            throw new ApplicationException("Princess is trying to cheat!");
+            throw new ArgumentException("No contender was with princess!");
         }
+
+        Contender contender = _contenderContainer[attemptId][_contenderContainer[attemptId].NextContender - 1];
 
         _attemptSaver.Save(new Attempt(
             PrincessProject.Data.Constants.DefaultContendersCount,
-            Mappers.ContenderToContenderData(_contenderContainer.Contenders),
+            Mappers.ContenderToContenderData(_contenderContainer[attemptId].Contenders),
             contender.Value
         ));
 

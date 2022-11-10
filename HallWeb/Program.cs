@@ -1,3 +1,4 @@
+using System.Text.Json.Nodes;
 using HallWeb.ContenderContainer;
 using HallWeb.ContenderGeneratorClasses;
 using HallWeb.Friend;
@@ -6,49 +7,93 @@ using HallWeb.utils;
 using HallWeb.utils.AttemptSaver;
 using HallWeb.utils.ContenderNamesLoader;
 using HallWeb.utils.WorldGeneratorClasses;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PrincessProject.Data.context;
+using PrincessProject.Data.model;
+using PrincessProject.Data.model.api;
 
-class Program
+var builder = WebApplication.CreateBuilder(args);
+
+AddServices(builder, args);
+
+var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
 {
-    public static void Main(string[] args)
+    var worldGenerator = scope.ServiceProvider.GetRequiredService<IWorldGenerator>();
+    await worldGenerator.GenerateWorld(Constants.DatabaseAttemptsGenerated);
+}
+
+app.MapPost("/hall/{attemptId}/reset", (IHall hall, int attemptId) => { hall.Reset(attemptId); });
+
+app.MapPost("/hall/{attemptId}/next", (IHall hall, int attemptId) =>
+{
+    try
     {
-        var builder = WebApplication.CreateBuilder(args);
-
-        AddServices(builder, args);
-
-        var app = builder.Build();
-
-        app.Run();
+        VisitingContender contender = hall.GetNextContender(attemptId);
+        return Results.Ok(new JsonObject()
+        {
+            ["name"] = contender.FullName
+        });
     }
-
-    private static void AddServices(WebApplicationBuilder builder, string[] args)
+    catch (ArgumentException e)
     {
-        builder.Services.AddDbContext<AttemptContext>(o =>
-            o.UseNpgsql(builder.Configuration.GetConnectionString("AttemptsDatabase")));
-        var namesLoader = new CsvLoader(Constants.FromProjectRootCsvNamesFilepath)
-            .WithSeparator(';')
-            .WithColumns(new string[1] { Constants.CsvNamesColumn });
-        var surnamesLoader = new CsvLoader(Constants.FromProjectRootCsvSurnamesFilepath)
-            .WithSeparator(';')
-            .WithColumns(new string[1] { Constants.CsvSurnamesColumn });
-        builder.Services.AddScoped<DatabaseAttemptSaver>();
-        builder.Services.AddScoped<IAttemptSaver, VoidAttemptSaver>();
-        builder.Services.AddScoped((_) => new ContenderGenerator(namesLoader, surnamesLoader));
-        builder.Services.AddScoped<IContenderGenerator, FromDatabaseContenderGenerator>();
-        builder.Services.AddScoped<IContenderContainer, ContenderContainer>();
-        builder.Services.AddScoped<IWorldGenerator, WorldGenerator>();
-        builder.Services.AddScoped<IFriend, Friend>();
-        builder.Services.AddSingleton<IHall, Hall>();
+        return Results.BadRequest(e.Message);
     }
+});
 
-    /*public static void GenerateWorldFromPrincessProject()
+app.MapPost("/hall/{attemptId}/select", (IHall hall, int attemptId) =>
+{
+    try
     {
-        using var scope = _scopeFactory.CreateScope();
-        var generator =
-            (FromDatabaseContenderGenerator)scope.ServiceProvider.GetRequiredService<IContenderGenerator>();
-        var worldGenerator = scope.ServiceProvider.GetRequiredService<IWorldGenerator>();
-        //TODO move world generator to hall web application
-        worldGenerator.GenerateWorld(Constants.DatabaseAttemptsGenerated);
-    }*/
+        int rank = hall.ChooseContender(attemptId);
+        return Results.Ok(new JsonObject()
+        {
+            ["rank"] = rank
+        });
+    }
+    catch (ArgumentException e)
+    {
+        return Results.BadRequest(e.Message);
+    }
+});
+
+app.MapPost("/friend/{attemptId}/compare", (IFriend friend, int attemptId, [FromBody] CompareApiPayload json) =>
+{
+    try
+    {
+        VisitingContender firstContender = Util.VisitingContenderFromFullName(json.first);
+        VisitingContender secondContender = Util.VisitingContenderFromFullName(json.second);
+        return Results.Ok(new JsonObject()
+        {
+            ["name"] = friend.CompareContenders(attemptId, firstContender, secondContender).FullName
+        });
+    }
+    catch (ArgumentException e)
+    {
+        return Results.BadRequest(e.Message);
+    }
+});
+
+app.Run();
+
+void AddServices(WebApplicationBuilder appBuilder, string[] args)
+{
+    appBuilder.Services.AddDbContext<AttemptContext>(o =>
+        o.UseNpgsql(appBuilder.Configuration.GetConnectionString("AttemptsDatabase")));
+    var namesLoader = new CsvLoader(Constants.FromProjectRootCsvNamesFilepath)
+        .WithSeparator(';')
+        .WithColumns(new string[1] { Constants.CsvNamesColumn });
+    var surnamesLoader = new CsvLoader(Constants.FromProjectRootCsvSurnamesFilepath)
+        .WithSeparator(';')
+        .WithColumns(new string[1] { Constants.CsvSurnamesColumn });
+    appBuilder.Services.AddSingleton<IContenderContainer, ContenderContainer>();
+    appBuilder.Services.AddScoped<DatabaseAttemptSaver>();
+    appBuilder.Services.AddScoped<IAttemptSaver, VoidAttemptSaver>();
+    appBuilder.Services.AddScoped((_) => new ContenderGenerator(namesLoader, surnamesLoader));
+    appBuilder.Services.AddScoped<FromDatabaseContenderGenerator>();
+    appBuilder.Services.AddScoped<IWorldGenerator, WorldGenerator>();
+    appBuilder.Services.AddScoped<IFriend, Friend>();
+    appBuilder.Services.AddScoped<IHall, Hall>();
 }
