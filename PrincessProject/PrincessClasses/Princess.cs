@@ -1,18 +1,35 @@
-﻿using PrincessProject.api;
+﻿using MassTransit;
+using PrincessProject.api;
 using PrincessProject.Data.model;
+using PrincessProject.Data.model.rabbitmq;
 using PrincessProject.PrincessClasses.Strategy;
 using PrincessProject.PrincessClasses.Strategy.CandidatePositionAnalysisStrategy;
 using PrincessProject.utils;
 
 namespace PrincessProject.PrincessClasses;
 
-public class Princess : IPrincess
+public class Princess : IPrincess, IConsumer<NextContenderMessage>
 {
     private int _attemptId = 0;
-    private IStrategy? _strategy;
+    private IStrategy _strategy = new CandidatePositionAnalysisStrategy(0);
 
     public Princess()
     {
+    }
+
+    public async Task Consume(ConsumeContext<NextContenderMessage> context)
+    {
+        Console.WriteLine("CONSUMER");
+        var nextVisitingContender = Util.VisitingContenderFromFullName(context.Message.Name);
+        var isChosen = (await _strategy.AssessNextContender(nextVisitingContender));
+        lock (this)
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                Thread.Sleep(1000);
+                Monitor.Pulse(this);
+            }
+        }
     }
 
     public void SetAttemptId(int attemptId)
@@ -27,17 +44,24 @@ public class Princess : IPrincess
         _strategy = new CandidatePositionAnalysisStrategy(_attemptId);
 
         VisitingContender? chosen = null;
+
         for (int i = 0; i < size; i++)
         {
-            VisitingContender nextVisitingContender = await HallApi.NextContender(_attemptId);
-            if (await _strategy.AssessNextContender(nextVisitingContender))
+            lock (this)
             {
-                chosen = nextVisitingContender;
+                HallApi.NextContender(_attemptId);
+                Console.WriteLine("SENT");
+                Monitor.Wait(this);
+            }
+
+            Console.WriteLine("AWAITED");
+            if (chosen is not null)
+            {
                 break;
             }
         }
 
-        return await _calculateHappinessAndCommentOnTopic(chosen);
+        return await _calculateHappinessAndCommentOnTopic(new VisitingContender("kek", "lol"));
     }
 
     private async Task<int> _calculateHappinessAndCommentOnTopic(VisitingContender? chosen)

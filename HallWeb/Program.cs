@@ -7,11 +7,13 @@ using HallWeb.utils;
 using HallWeb.utils.AttemptSaver;
 using HallWeb.utils.ContenderNamesLoader;
 using HallWeb.utils.WorldGeneratorClasses;
+using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PrincessProject.Data.context;
 using PrincessProject.Data.model;
 using PrincessProject.Data.model.api;
+using PrincessProject.Data.model.rabbitmq;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,15 +29,15 @@ using (var scope = app.Services.CreateScope())
 
 app.MapPost("/hall/{attemptId}/reset", (IHall hall, int attemptId) => { hall.Reset(attemptId); });
 
-app.MapPost("/hall/{attemptId}/next", (IHall hall, int attemptId) =>
+app.MapPost("/hall/{attemptId}/next", async (IPublishEndpoint publishEndpoint, IHall hall, int attemptId) =>
 {
     try
     {
+        Console.WriteLine("POSTED");
         VisitingContender contender = hall.GetNextContender(attemptId);
-        return Results.Ok(new JsonObject()
-        {
-            ["name"] = contender.FullName
-        });
+        var message = new NextContenderMessage(contender.FullName);
+        await publishEndpoint.Publish<NextContenderMessage>(message);
+        return Results.Ok();
     }
     catch (ArgumentException e)
     {
@@ -80,6 +82,11 @@ app.Run();
 
 void AddServices(WebApplicationBuilder appBuilder, string[] args)
 {
+    appBuilder.Services.AddMassTransit(config =>
+    {
+        config.UsingRabbitMq((ctx, cfg) => { cfg.Host("amqp://guest:guest@localhost:5672"); });
+    });
+
     appBuilder.Services.AddDbContext<AttemptContext>(o =>
         o.UseNpgsql(appBuilder.Configuration.GetConnectionString("AttemptsDatabase")));
     var namesLoader = new CsvLoader(Constants.FromProjectRootCsvNamesFilepath)

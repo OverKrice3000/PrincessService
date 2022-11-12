@@ -20,7 +20,7 @@ public static class HallApi
         await client.PostAsync(builder.ToString(), null);
     }
 
-    public static async Task<VisitingContender> NextContender(int attemptId)
+    public static async Task NextContender(int attemptId)
     {
         using var client = new HttpClient();
         var builder = new UriBuilder($"{Constants.HallApiBase}/{attemptId}/next");
@@ -29,15 +29,7 @@ public static class HallApi
         query["session"] = Constants.SessionId.ToString();
         builder.Query = query.ToString();
 
-        var content = await client.PostAsync(builder.ToString(), null);
-        var json = JsonNode.Parse(await content.Content.ReadAsStringAsync());
-
-        if (json?["name"] is null)
-        {
-            throw new ApplicationException("Bad http response");
-        }
-
-        return Util.VisitingContenderFromFullName(json!["name"]!.ToString());
+        await client.PostAsync(builder.ToString(), null);
     }
 
     public static async Task<int> SelectContender(int attemptId)

@@ -6,7 +6,7 @@ public static class Constants
     public const int ManyCandidatesStrategyCandidatesLowerBorder = 1000;
 
     // Debug mode, which enables some logs
-    public const bool DebugMode = false;
+    public const bool DebugMode = true;
 
     // Non configurable constants
     public const double IdiotHusbandTopBorderPercentage = 0.5;
