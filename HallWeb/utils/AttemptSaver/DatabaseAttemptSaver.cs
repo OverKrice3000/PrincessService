@@ -17,7 +17,7 @@ public class DatabaseAttemptSaver : IAttemptSaver
         await using var transaction = await _context.Database.BeginTransactionAsync();
         try
         {
-            int attemptId = _context.FindLastAttemptId() + 1;
+            int attemptId = _context.Attempts.Any() ? _context.FindLastAttemptId() + 1 : 0;
             for (int i = 0; i < attempt.ContendersCount; i++)
             {
                 _context.Add(new AttemptEntity(
