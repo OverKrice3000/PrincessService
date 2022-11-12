@@ -87,12 +87,12 @@ public class DatabaseAttemptSaverLoaderTests
     }
 
     [Test]
-    public void AttemptCanBeSavedToDatabase()
+    public async Task AttemptCanBeSavedToDatabase()
     {
-        var nextAttemptId = _context.FindLastAttemptId() + 1;
+        var nextAttemptId = _context.Attempts.Any() ? _context.FindLastAttemptId() + 1 : 0;
         var contenders = _generator.Generate()
             .Select(c => new ContenderData(c.Name, c.Surname, c.Value)).ToArray();
-        _attemptSaver.Save(new Attempt(contenders.Length, contenders, null)).Wait();
+        await _attemptSaver.Save(new Attempt(contenders.Length, contenders, null));
         _context.Attempts
             .Count(a => a.AttemptId == nextAttemptId).Should().Be(contenders.Length);
         var attempt = _context.Attempts.Where(a => a.AttemptId == nextAttemptId).ToList()

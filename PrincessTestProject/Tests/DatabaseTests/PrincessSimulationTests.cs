@@ -29,7 +29,7 @@ public class PrincessSimulationTests
             .WithAttemptSaver(attemptSaver)
             .Build();
 
-        worldGenerator.GenerateWorld(1);
+        worldGenerator.GenerateWorld(1).Wait();
 
         var attemptLoader = TestBuilder
             .BuildIContenderGenerator()

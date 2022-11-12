@@ -18,9 +18,6 @@ public class AttemptContext : DbContext
 
     public int FindLastAttemptId()
     {
-        using var transaction = Database.BeginTransaction();
-        if (!Attempts.Any())
-            return -1;
         return Attempts.Max<AttemptEntity>((data) => data.AttemptId);
     }
 
