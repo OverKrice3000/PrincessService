@@ -12,7 +12,7 @@ public class PrincessSimulationTests
     private IPrincess _princess;
 
     [OneTimeSetUp]
-    public void SetUp()
+    public async Task SetUp()
     {
         _context = TestBuilder
             .BuildDatabaseContext()
@@ -29,7 +29,7 @@ public class PrincessSimulationTests
             .WithAttemptSaver(attemptSaver)
             .Build();
 
-        worldGenerator.GenerateWorld(1).Wait();
+        await worldGenerator.GenerateWorld(1);
 
         var attemptLoader = TestBuilder
             .BuildIContenderGenerator()

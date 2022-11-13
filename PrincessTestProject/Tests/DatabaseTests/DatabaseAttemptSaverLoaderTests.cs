@@ -16,7 +16,7 @@ public class DatabaseAttemptSaverLoaderTests
     private ContenderGenerator _generator;
 
     [OneTimeSetUp]
-    public void SetUp()
+    public async Task SetUp()
     {
         _generator = (ContenderGenerator)TestBuilder
             .BuildIContenderGenerator()
@@ -44,7 +44,7 @@ public class DatabaseAttemptSaverLoaderTests
             .WithContendersGenerator(_generator)
             .Build();
 
-        worldGenerator.GenerateWorld(Constants.DatabaseAttemptsGenerated).Wait();
+        await worldGenerator.GenerateWorld(Constants.DatabaseAttemptsGenerated);
     }
 
     [TearDown]
