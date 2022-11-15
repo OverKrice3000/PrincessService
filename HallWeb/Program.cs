@@ -4,8 +4,8 @@ using HallWeb.ContenderGeneratorClasses;
 using HallWeb.Friend;
 using HallWeb.Hall;
 using HallWeb.utils;
-using HallWeb.utils.AttemptSaver;
 using HallWeb.utils.ContenderNamesLoader;
+using HallWeb.utils.ResultSaver;
 using HallWeb.utils.WorldGeneratorClasses;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -89,8 +89,7 @@ void AddServices(WebApplicationBuilder appBuilder, string[] args)
         .WithSeparator(';')
         .WithColumns(new string[1] { Constants.CsvSurnamesColumn });
     appBuilder.Services.AddSingleton<IContenderContainer, ContenderContainer>();
-    appBuilder.Services.AddScoped<DatabaseAttemptSaver>();
-    appBuilder.Services.AddScoped<IAttemptSaver, VoidAttemptSaver>();
+    appBuilder.Services.AddScoped<IResultSaver, VoidResultSaver>();
     appBuilder.Services.AddScoped((_) => new ContenderGenerator(namesLoader, surnamesLoader));
     appBuilder.Services.AddScoped<FromDatabaseContenderGenerator>();
     appBuilder.Services.AddScoped<IWorldGenerator, WorldGenerator>();

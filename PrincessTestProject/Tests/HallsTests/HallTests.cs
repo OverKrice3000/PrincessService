@@ -30,7 +30,6 @@ public class HallTests
             .BuildIHall()
             .BuildHall()
             .WithContainer(_contenderContainer)
-            .WithFriend(_friend)
             .WithSize(ContendersInContainerCount)
             .Build();
     }

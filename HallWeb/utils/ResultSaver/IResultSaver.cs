@@ -1,14 +1,14 @@
-﻿using PrincessProject.Data.model;
+﻿using PrincessProject.Data.model.data;
 
-namespace HallWeb.utils.AttemptSaver;
+namespace HallWeb.utils.ResultSaver;
 
 /*
  * Defines method, which saves program execution data to some source.
  */
-public interface IAttemptSaver
+public interface IResultSaver
 {
     /*
      * Method, which saves program execution data to some source.
      */
-    Task Save(Attempt attempt);
+    Task Save(Result result);
 }

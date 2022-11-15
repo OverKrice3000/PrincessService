@@ -1,10 +1,10 @@
-﻿using PrincessProject.Data.model;
+﻿using PrincessProject.Data.model.data;
 
-namespace HallWeb.utils.AttemptSaver;
+namespace HallWeb.utils.ResultSaver;
 
-public class FileAttemptSaver : IAttemptSaver
+public class FileResultSaver : IResultSaver
 {
-    public Task Save(Attempt attempt)
+    public Task Save(Result result)
     {
         string projectPath = Util.GetProjectBaseDirectory();
         var outputDirectory = new DirectoryInfo(Path.Join(projectPath, Constants.FromProjectRootOutputFolderPath));
@@ -19,20 +19,15 @@ public class FileAttemptSaver : IAttemptSaver
             Util.DeriveOutputFileName(outputFilesExists)));
         using (var writer = new StreamWriter(nextFile.Create()))
         {
-            writer.WriteLine(attempt.ContendersCount);
+            writer.WriteLine(result.ContendersCount);
             Util.WriteSectionSeparator(writer);
-            foreach (var candidate in attempt.Contenders)
+            foreach (var candidate in result.Contenders)
             {
                 writer.WriteLine(candidate.ToString());
             }
 
-            if (attempt.ChosenContenderValue is null)
-            {
-                return Task.CompletedTask;
-            }
-
             Util.WriteSectionSeparator(writer);
-            writer.Write(attempt.ChosenContenderValue);
+            writer.Write(result.ChosenContenderValue);
 
             return Task.CompletedTask;
         }
