@@ -1,4 +1,3 @@
-using System.Text.Json.Nodes;
 using HallWeb.ContenderContainer;
 using HallWeb.ContenderGeneratorClasses;
 using HallWeb.Friend;
@@ -32,10 +31,7 @@ app.MapPost("/hall/{attemptId}/next", (IHall hall, int attemptId) =>
     try
     {
         VisitingContender contender = hall.GetNextContender(attemptId);
-        return Results.Ok(new JsonObject()
-        {
-            ["name"] = contender.FullName
-        });
+        return Results.Ok(new NextContenderResponsePayload(contender.FullName));
     }
     catch (ArgumentException e)
     {
@@ -48,10 +44,7 @@ app.MapPost("/hall/{attemptId}/select", (IHall hall, int attemptId) =>
     try
     {
         int rank = hall.ChooseContender(attemptId);
-        return Results.Ok(new JsonObject()
-        {
-            ["rank"] = rank
-        });
+        return Results.Ok(new SelectContenderResponsePayload(rank.ToString()));
     }
     catch (ArgumentException e)
     {
@@ -59,22 +52,21 @@ app.MapPost("/hall/{attemptId}/select", (IHall hall, int attemptId) =>
     }
 });
 
-app.MapPost("/friend/{attemptId}/compare", (IFriend friend, int attemptId, [FromBody] CompareApiPayload json) =>
-{
-    try
+app.MapPost("/friend/{attemptId}/compare",
+    (IFriend friend, int attemptId, [FromBody] CompareContendersRequestPayload json) =>
     {
-        VisitingContender firstContender = Util.VisitingContenderFromFullName(json.first);
-        VisitingContender secondContender = Util.VisitingContenderFromFullName(json.second);
-        return Results.Ok(new JsonObject()
+        try
         {
-            ["name"] = friend.CompareContenders(attemptId, firstContender, secondContender).FullName
-        });
-    }
-    catch (ArgumentException e)
-    {
-        return Results.BadRequest(e.Message);
-    }
-});
+            VisitingContender firstContender = Util.VisitingContenderFromFullName(json.first);
+            VisitingContender secondContender = Util.VisitingContenderFromFullName(json.second);
+            return Results.Ok(new CompareContendersResponsePayload(friend
+                .CompareContenders(attemptId, firstContender, secondContender).FullName));
+        }
+        catch (ArgumentException e)
+        {
+            return Results.BadRequest(e.Message);
+        }
+    });
 
 app.Run();
 

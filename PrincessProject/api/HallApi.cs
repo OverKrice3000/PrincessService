@@ -1,8 +1,10 @@
 ﻿using System.Text;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Web;
 using Microsoft.Extensions.Configuration;
 using PrincessProject.Data.model;
+using PrincessProject.Data.model.api;
 using PrincessProject.utils;
 
 namespace PrincessProject.api;
@@ -48,14 +50,16 @@ public static class HallApi
         builder.Query = query.ToString();
 
         var content = await Client.PostAsync(builder.ToString(), null);
-        var json = JsonNode.Parse(await content.Content.ReadAsStringAsync());
 
-        if (json?["name"] is null)
+        var json = JsonNode.Parse(await content.Content.ReadAsStringAsync())
+            .Deserialize<NextContenderResponsePayload>();
+
+        if (json?.name is null)
         {
             throw new ApplicationException("Bad http response");
         }
 
-        return Util.VisitingContenderFromFullName(json!["name"]!.ToString());
+        return Util.VisitingContenderFromFullName(json.name);
     }
 
     public static async Task<int> SelectContender(int attemptId)
@@ -67,14 +71,15 @@ public static class HallApi
         builder.Query = query.ToString();
 
         var content = await Client.PostAsync(builder.ToString(), null);
-        var json = JsonNode.Parse(await content.Content.ReadAsStringAsync());
+        var json = JsonNode.Parse(await content.Content.ReadAsStringAsync())
+            .Deserialize<SelectContenderResponsePayload>();
 
-        if (json?["rank"] is null)
+        if (json?.rank is null)
         {
             throw new ApplicationException("Bad http response");
         }
 
-        return int.Parse(json!["rank"]!.ToString());
+        return int.Parse(json.rank);
     }
 
     public static async Task<VisitingContender> CompareContenders(int attemptId, VisitingContender first,
@@ -94,13 +99,14 @@ public static class HallApi
         var content = await Client.PostAsync(builder.ToString(),
             new StringContent(jsonRaw, Encoding.UTF8, "application/json"));
 
-        var json = JsonNode.Parse(await content.Content.ReadAsStringAsync());
+        var json = JsonNode.Parse(await content.Content.ReadAsStringAsync())
+            .Deserialize<CompareContendersResponsePayload>();
 
-        if (json?["name"] is null)
+        if (json?.name is null)
         {
             throw new ApplicationException("Bad http response");
         }
 
-        return Util.VisitingContenderFromFullName(json!["name"]!.ToString());
+        return Util.VisitingContenderFromFullName(json.name);
     }
 }
