@@ -23,6 +23,18 @@ public class MContenderContainer : IContenderContainer
 
     public AttemptContainerContext this[int attemptId] => _context;
 
+    public Contender FindContenderByName(
+        int attemptId,
+        VisitingContender visitingContender
+    )
+    {
+        return Array.Find(
+                   _context.Contenders,
+                   contender => contender.FullName.Equals(visitingContender.FullName)
+               ) ??
+               throw new ArgumentException("No contender with such name!");
+    }
+
     private Contender[] _generateContenders(in int size)
     {
         Contender[] arr = new Contender[size];

@@ -1,5 +1,4 @@
-﻿using HallWeb.ContenderContainer;
-using PrincessProject.Data.model;
+﻿using PrincessProject.Data.model;
 
 namespace HallWeb.utils;
 
@@ -20,19 +19,6 @@ public static class Util
     {
         var currentDirectory = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
         return currentDirectory.Parent!.Parent!.Parent!.FullName;
-    }
-
-    public static Contender FindContenderByName(
-        IContenderContainer contenderContainer,
-        int attemptId,
-        VisitingContender visitingContender
-    )
-    {
-        return Array.Find(
-                   contenderContainer[attemptId].Contenders,
-                   contender => contender.FullName.Equals(visitingContender.FullName)
-               ) ??
-               throw new ArgumentException("No contender with such name!");
     }
 
     public static VisitingContender VisitingContenderFromFullName(string fullName)
