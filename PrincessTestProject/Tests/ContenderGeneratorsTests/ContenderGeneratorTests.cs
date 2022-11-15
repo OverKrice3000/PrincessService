@@ -1,5 +1,5 @@
 ﻿using FluentAssertions;
-using PrincessProject.ContenderGenerator;
+using PrincessProject.ContenderGeneratorClasses;
 using PrincessProject.utils.ContenderNamesLoader;
 using PrincessTestProject.Builder;
 

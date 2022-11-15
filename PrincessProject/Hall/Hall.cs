@@ -51,7 +51,6 @@ public class Hall : IHall
 
     public void Reset()
     {
-        var random = new Random();
         _contenderContainer.Reset(_size);
         _nextContender = 0;
     }
@@ -67,17 +66,13 @@ public class Hall : IHall
             throw new ApplicationException("Princess is trying to cheat!");
         }
 
-        return contender.Value;
-    }
-
-    public void SaveAttempt(int happiness)
-    {
         _attemptSaver.Save(new Attempt(
             Constants.DefaultContendersCount,
             Mappers.ContenderToContenderData(_contenderContainer.Contenders),
-            null,
-            happiness
+            contender.Value
         ));
+
+        return contender.Value;
     }
 
     public void SetAttemptSaver(IAttemptSaver attemptSaver)

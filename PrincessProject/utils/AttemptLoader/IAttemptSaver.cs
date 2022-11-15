@@ -10,5 +10,5 @@ public interface IAttemptSaver
     /*
      * Method, which saves program execution data to some source.
      */
-    void Save(Attempt attempt);
+    Task Save(Attempt attempt);
 }

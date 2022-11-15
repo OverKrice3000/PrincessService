@@ -2,7 +2,7 @@
 using PrincessProject.utils;
 using PrincessProject.utils.ContenderNamesLoader;
 
-namespace PrincessProject.ContenderGenerator;
+namespace PrincessProject.ContenderGeneratorClasses;
 
 public class ContenderGenerator : IContenderGenerator
 {
@@ -52,6 +52,6 @@ public class ContenderGenerator : IContenderGenerator
             surnames.RemoveAt(surnamesNextIndex);
         }
 
-        return contenders;
+        return contenders.OrderBy(item => random.Next()).ToArray();
     }
 }

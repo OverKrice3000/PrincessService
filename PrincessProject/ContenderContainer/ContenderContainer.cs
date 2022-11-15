@@ -1,4 +1,4 @@
-﻿using PrincessProject.ContenderGenerator;
+﻿using PrincessProject.ContenderGeneratorClasses;
 using PrincessProject.model;
 using PrincessProject.utils;
 
@@ -18,10 +18,7 @@ public class ContenderContainer : IContenderContainer
 
     public void Reset(in int size = Constants.DefaultContendersCount)
     {
-        var random = new Random();
-        Contenders = _generator.Generate(size)
-            .OrderBy(item => random.Next())
-            .ToArray();
+        Contenders = _generator.Generate(size);
     }
 
     public Contender this[int index] => Contenders[index];

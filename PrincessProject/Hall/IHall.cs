@@ -36,10 +36,4 @@ public interface IHall
     /// <param name="visitingContender">chosen contender</param>
     /// <returns>value of chosen contender</returns>
     int ChooseContender(VisitingContender visitingContender);
-
-    /// <summary>
-    /// Method, which saves an execution record to some source
-    /// </summary>
-    /// <param name="happiness">happiness of princess</param>
-    void SaveAttempt(int happiness);
 }

@@ -1,6 +1,7 @@
 ﻿using PrincessProject.model;
+using PrincessProject.utils;
 
-namespace PrincessProject.ContenderGenerator;
+namespace PrincessProject.ContenderGeneratorClasses;
 
 /// <summary>
 /// Defines contender generator abstraction, which is able to generate
@@ -13,5 +14,5 @@ public interface IContenderGenerator
     /// </summary>
     /// <param name="size">size of array to generate</param>
     /// <returns>generated array of contenders</returns>
-    Contender[] Generate(int size);
+    Contender[] Generate(int size = Constants.DefaultContendersCount);
 }

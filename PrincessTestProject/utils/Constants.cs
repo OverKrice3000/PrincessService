@@ -10,4 +10,8 @@ public class Constants
     public const char CsvNamesSurnamesSeparator = ';';
     public const int PossibleToGenerateContendersAmount = 100;
     public const int ImpossibleToGenerateContendersAmount = Int32.MaxValue;
+
+    public const string InMemoryDatabaseDefaultName = "AttemptsDatabase";
+
+    public const int DatabaseAttemptsGenerated = 100;
 }

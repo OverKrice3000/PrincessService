@@ -1,8 +1,12 @@
-﻿using PrincessTestProject.Builder.ContenderContainerBuilder;
+﻿using PrincessTestProject.Builder.AttemptSaverBuilder;
+using PrincessTestProject.Builder.ContenderContainerBuilder;
 using PrincessTestProject.Builder.ContenderGeneratorBuilder;
+using PrincessTestProject.Builder.ContextBuilder;
 using PrincessTestProject.Builder.FriendBuilder;
 using PrincessTestProject.Builder.HallBuilder;
+using PrincessTestProject.Builder.PrincessBuilder;
 using PrincessTestProject.Builder.TableLoaderBuilder;
+using PrincessTestProject.Builder.WorldGeneratorBuilder;
 
 namespace PrincessTestProject.Builder;
 
@@ -31,5 +35,25 @@ public static class TestBuilder
     public static FriendInterfaceBuilder BuildIFriend()
     {
         return new FriendInterfaceBuilder();
+    }
+
+    public static DatabaseContextBuilder BuildDatabaseContext()
+    {
+        return new DatabaseContextBuilder();
+    }
+
+    public static AttemptSaverInterfaceBuilder BuildIAttemptSaver()
+    {
+        return new AttemptSaverInterfaceBuilder();
+    }
+
+    public static WorldGeneratorInterfaceBuilder BuildIWorldGenerator()
+    {
+        return new WorldGeneratorInterfaceBuilder();
+    }
+
+    public static PrincessInterfaceBuilder BuildIPrincess()
+    {
+        return new PrincessInterfaceBuilder();
     }
 }

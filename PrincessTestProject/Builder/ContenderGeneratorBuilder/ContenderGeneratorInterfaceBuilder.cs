@@ -6,4 +6,9 @@ public class ContenderGeneratorInterfaceBuilder
     {
         return new ContenderGeneratorBuilder();
     }
+
+    public FromDatabaseContenderGeneratorBuilder BuildFromDatabaseContenderGenerator()
+    {
+        return new FromDatabaseContenderGeneratorBuilder();
+    }
 }

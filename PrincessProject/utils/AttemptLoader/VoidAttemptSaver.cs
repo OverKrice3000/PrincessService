@@ -4,8 +4,8 @@ namespace PrincessProject.utils.AttemptLoader;
 
 public class VoidAttemptSaver : IAttemptSaver
 {
-    public void Save(Attempt attempt)
+    public Task Save(Attempt attempt)
     {
-        return;
+        return Task.CompletedTask;
     }
 }
