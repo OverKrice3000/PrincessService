@@ -13,6 +13,7 @@ public static class HallApi
     private static string WebAppApiBase;
     private static string HallApiBase;
     private static string FriendApiBase;
+    private static int SessionId;
 
     static HallApi()
     {
@@ -22,6 +23,7 @@ public static class HallApi
             .Build();
 
         WebAppApiBase = config.GetSection("PrincessConfig")["HallApiBase"];
+        SessionId = int.Parse(config.GetSection("PrincessConfig")["SessionId"]);
         HallApiBase = WebAppApiBase + "/hall";
         FriendApiBase = WebAppApiBase + "/friend";
     }
@@ -31,7 +33,7 @@ public static class HallApi
         var builder = new UriBuilder($"{HallApiBase}/{attemptId}/reset");
 
         var query = HttpUtility.ParseQueryString(builder.Query);
-        query["session"] = Constants.SessionId.ToString();
+        query["session"] = SessionId.ToString();
         builder.Query = query.ToString();
 
         await Client.PostAsync(builder.ToString(), null);
@@ -42,7 +44,7 @@ public static class HallApi
         var builder = new UriBuilder($"{HallApiBase}/{attemptId}/next");
 
         var query = HttpUtility.ParseQueryString(builder.Query);
-        query["session"] = Constants.SessionId.ToString();
+        query["session"] = SessionId.ToString();
         builder.Query = query.ToString();
 
         var content = await Client.PostAsync(builder.ToString(), null);
@@ -61,7 +63,7 @@ public static class HallApi
         var builder = new UriBuilder($"{HallApiBase}/{attemptId}/select");
 
         var query = HttpUtility.ParseQueryString(builder.Query);
-        query["session"] = Constants.SessionId.ToString();
+        query["session"] = SessionId.ToString();
         builder.Query = query.ToString();
 
         var content = await Client.PostAsync(builder.ToString(), null);
@@ -81,7 +83,7 @@ public static class HallApi
         var builder = new UriBuilder($"{FriendApiBase}/{attemptId}/compare");
 
         var query = HttpUtility.ParseQueryString(builder.Query);
-        query["session"] = Constants.SessionId.ToString();
+        query["session"] = SessionId.ToString();
         builder.Query = query.ToString();
 
         var jsonRaw = new JsonObject()
