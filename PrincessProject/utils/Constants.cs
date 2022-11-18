@@ -27,6 +27,14 @@ public static class Constants
     public const bool DebugMode = true;
 
     // Non configurable constants
+    public const int FirstHusbandHappinessLevel = 20;
+    public const int ThirdHusbandHappinessLevel = 50;
+    public const int FifthHusbandHappinessLevel = 100;
+
+    public const int FirstContenderValue = 100;
+    public const int ThirdContenderValue = 98;
+    public const int FifthContenderValue = 96;
+
     public const double IdiotHusbandTopBorderPercentage = 0.5;
     public const int IdiotHusbandHappinessLevel = 0;
     public const int NoHusbandHappinessLevel = 10;

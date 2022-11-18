@@ -47,15 +47,29 @@ public class Princess : IPrincess
 
         int contenderValue = _hall.ChooseContender(chosen);
 
-        if (contenderValue <= _hall.GetTotalCandidates() * Constants.IdiotHusbandTopBorderPercentage)
+        if (contenderValue == Constants.FirstContenderValue)
         {
-            Console.WriteLine("Princess has chosen an idiot husband: {0}", chosen.FullName);
-            Console.WriteLine("Her happiness level: {0}", Constants.IdiotHusbandHappinessLevel);
-            return Constants.IdiotHusbandHappinessLevel;
+            Console.WriteLine("Princess has chosen best husband: {0}", chosen.FullName);
+            Console.WriteLine("Her happiness level: {0}", Constants.FirstHusbandHappinessLevel);
+            return Constants.FirstHusbandHappinessLevel;
         }
 
-        Console.WriteLine("Princess has chosen a worthy contender: {0}", chosen.FullName);
-        Console.WriteLine("Her happiness level: {0}", contenderValue);
-        return contenderValue;
+        if (contenderValue == Constants.ThirdContenderValue)
+        {
+            Console.WriteLine("Princess has chosen third best husband: {0}", chosen.FullName);
+            Console.WriteLine("Her happiness level: {0}", Constants.ThirdHusbandHappinessLevel);
+            return Constants.ThirdHusbandHappinessLevel;
+        }
+
+        if (contenderValue == Constants.FifthContenderValue)
+        {
+            Console.WriteLine("Princess has chosen fifth best husband: {0}", chosen.FullName);
+            Console.WriteLine("Her happiness level: {0}", Constants.FifthHusbandHappinessLevel);
+            return Constants.FifthHusbandHappinessLevel;
+        }
+
+        Console.WriteLine("Princess has chosen an idiot husband: {0}", chosen.FullName);
+        Console.WriteLine("Her happiness level: {0}", Constants.IdiotHusbandHappinessLevel);
+        return Constants.IdiotHusbandHappinessLevel;
     }
 }
