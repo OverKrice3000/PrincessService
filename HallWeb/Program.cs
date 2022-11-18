@@ -6,16 +6,12 @@ using HallWeb.utils;
 using HallWeb.utils.ContenderNamesLoader;
 using HallWeb.utils.ResultSaver;
 using HallWeb.utils.WorldGeneratorClasses;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PrincessProject.Data.context;
-using PrincessProject.Data.model;
-using PrincessProject.Data.model.api;
 
 var builder = WebApplication.CreateBuilder(args);
-
 AddServices(builder, args);
-
+builder.Services.AddControllers();
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
@@ -24,50 +20,7 @@ using (var scope = app.Services.CreateScope())
     await worldGenerator.GenerateWorld(Constants.DatabaseAttemptsGenerated);
 }
 
-app.MapPost("/hall/{attemptId}/reset", (IHall hall, int attemptId) => { hall.Reset(attemptId); });
-
-app.MapPost("/hall/{attemptId}/next", (IHall hall, int attemptId) =>
-{
-    try
-    {
-        VisitingContender contender = hall.GetNextContender(attemptId);
-        return Results.Ok(new NextContenderResponsePayload(contender.FullName));
-    }
-    catch (ArgumentException e)
-    {
-        return Results.BadRequest(e.Message);
-    }
-});
-
-app.MapPost("/hall/{attemptId}/select", (IHall hall, int attemptId) =>
-{
-    try
-    {
-        int rank = hall.ChooseContender(attemptId);
-        return Results.Ok(new SelectContenderResponsePayload(rank.ToString()));
-    }
-    catch (ArgumentException e)
-    {
-        return Results.BadRequest(e.Message);
-    }
-});
-
-app.MapPost("/friend/{attemptId}/compare",
-    (IFriend friend, int attemptId, [FromBody] CompareContendersRequestPayload json) =>
-    {
-        try
-        {
-            VisitingContender firstContender = Util.VisitingContenderFromFullName(json.first);
-            VisitingContender secondContender = Util.VisitingContenderFromFullName(json.second);
-            return Results.Ok(new CompareContendersResponsePayload(friend
-                .CompareContenders(attemptId, firstContender, secondContender).FullName));
-        }
-        catch (ArgumentException e)
-        {
-            return Results.BadRequest(e.Message);
-        }
-    });
-
+app.MapControllers();
 app.Run();
 
 void AddServices(WebApplicationBuilder appBuilder, string[] args)
