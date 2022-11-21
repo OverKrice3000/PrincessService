@@ -1,4 +1,5 @@
 ﻿using HallWeb.ContenderContainer;
+using Microsoft.Extensions.Configuration;
 using PrincessProject.Data.model;
 
 namespace PrincessTestProject.Mocks.ContenderContainer;
@@ -9,11 +10,16 @@ namespace PrincessTestProject.Mocks.ContenderContainer;
 /// </summary>
 public class MContenderContainer : IContenderContainer
 {
+    private IConfigurationRoot _config;
     private Contender[] _contenders;
     private AttemptContainerContext _context;
 
     public MContenderContainer(in int size)
     {
+        _config = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json")
+            .Build();
         _contenders = _generateContenders(size);
         _context = new AttemptContainerContext(_contenders);
         Container = new Dictionary<int, AttemptContainerContext>();
@@ -32,7 +38,7 @@ public class MContenderContainer : IContenderContainer
                    _context.Contenders,
                    contender => contender.FullName.Equals(visitingContender.FullName)
                ) ??
-               throw new ArgumentException("No contender with such name!");
+               throw new ArgumentException(_config.GetSection("ExceptionMessages")["MContenderContainer_NoContender"]);
     }
 
     private Contender[] _generateContenders(in int size)
