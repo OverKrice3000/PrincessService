@@ -19,17 +19,17 @@ class Program
             {
                 services.AddMassTransit(config =>
                 {
-                    config.AddConsumer<ContenderConsumer>();
+                    config.AddConsumer<PrincessService>();
 
                     config.UsingRabbitMq((ctx, cfg) =>
                     {
                         cfg.Host("amqp://guest:guest@localhost:5672");
-                        cfg.ReceiveEndpoint("demo-queue", c => { c.ConfigureConsumer<ContenderConsumer>(ctx); });
+                        cfg.ReceiveEndpoint("demo-queue", c => { c.ConfigureConsumer<PrincessService>(ctx); });
                     });
                 });
 
                 services.AddScoped<IPrincess, Princess>();
-                services.AddScoped<ContenderConsumer>();
+                services.AddSingleton<EventContext>();
                 services.AddHostedService<PrincessService>();
             });
     }

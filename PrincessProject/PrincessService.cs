@@ -1,53 +1,60 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using MassTransit;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using PrincessProject.consumers;
-using PrincessProject.Data;
+using PrincessProject.Data.model;
+using PrincessProject.Data.model.rabbitmq;
 using PrincessProject.PrincessClasses;
+using PrincessProject.utils;
+using Constants = PrincessProject.Data.Constants;
 
 namespace PrincessProject;
 
-public class PrincessService : IHostedService
+public class PrincessService : IHostedService, IConsumer<NextContenderMessage>
 {
     private readonly IHostApplicationLifetime _applicationLifetime;
+    private readonly EventContext _eventContext;
     private readonly IServiceScopeFactory _scopeFactory;
 
     public PrincessService(
         IServiceScopeFactory scopeFactory,
-        IHostApplicationLifetime applicationLifetime
+        IHostApplicationLifetime applicationLifetime,
+        EventContext eventContext
     )
     {
+        _eventContext = eventContext;
         _scopeFactory = scopeFactory;
         _applicationLifetime = applicationLifetime;
     }
 
+    public Task Consume(ConsumeContext<NextContenderMessage> context)
+    {
+        var nextVisitingContender = Util.VisitingContenderFromFullName(context.Message.Name);
+        _eventContext.InvokeCandidateReceived(nextVisitingContender);
+        return Task.CompletedTask;
+    }
+
     public Task StartAsync(CancellationToken cancellationToken)
     {
-        Console.WriteLine("Starting Application!");
         Task.Run(Run);
         return Task.CompletedTask;
     }
 
     public Task StopAsync(CancellationToken cancellationToken)
     {
-        Console.WriteLine("Stopping Application!");
         return Task.CompletedTask;
     }
 
-    private event Action<int> OnStartAttempt;
-    private event Action OnFinishAttempt;
 
-    private async void Run()
+    private void Run()
     {
-        Console.WriteLine("Running Activity!");
-        await CalculateAverageHappiness();
-        _applicationLifetime.StopApplication();
+        CalculateAverageHappiness();
     }
 
-    private async Task CalculateAverageHappiness()
+    private void CalculateAverageHappiness()
     {
         using var scope = _scopeFactory.CreateScope();
         var princess = scope.ServiceProvider.GetRequiredService<IPrincess>();
-        var contenderConsumer = scope.ServiceProvider.GetRequiredService<ContenderConsumer>();
 
         const int contendersCount = Constants.DefaultContendersCount;
         int currentContender = 0;
@@ -55,20 +62,20 @@ public class PrincessService : IHostedService
 
         double totalHappiness = 0;
 
-        OnStartAttempt += (attemptId) =>
+        void OnStartAction(int attemptId)
         {
             princess.SetAttemptId(attemptId);
             princess.ResetAttempt();
             princess.AskForNextContender();
-        };
+        }
 
-        contenderConsumer.CandidateReceived += async (sender, contender) =>
+        async void OnCandidateReceivedAction(VisitingContender contender)
         {
             var isChosen = await princess.AssessNextContender(contender);
             if (isChosen)
             {
                 totalHappiness += await princess.SelectContenderAndCommentOnTopic(contender);
-                OnFinishAttempt.Invoke();
+                _eventContext.InvokeFinishAttempt();
             }
             else if (currentContender < contendersCount)
             {
@@ -76,30 +83,78 @@ public class PrincessService : IHostedService
             }
             else
             {
-                OnFinishAttempt.Invoke();
+                totalHappiness += await princess.SelectContenderAndCommentOnTopic(null);
+                _eventContext.InvokeFinishAttempt();
             }
-        };
+        }
 
-        OnFinishAttempt += () =>
+        void OnAttemptFinishAction()
         {
-            if (currentAttempt < 100)
+            if (++currentAttempt < 100)
             {
-                OnStartAttempt.Invoke(++currentAttempt);
+                _eventContext.InvokeStartAttempt(currentAttempt);
             }
             else
             {
-                Console.WriteLine(totalHappiness / 100);
+                Console.WriteLine($"Princess average happiness is {totalHappiness / 100}");
+                _eventContext.OnStartAttempt -= OnStartAction;
+                _eventContext.OnCandidateReceived -= OnCandidateReceivedAction;
+                _eventContext.OnFinishAttempt -= OnAttemptFinishAction;
+                _applicationLifetime.StopApplication();
             }
-        };
+        }
 
-        OnStartAttempt.Invoke(currentAttempt);
+        _eventContext.OnStartAttempt += OnStartAction;
+        _eventContext.OnCandidateReceived += OnCandidateReceivedAction;
+        _eventContext.OnFinishAttempt += OnAttemptFinishAction;
+        _eventContext.InvokeStartAttempt(currentAttempt);
     }
 
     private async Task ChooseHusbandForAttempt(int attemptId)
     {
-        /*using var scope = _scopeFactory.CreateScope();
+        using var scope = _scopeFactory.CreateScope();
         var princess = scope.ServiceProvider.GetRequiredService<IPrincess>();
-        princess.SetAttemptId(attemptId);
-        await princess.ChooseHusband();*/
+
+        const int contendersCount = Constants.DefaultContendersCount;
+        int currentContender = 0;
+
+        void OnStartAction(int attemptId)
+        {
+            princess.SetAttemptId(attemptId);
+            princess.ResetAttempt();
+            princess.AskForNextContender();
+        }
+
+        async void OnCandidateReceivedAction(VisitingContender contender)
+        {
+            var isChosen = await princess.AssessNextContender(contender);
+            if (isChosen)
+            {
+                await princess.SelectContenderAndCommentOnTopic(contender);
+                _eventContext.InvokeFinishAttempt();
+            }
+            else if (currentContender < contendersCount)
+            {
+                await princess.AskForNextContender();
+            }
+            else
+            {
+                await princess.SelectContenderAndCommentOnTopic(null);
+                _eventContext.InvokeFinishAttempt();
+            }
+        }
+
+        void OnAttemptFinishAction()
+        {
+            _eventContext.OnStartAttempt -= OnStartAction;
+            _eventContext.OnCandidateReceived -= OnCandidateReceivedAction;
+            _eventContext.OnFinishAttempt -= OnAttemptFinishAction;
+            _applicationLifetime.StopApplication();
+        }
+
+        _eventContext.OnStartAttempt += OnStartAction;
+        _eventContext.OnCandidateReceived += OnCandidateReceivedAction;
+        _eventContext.OnFinishAttempt += OnAttemptFinishAction;
+        _eventContext.InvokeStartAttempt(attemptId);
     }
 }

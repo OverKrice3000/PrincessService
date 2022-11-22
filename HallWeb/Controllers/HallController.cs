@@ -1,7 +1,9 @@
 ﻿using HallWeb.Hall;
+using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using PrincessProject.Data.model;
 using PrincessProject.Data.model.api;
+using PrincessProject.Data.model.rabbitmq;
 
 namespace HallWeb.Controllers;
 
@@ -18,16 +20,18 @@ public class HallController : ControllerBase
 
     [HttpPost("{attemptId}/next")]
     [Produces("application/json")]
-    public ActionResult GetNextContender([FromServices] IHall hall, int attemptId)
+    public async Task<ActionResult> GetNextContender([FromServices] IPublishEndpoint publishEndpoint,
+        [FromServices] IHall hall, int attemptId)
     {
         try
         {
             VisitingContender contender = hall.GetNextContender(attemptId);
-            return new JsonResult(new NextContenderResponsePayload(contender.FullName));
+            var message = new NextContenderMessage(contender.FullName);
+            await publishEndpoint.Publish<NextContenderMessage>(message);
+            return StatusCode(200);
         }
         catch (ArgumentException e)
         {
-            Console.WriteLine(e);
             return StatusCode(400);
         }
     }
