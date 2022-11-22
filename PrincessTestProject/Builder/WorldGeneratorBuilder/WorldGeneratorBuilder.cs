@@ -1,13 +1,11 @@
-﻿using PrincessProject.ContenderGeneratorClasses;
+﻿using HallWeb.ContenderGeneratorClasses;
+using HallWeb.utils.WorldGeneratorClasses;
 using PrincessProject.Data.context;
-using PrincessProject.utils.AttemptLoader;
-using PrincessProject.utils.WorldGeneratorClasses;
 
 namespace PrincessTestProject.Builder.WorldGeneratorBuilder;
 
 public class WorldGeneratorBuilder
 {
-    private DatabaseAttemptSaver _attemptSaver;
     private AttemptContext _context;
     private ContenderGenerator _generator;
 
@@ -18,22 +16,11 @@ public class WorldGeneratorBuilder
         _generator = (ContenderGenerator)TestBuilder.BuildIContenderGenerator()
             .BuildContenderGenerator()
             .Build();
-        _attemptSaver = (DatabaseAttemptSaver)TestBuilder
-            .BuildIAttemptSaver()
-            .BuildDatabaseAttemptSaver()
-            .WithAttemptsContext(_context)
-            .Build();
     }
 
     public WorldGeneratorBuilder WithContext(AttemptContext context)
     {
         _context = context;
-        return this;
-    }
-
-    public WorldGeneratorBuilder WithAttemptSaver(DatabaseAttemptSaver attemptSaver)
-    {
-        _attemptSaver = attemptSaver;
         return this;
     }
 
@@ -45,6 +32,6 @@ public class WorldGeneratorBuilder
 
     public IWorldGenerator Build()
     {
-        return new WorldGenerator(_generator, _attemptSaver, _context);
+        return new WorldGenerator(_generator, _context);
     }
 }

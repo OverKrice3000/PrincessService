@@ -1,5 +1,4 @@
-﻿using PrincessProject.Hall;
-using PrincessProject.model;
+﻿using PrincessProject.Data.model;
 
 namespace PrincessProject.PrincessClasses.Strategy.LargeNumbersLawStrategy;
 
@@ -9,15 +8,15 @@ public class LargeNumbersLawStrategy : IStrategy
     private readonly int _contendersCount;
     private int _contendersAssessed = 0;
 
-    public LargeNumbersLawStrategy(IHall hall, int contendersCount)
+    public LargeNumbersLawStrategy(int attemptId)
     {
-        _contendersCount = contendersCount;
-        _contenderChain = new ContenderChain(hall, contendersCount);
+        _contendersCount = Data.Constants.DefaultContendersCount;
+        _contenderChain = new ContenderChain(attemptId, _contendersCount);
     }
 
-    public bool AssessNextContender(VisitingContender visitingContender)
+    public async Task<bool> AssessNextContender(VisitingContender visitingContender)
     {
-        int contenderScore = _contenderChain.Add(visitingContender);
+        int contenderScore = await _contenderChain.Add(visitingContender);
         return _contendersAssessed++ >=
                _contendersCount * LargeNumbersLawStrategyConfig.FirstContendersRejectedPercentage
                && contenderScore <= LargeNumbersLawStrategyConfig.SatisfactoryContenderPositionUpperBorder;

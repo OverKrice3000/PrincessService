@@ -1,28 +1,25 @@
-﻿using PrincessProject.Hall;
-using PrincessProject.model;
-using PrincessProject.PrincessClasses.Strategy;
-using PrincessProject.PrincessClasses.Strategy.CandidatePositionAnalysisStrategy;
+﻿using PrincessProject.Data.model;
 using PrincessProject.utils;
 using PrincessProject.utils.PrincessMath;
 using radj307;
 
-namespace PrincessProject.Princess.Strategy;
+namespace PrincessProject.PrincessClasses.Strategy.CandidatePositionAnalysisStrategy;
 
 public class CandidatePositionAnalysisStrategy : IStrategy
 {
     private readonly IContenderChain _contenderChain;
     private readonly int _contendersCount;
 
-    public CandidatePositionAnalysisStrategy(IHall hall)
+    public CandidatePositionAnalysisStrategy(int attemptId)
     {
-        _contendersCount = hall.GetTotalCandidates();
-        _contenderChain = new ContenderChain(hall, _contendersCount);
+        _contendersCount = Data.Constants.DefaultContendersCount;
+        _contenderChain = new ContenderChain(attemptId, _contendersCount);
     }
 
-    public bool AssessNextContender(VisitingContender visitingContender)
+    public async Task<bool> AssessNextContender(VisitingContender visitingContender)
     {
         // Add contender to chain, receive his current position in the chain
-        int position = _contenderChain.Add(visitingContender);
+        int position = await _contenderChain.Add(visitingContender);
 
         // Calculate how many contenders are better / worse than current one
         // And use those numbers to calculate probability that current contender

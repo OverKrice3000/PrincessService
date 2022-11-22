@@ -1,42 +1,46 @@
-﻿using PrincessProject.Hall;
-using PrincessProject.model;
-using PrincessProject.Princess.Strategy;
+﻿using PrincessProject.api;
+using PrincessProject.Data.model;
 using PrincessProject.PrincessClasses.Strategy;
+using PrincessProject.PrincessClasses.Strategy.CandidatePositionAnalysisStrategy;
 using PrincessProject.utils;
 
 namespace PrincessProject.PrincessClasses;
 
 public class Princess : IPrincess
 {
-    private readonly IHall _hall;
+    private int _attemptId = 0;
     private IStrategy? _strategy;
 
-    public Princess(IHall hall)
+    public Princess()
     {
-        _hall = hall;
     }
 
-    public int ChooseHusband()
+    public void SetAttemptId(int attemptId)
     {
-        _hall.Reset();
-        int size = _hall.GetTotalCandidates();
-        _strategy = new CandidatePositionAnalysisStrategy(_hall);
+        _attemptId = attemptId;
+    }
+
+    public async Task<int> ChooseHusband()
+    {
+        await HallApi.ResetHall(_attemptId);
+        int size = Data.Constants.DefaultContendersCount;
+        _strategy = new CandidatePositionAnalysisStrategy(_attemptId);
 
         VisitingContender? chosen = null;
         for (int i = 0; i < size; i++)
         {
-            VisitingContender nextVisitingContender = _hall.GetNextContender();
-            if (_strategy.AssessNextContender(nextVisitingContender))
+            VisitingContender nextVisitingContender = await HallApi.NextContender(_attemptId);
+            if (await _strategy.AssessNextContender(nextVisitingContender))
             {
                 chosen = nextVisitingContender;
                 break;
             }
         }
 
-        return _calculateHappinessAndCommentOnTopic(chosen);
+        return await _calculateHappinessAndCommentOnTopic(chosen);
     }
 
-    private int _calculateHappinessAndCommentOnTopic(VisitingContender? chosen)
+    private async Task<int> _calculateHappinessAndCommentOnTopic(VisitingContender? chosen)
     {
         if (chosen is null)
         {
@@ -45,9 +49,9 @@ public class Princess : IPrincess
             return Constants.NoHusbandHappinessLevel;
         }
 
-        int contenderValue = _hall.ChooseContender(chosen);
+        int contenderValue = await HallApi.SelectContender(_attemptId);
 
-        if (contenderValue <= _hall.GetTotalCandidates() * Constants.IdiotHusbandTopBorderPercentage)
+        if (contenderValue <= Data.Constants.DefaultContendersCount * Constants.IdiotHusbandTopBorderPercentage)
         {
             Console.WriteLine("Princess has chosen an idiot husband: {0}", chosen.FullName);
             Console.WriteLine("Her happiness level: {0}", Constants.IdiotHusbandHappinessLevel);

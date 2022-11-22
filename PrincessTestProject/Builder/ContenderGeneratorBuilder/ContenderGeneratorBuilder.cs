@@ -1,6 +1,5 @@
-﻿using PrincessProject.ContenderGeneratorClasses;
-using PrincessProject.utils;
-using PrincessProject.utils.ContenderNamesLoader;
+﻿using HallWeb.ContenderGeneratorClasses;
+using HallWeb.utils.ContenderNamesLoader;
 
 namespace PrincessTestProject.Builder.ContenderGeneratorBuilder;
 
@@ -9,13 +8,13 @@ public class ContenderGeneratorBuilder
     private ITableLoader _namesLoader = TestBuilder
         .BuildITableLoader()
         .BuildMTableLoader()
-        .WithLoadedColumnName(Constants.CsvNamesColumn)
+        .WithLoadedColumnName(HallWeb.utils.Constants.CsvNamesColumn)
         .Build();
 
     private ITableLoader _surnamesLoader = TestBuilder
         .BuildITableLoader()
         .BuildMTableLoader()
-        .WithLoadedColumnName(Constants.CsvSurnamesColumn)
+        .WithLoadedColumnName(HallWeb.utils.Constants.CsvSurnamesColumn)
         .Build();
 
     public ContenderGeneratorBuilder WithNamesLoader(ITableLoader namesLoader)

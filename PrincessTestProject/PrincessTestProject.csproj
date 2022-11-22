@@ -19,6 +19,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\HallWeb\HallWeb.csproj"/>
         <ProjectReference Include="..\PrincessProject\PrincessProject.csproj"/>
     </ItemGroup>
 

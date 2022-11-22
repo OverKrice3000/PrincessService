@@ -1,4 +1,4 @@
-﻿using PrincessProject.utils.ContenderNamesLoader;
+﻿using HallWeb.utils.ContenderNamesLoader;
 
 namespace PrincessTestProject.Mocks.ContenderNamesLoaders;
 

@@ -1,36 +1,17 @@
-﻿using PrincessProject.ContenderContainer;
-using PrincessProject.model;
+﻿using PrincessProject.Data.model;
 
 namespace PrincessProject.utils;
 
 public static class Util
 {
-    public static string DeriveOutputFileName(int outputFilesExists)
+    public static VisitingContender VisitingContenderFromFullName(string fullName)
     {
-        return
-            $"{Constants.OutputFileBasename}_{outputFilesExists:D6}_{new Random().Next(Constants.First7DigitInteger):D6}{Constants.OutputFileExtension}";
-    }
+        var split = fullName.Split(" ");
+        if (split.Length != 2)
+        {
+            throw new ArgumentException("Bad contender name");
+        }
 
-    public static void WriteSectionSeparator(StreamWriter writer)
-    {
-        writer.WriteLine("----------");
-    }
-
-    public static string GetProjectBaseDirectory()
-    {
-        var currentDirectory = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
-        return currentDirectory.Parent!.Parent!.Parent!.FullName;
-    }
-
-    public static Contender FindContenderByName(
-        IContenderContainer contenderContainer,
-        VisitingContender visitingContender
-    )
-    {
-        return Array.Find(
-                   contenderContainer.Contenders,
-                   contender => contender.FullName.Equals(visitingContender.FullName)
-               ) ??
-               throw new ArgumentException("No contender with such name!");
+        return new VisitingContender(split[0], split[1]);
     }
 }

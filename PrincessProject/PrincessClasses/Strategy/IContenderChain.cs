@@ -1,4 +1,4 @@
-﻿using PrincessProject.model;
+﻿using PrincessProject.Data.model;
 
 namespace PrincessProject.PrincessClasses.Strategy;
 
@@ -13,7 +13,7 @@ public interface IContenderChain
     /// </summary>
     /// <param name="visitingContender">contender to add to chain</param>
     /// <returns>position of added contender in chain</returns>
-    int Add(VisitingContender visitingContender);
+    Task<int> Add(VisitingContender visitingContender);
 
     /// <summary>
     /// Method, which returns size of the chain

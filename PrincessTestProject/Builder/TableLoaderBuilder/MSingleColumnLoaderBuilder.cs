@@ -1,4 +1,4 @@
-﻿using PrincessProject.utils.ContenderNamesLoader;
+﻿using HallWeb.utils.ContenderNamesLoader;
 using PrincessTestProject.Mocks.ContenderNamesLoaders;
 
 namespace PrincessTestProject.Builder.TableLoaderBuilder;

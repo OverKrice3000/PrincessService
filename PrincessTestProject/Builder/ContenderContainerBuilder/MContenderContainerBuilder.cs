@@ -1,4 +1,4 @@
-﻿using PrincessProject.ContenderContainer;
+﻿using HallWeb.ContenderContainer;
 using PrincessTestProject.Mocks.ContenderContainer;
 
 namespace PrincessTestProject.Builder.ContenderContainerBuilder;

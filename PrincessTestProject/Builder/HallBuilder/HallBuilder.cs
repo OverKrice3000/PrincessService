@@ -1,22 +1,25 @@
-﻿using PrincessProject.ContenderContainer;
-using PrincessProject.Friend;
-using PrincessProject.Hall;
-using PrincessProject.utils.AttemptLoader;
+﻿using HallWeb.ContenderContainer;
+using HallWeb.ContenderGeneratorClasses;
+using HallWeb.Friend;
+using HallWeb.Hall;
+using HallWeb.utils.ResultSaver;
 
 namespace PrincessTestProject.Builder.HallBuilder;
 
 public class HallBuilder
 {
-    private IAttemptSaver _attemptSaver;
+    private readonly IResultSaver _resultSaver;
     private IContenderContainer _container;
-    private IFriend _friend = TestBuilder.BuildIFriend().BuildFriend().Build();
+    private IFriend _friend;
+    private FromDatabaseContenderGenerator _generator;
     private int _size;
 
     public HallBuilder()
     {
         _container = TestBuilder.BuildIContenderContainer().BuildMContenderContainer().Build();
         _friend = TestBuilder.BuildIFriend().BuildFriend().WithContainer(_container).Build();
-        _attemptSaver = new VoidAttemptSaver();
+        _generator = TestBuilder.BuildIContenderGenerator().BuildFromDatabaseContenderGenerator().Build();
+        _resultSaver = new VoidResultSaver();
         _size = 100;
     }
 
@@ -26,9 +29,9 @@ public class HallBuilder
         return this;
     }
 
-    public HallBuilder WithFriend(in IFriend friend)
+    public HallBuilder WithGenerator(in FromDatabaseContenderGenerator generator)
     {
-        _friend = friend;
+        _generator = generator;
         return this;
     }
 
@@ -40,6 +43,6 @@ public class HallBuilder
 
     public IHall Build()
     {
-        return new Hall(_friend, _attemptSaver, _container, _size);
+        return new Hall(_resultSaver, _generator, _container, _size);
     }
 }
