@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using PrincessProject.consumers;
+using PrincessProject.Data;
 using PrincessProject.PrincessClasses;
 
 namespace PrincessProject;
@@ -31,6 +33,9 @@ public class PrincessService : IHostedService
         return Task.CompletedTask;
     }
 
+    private event Action<int> OnStartAttempt;
+    private event Action OnFinishAttempt;
+
     private async void Run()
     {
         Console.WriteLine("Running Activity!");
@@ -42,21 +47,59 @@ public class PrincessService : IHostedService
     {
         using var scope = _scopeFactory.CreateScope();
         var princess = scope.ServiceProvider.GetRequiredService<IPrincess>();
-        double totalHappiness = 0;
-        for (int i = 0; i < 100; i++)
-        {
-            princess.SetAttemptId(i);
-            totalHappiness += await princess.ChooseHusband();
-        }
+        var contenderConsumer = scope.ServiceProvider.GetRequiredService<ContenderConsumer>();
 
-        Console.WriteLine(totalHappiness / 100);
+        const int contendersCount = Constants.DefaultContendersCount;
+        int currentContender = 0;
+        int currentAttempt = 0;
+
+        double totalHappiness = 0;
+
+        OnStartAttempt += (attemptId) =>
+        {
+            princess.SetAttemptId(attemptId);
+            princess.ResetAttempt();
+            princess.AskForNextContender();
+        };
+
+        contenderConsumer.CandidateReceived += async (sender, contender) =>
+        {
+            var isChosen = await princess.AssessNextContender(contender);
+            if (isChosen)
+            {
+                totalHappiness += await princess.SelectContenderAndCommentOnTopic(contender);
+                OnFinishAttempt.Invoke();
+            }
+            else if (currentContender < contendersCount)
+            {
+                await princess.AskForNextContender();
+            }
+            else
+            {
+                OnFinishAttempt.Invoke();
+            }
+        };
+
+        OnFinishAttempt += () =>
+        {
+            if (currentAttempt < 100)
+            {
+                OnStartAttempt.Invoke(++currentAttempt);
+            }
+            else
+            {
+                Console.WriteLine(totalHappiness / 100);
+            }
+        };
+
+        OnStartAttempt.Invoke(currentAttempt);
     }
 
     private async Task ChooseHusbandForAttempt(int attemptId)
     {
-        using var scope = _scopeFactory.CreateScope();
+        /*using var scope = _scopeFactory.CreateScope();
         var princess = scope.ServiceProvider.GetRequiredService<IPrincess>();
         princess.SetAttemptId(attemptId);
-        await princess.ChooseHusband();
+        await princess.ChooseHusband();*/
     }
 }

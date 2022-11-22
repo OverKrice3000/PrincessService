@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using PrincessProject;
+using PrincessProject.consumers;
 using PrincessProject.PrincessClasses;
 
 class Program
@@ -18,16 +19,17 @@ class Program
             {
                 services.AddMassTransit(config =>
                 {
-                    config.AddConsumer<Princess>();
+                    config.AddConsumer<ContenderConsumer>();
 
                     config.UsingRabbitMq((ctx, cfg) =>
                     {
                         cfg.Host("amqp://guest:guest@localhost:5672");
-                        cfg.ReceiveEndpoint("demo-queue", c => { c.ConfigureConsumer<Princess>(ctx); });
+                        cfg.ReceiveEndpoint("demo-queue", c => { c.ConfigureConsumer<ContenderConsumer>(ctx); });
                     });
                 });
 
                 services.AddScoped<IPrincess, Princess>();
+                services.AddScoped<ContenderConsumer>();
                 services.AddHostedService<PrincessService>();
             });
     }
