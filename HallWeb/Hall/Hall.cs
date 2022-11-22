@@ -1,9 +1,9 @@
 ﻿using HallWeb.ContenderContainer;
 using HallWeb.ContenderGeneratorClasses;
-using HallWeb.Friend;
 using HallWeb.utils;
-using HallWeb.utils.AttemptSaver;
+using HallWeb.utils.ResultSaver;
 using PrincessProject.Data.model;
+using PrincessProject.Data.model.data;
 
 namespace HallWeb.Hall;
 
@@ -11,25 +11,21 @@ public class Hall : IHall
 {
     private readonly IContenderContainer _contenderContainer;
     private readonly int _size;
-    private IAttemptSaver _attemptSaver;
     private FromDatabaseContenderGenerator _generator;
+    private IResultSaver _resultSaver;
 
     public Hall(
-        IFriend friend,
-        IAttemptSaver attemptSaver,
+        IResultSaver resultSaver,
         FromDatabaseContenderGenerator generator,
         IContenderContainer contenderContainer,
         int size = PrincessProject.Data.Constants.DefaultContendersCount
     )
     {
         _size = size;
-        Friend = friend;
         _contenderContainer = contenderContainer;
-        _attemptSaver = attemptSaver;
+        _resultSaver = resultSaver;
         _generator = generator;
     }
-
-    public IFriend Friend { get; }
 
     public int GetTotalCandidates()
     {
@@ -84,7 +80,7 @@ public class Hall : IHall
 
         Contender contender = _contenderContainer[attemptId][_contenderContainer[attemptId].NextContender - 1];
 
-        _attemptSaver.Save(new Attempt(
+        _resultSaver.Save(new Result(
             PrincessProject.Data.Constants.DefaultContendersCount,
             Mappers.ContenderToContenderData(_contenderContainer[attemptId].Contenders),
             contender.Value
@@ -93,8 +89,8 @@ public class Hall : IHall
         return contender.Value;
     }
 
-    public void SetAttemptSaver(IAttemptSaver attemptSaver)
+    public void SetAttemptSaver(IResultSaver resultSaver)
     {
-        _attemptSaver = attemptSaver;
+        _resultSaver = resultSaver;
     }
 }

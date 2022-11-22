@@ -1,67 +1,84 @@
 ﻿using System.Text;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Web;
+using Microsoft.Extensions.Configuration;
 using PrincessProject.Data.model;
+using PrincessProject.Data.model.api;
 using PrincessProject.utils;
 
 namespace PrincessProject.api;
 
 public static class HallApi
 {
+    private static readonly HttpClient Client = new HttpClient();
+    private static string WebAppApiBase;
+    private static string HallApiBase;
+    private static string FriendApiBase;
+    private static int SessionId;
+
+    static HallApi()
+    {
+        var config = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json")
+            .Build();
+
+        WebAppApiBase = config.GetSection("PrincessConfig")["HallApiBase"];
+        SessionId = int.Parse(config.GetSection("PrincessConfig")["SessionId"]);
+        HallApiBase = WebAppApiBase + "/hall";
+        FriendApiBase = WebAppApiBase + "/friend";
+    }
+
     public static async Task ResetHall(int attemptId)
     {
-        using var client = new HttpClient();
-        var builder = new UriBuilder($"{Constants.HallApiBase}/{attemptId}/reset");
+        var builder = new UriBuilder($"{HallApiBase}/{attemptId}/reset");
 
         var query = HttpUtility.ParseQueryString(builder.Query);
-        query["session"] = Constants.SessionId.ToString();
+        query["session"] = SessionId.ToString();
         builder.Query = query.ToString();
 
-        await client.PostAsync(builder.ToString(), null);
+        await Client.PostAsync(builder.ToString(), null);
     }
 
     public static async Task NextContender(int attemptId)
     {
-        using var client = new HttpClient();
-        var builder = new UriBuilder($"{Constants.HallApiBase}/{attemptId}/next");
+        var builder = new UriBuilder($"{HallApiBase}/{attemptId}/next");
 
         var query = HttpUtility.ParseQueryString(builder.Query);
-        query["session"] = Constants.SessionId.ToString();
+        query["session"] = SessionId.ToString();
         builder.Query = query.ToString();
 
-        await client.PostAsync(builder.ToString(), null);
+        await Client.PostAsync(builder.ToString(), null);
     }
 
     public static async Task<int> SelectContender(int attemptId)
     {
-        using var client = new HttpClient();
-        var builder = new UriBuilder($"{Constants.HallApiBase}/{attemptId}/select");
+        var builder = new UriBuilder($"{HallApiBase}/{attemptId}/select");
 
         var query = HttpUtility.ParseQueryString(builder.Query);
-        query["session"] = Constants.SessionId.ToString();
+        query["session"] = SessionId.ToString();
         builder.Query = query.ToString();
 
-        var content = await client.PostAsync(builder.ToString(), null);
-        var json = JsonNode.Parse(await content.Content.ReadAsStringAsync());
+        var content = await Client.PostAsync(builder.ToString(), null);
+        var json = JsonNode.Parse(await content.Content.ReadAsStringAsync())
+            .Deserialize<SelectContenderResponsePayload>();
 
-        if (json?["rank"] is null)
+        if (json?.rank is null)
         {
             throw new ApplicationException("Bad http response");
         }
 
-        return int.Parse(json!["rank"]!.ToString());
+        return int.Parse(json.rank);
     }
 
     public static async Task<VisitingContender> CompareContenders(int attemptId, VisitingContender first,
         VisitingContender second)
     {
-        using var client = new HttpClient();
-        var builder = new UriBuilder($"{Constants.FriendApiBase}/{attemptId}/compare");
+        var builder = new UriBuilder($"{FriendApiBase}/{attemptId}/compare");
 
         var query = HttpUtility.ParseQueryString(builder.Query);
-        query["session"] = Constants.SessionId.ToString();
-        query["first"] = first.FullName;
-        query["second"] = second.FullName;
+        query["session"] = SessionId.ToString();
         builder.Query = query.ToString();
 
         var jsonRaw = new JsonObject()
@@ -69,16 +86,17 @@ public static class HallApi
             ["first"] = first.FullName,
             ["second"] = second.FullName
         }.ToString();
-        var content = await client.PostAsync(builder.ToString(),
+        var content = await Client.PostAsync(builder.ToString(),
             new StringContent(jsonRaw, Encoding.UTF8, "application/json"));
 
-        var json = JsonNode.Parse(await content.Content.ReadAsStringAsync());
+        var json = JsonNode.Parse(await content.Content.ReadAsStringAsync())
+            .Deserialize<CompareContendersResponsePayload>();
 
-        if (json?["name"] is null)
+        if (json?.name is null)
         {
             throw new ApplicationException("Bad http response");
         }
 
-        return Util.VisitingContenderFromFullName(json!["name"]!.ToString());
+        return Util.VisitingContenderFromFullName(json.name);
     }
 }

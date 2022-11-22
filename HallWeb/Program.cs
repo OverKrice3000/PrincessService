@@ -1,11 +1,10 @@
-using System.Text.Json.Nodes;
 using HallWeb.ContenderContainer;
 using HallWeb.ContenderGeneratorClasses;
 using HallWeb.Friend;
 using HallWeb.Hall;
 using HallWeb.utils;
-using HallWeb.utils.AttemptSaver;
 using HallWeb.utils.ContenderNamesLoader;
+using HallWeb.utils.ResultSaver;
 using HallWeb.utils.WorldGeneratorClasses;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
@@ -16,9 +15,8 @@ using PrincessProject.Data.model.api;
 using PrincessProject.Data.model.rabbitmq;
 
 var builder = WebApplication.CreateBuilder(args);
-
 AddServices(builder, args);
-
+builder.Services.AddControllers();
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
@@ -27,57 +25,7 @@ using (var scope = app.Services.CreateScope())
     await worldGenerator.GenerateWorld(Constants.DatabaseAttemptsGenerated);
 }
 
-app.MapPost("/hall/{attemptId}/reset", (IHall hall, int attemptId) => { hall.Reset(attemptId); });
-
-app.MapPost("/hall/{attemptId}/next", async (IPublishEndpoint publishEndpoint, IHall hall, int attemptId) =>
-{
-    try
-    {
-        Console.WriteLine("POSTED");
-        VisitingContender contender = hall.GetNextContender(attemptId);
-        var message = new NextContenderMessage(contender.FullName);
-        await publishEndpoint.Publish<NextContenderMessage>(message);
-        return Results.Ok();
-    }
-    catch (ArgumentException e)
-    {
-        return Results.BadRequest(e.Message);
-    }
-});
-
-app.MapPost("/hall/{attemptId}/select", (IHall hall, int attemptId) =>
-{
-    try
-    {
-        int rank = hall.ChooseContender(attemptId);
-        return Results.Ok(new JsonObject()
-        {
-            ["rank"] = rank
-        });
-    }
-    catch (ArgumentException e)
-    {
-        return Results.BadRequest(e.Message);
-    }
-});
-
-app.MapPost("/friend/{attemptId}/compare", (IFriend friend, int attemptId, [FromBody] CompareApiPayload json) =>
-{
-    try
-    {
-        VisitingContender firstContender = Util.VisitingContenderFromFullName(json.first);
-        VisitingContender secondContender = Util.VisitingContenderFromFullName(json.second);
-        return Results.Ok(new JsonObject()
-        {
-            ["name"] = friend.CompareContenders(attemptId, firstContender, secondContender).FullName
-        });
-    }
-    catch (ArgumentException e)
-    {
-        return Results.BadRequest(e.Message);
-    }
-});
-
+app.MapControllers();
 app.Run();
 
 void AddServices(WebApplicationBuilder appBuilder, string[] args)
@@ -96,8 +44,7 @@ void AddServices(WebApplicationBuilder appBuilder, string[] args)
         .WithSeparator(';')
         .WithColumns(new string[1] { Constants.CsvSurnamesColumn });
     appBuilder.Services.AddSingleton<IContenderContainer, ContenderContainer>();
-    appBuilder.Services.AddScoped<DatabaseAttemptSaver>();
-    appBuilder.Services.AddScoped<IAttemptSaver, VoidAttemptSaver>();
+    appBuilder.Services.AddScoped<IResultSaver, VoidResultSaver>();
     appBuilder.Services.AddScoped((_) => new ContenderGenerator(namesLoader, surnamesLoader));
     appBuilder.Services.AddScoped<FromDatabaseContenderGenerator>();
     appBuilder.Services.AddScoped<IWorldGenerator, WorldGenerator>();

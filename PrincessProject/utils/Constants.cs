@@ -15,9 +15,4 @@ public static class Constants
 
     // Session
     public const int SessionId = 98098;
-
-    // HallApi
-    public const string WebAppApiBase = "http://localhost:12345";
-    public const string HallApiBase = WebAppApiBase + "/hall";
-    public const string FriendApiBase = WebAppApiBase + "/friend";
 }
