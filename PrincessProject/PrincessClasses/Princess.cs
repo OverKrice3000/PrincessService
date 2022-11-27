@@ -1,7 +1,7 @@
 ﻿using PrincessProject.Hall;
 using PrincessProject.model;
-using PrincessProject.Princess.Strategy;
 using PrincessProject.PrincessClasses.Strategy;
+using PrincessProject.PrincessClasses.Strategy.StatisticsCollectedAnalysisStrategy;
 using PrincessProject.utils;
 
 namespace PrincessProject.PrincessClasses;
@@ -20,7 +20,7 @@ public class Princess : IPrincess
     {
         _hall.Reset();
         int size = _hall.GetTotalCandidates();
-        _strategy = new CandidatePositionAnalysisStrategy(_hall);
+        _strategy = new StatisticsCollectedAnalysisStrategy(_hall);
 
         VisitingContender? chosen = null;
         for (int i = 0; i < size; i++)
