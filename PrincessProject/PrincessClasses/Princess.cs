@@ -27,14 +27,14 @@ public class Princess : IPrincess
         _strategy = new CandidatePositionAnalysisStrategy(_attemptId);
     }
 
-    public async Task AskForNextContender()
+    public Task AskForNextContender()
     {
-        await HallApi.NextContender(_attemptId);
+        return HallApi.NextContender(_attemptId);
     }
 
-    public async Task<bool> AssessNextContender(VisitingContender contender)
+    public Task<bool> AssessNextContender(VisitingContender contender)
     {
-        return await _strategy.AssessNextContender(contender);
+        return _strategy.AssessNextContender(contender);
     }
 
     public async Task<int> SelectContenderAndCommentOnTopic(VisitingContender? chosen)

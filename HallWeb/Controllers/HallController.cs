@@ -11,21 +11,27 @@ namespace HallWeb.Controllers;
 [ApiController]
 public class HallController : ControllerBase
 {
-    [HttpPost("{attemptId}/reset")]
-    public ActionResult ResetHall([FromServices] IHall hall, int attemptId)
+    private readonly IHall _hall;
+
+    public HallController(IHall hall)
     {
-        hall.Reset(attemptId);
+        _hall = hall;
+    }
+
+    [HttpPost("{attemptId}/reset")]
+    public ActionResult ResetHall(int attemptId)
+    {
+        _hall.Reset(attemptId);
         return StatusCode(200);
     }
 
     [HttpPost("{attemptId}/next")]
     [Produces("application/json")]
-    public async Task<ActionResult> GetNextContender([FromServices] IPublishEndpoint publishEndpoint,
-        [FromServices] IHall hall, int attemptId)
+    public async Task<ActionResult> GetNextContender([FromServices] IPublishEndpoint publishEndpoint, int attemptId)
     {
         try
         {
-            VisitingContender contender = hall.GetNextContender(attemptId);
+            VisitingContender contender = _hall.GetNextContender(attemptId);
             var message = new NextContenderMessage(contender.FullName);
             await publishEndpoint.Publish<NextContenderMessage>(message);
             return StatusCode(200);
@@ -38,11 +44,11 @@ public class HallController : ControllerBase
 
     [HttpPost("{attemptId}/select")]
     [Produces("application/json")]
-    public ActionResult SelectContender([FromServices] IHall hall, int attemptId)
+    public ActionResult SelectContender(int attemptId)
     {
         try
         {
-            int rank = hall.ChooseContender(attemptId);
+            int rank = _hall.ChooseContender(attemptId);
             return new JsonResult(new SelectContenderResponsePayload(rank.ToString()));
         }
         catch (ArgumentException e)

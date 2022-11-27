@@ -10,7 +10,7 @@ using Constants = PrincessProject.Data.Constants;
 
 namespace PrincessProject;
 
-public class PrincessService : IHostedService, IConsumer<NextContenderMessage>
+public class PrincessService : IHostedService
 {
     private readonly IHostApplicationLifetime _applicationLifetime;
     private readonly EventContext _eventContext;
@@ -25,13 +25,6 @@ public class PrincessService : IHostedService, IConsumer<NextContenderMessage>
         _eventContext = eventContext;
         _scopeFactory = scopeFactory;
         _applicationLifetime = applicationLifetime;
-    }
-
-    public Task Consume(ConsumeContext<NextContenderMessage> context)
-    {
-        var nextVisitingContender = Util.VisitingContenderFromFullName(context.Message.Name);
-        _eventContext.InvokeCandidateReceived(nextVisitingContender);
-        return Task.CompletedTask;
     }
 
     public Task StartAsync(CancellationToken cancellationToken)
@@ -64,39 +57,57 @@ public class PrincessService : IHostedService, IConsumer<NextContenderMessage>
 
         void OnStartAction(int attemptId)
         {
-            princess.SetAttemptId(attemptId);
-            princess.ResetAttempt();
-            princess.AskForNextContender();
+            try
+            {
+                princess.SetAttemptId(attemptId);
+                princess.ResetAttempt();
+                princess.AskForNextContender();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Unexpected exception occured");
+                Console.WriteLine(e);
+                _applicationLifetime.StopApplication();
+            }
         }
 
         async void OnCandidateReceivedAction(VisitingContender contender)
         {
-            var isChosen = await princess.AssessNextContender(contender);
-            if (isChosen)
+            try
             {
-                totalHappiness += await princess.SelectContenderAndCommentOnTopic(contender);
-                _eventContext.InvokeFinishAttempt();
+                var isChosen = await princess.AssessNextContender(contender);
+                if (isChosen)
+                {
+                    totalHappiness += await princess.SelectContenderAndCommentOnTopic(contender);
+                    _eventContext.InvokeFinishAttempt();
+                }
+                else if (currentContender < contendersCount)
+                {
+                    await princess.AskForNextContender();
+                }
+                else
+                {
+                    totalHappiness += await princess.SelectContenderAndCommentOnTopic(null);
+                    _eventContext.InvokeFinishAttempt();
+                }
             }
-            else if (currentContender < contendersCount)
+            catch (Exception e)
             {
-                await princess.AskForNextContender();
-            }
-            else
-            {
-                totalHappiness += await princess.SelectContenderAndCommentOnTopic(null);
-                _eventContext.InvokeFinishAttempt();
+                Console.WriteLine(e);
+                Console.WriteLine("Unexpected exception occured");
+                _applicationLifetime.StopApplication();
             }
         }
 
         void OnAttemptFinishAction()
         {
-            if (++currentAttempt < 100)
+            if (++currentAttempt < Constants.DatabaseAttemptsGenerated)
             {
                 _eventContext.InvokeStartAttempt(currentAttempt);
             }
             else
             {
-                Console.WriteLine($"Princess average happiness is {totalHappiness / 100}");
+                Console.WriteLine($"Princess average happiness is {totalHappiness / Constants.DatabaseAttemptsGenerated}");
                 _eventContext.OnStartAttempt -= OnStartAction;
                 _eventContext.OnCandidateReceived -= OnCandidateReceivedAction;
                 _eventContext.OnFinishAttempt -= OnAttemptFinishAction;
@@ -110,7 +121,7 @@ public class PrincessService : IHostedService, IConsumer<NextContenderMessage>
         _eventContext.InvokeStartAttempt(currentAttempt);
     }
 
-    private async Task ChooseHusbandForAttempt(int attemptId)
+    private Task ChooseHusbandForAttempt(int attemptId)
     {
         using var scope = _scopeFactory.CreateScope();
         var princess = scope.ServiceProvider.GetRequiredService<IPrincess>();
@@ -120,27 +131,44 @@ public class PrincessService : IHostedService, IConsumer<NextContenderMessage>
 
         void OnStartAction(int attemptId)
         {
-            princess.SetAttemptId(attemptId);
-            princess.ResetAttempt();
-            princess.AskForNextContender();
+            try{
+                
+                princess.SetAttemptId(attemptId);
+                princess.ResetAttempt();
+                princess.AskForNextContender();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                Console.WriteLine("Unexpected exception occured");
+                _applicationLifetime.StopApplication();
+            }
         }
 
         async void OnCandidateReceivedAction(VisitingContender contender)
         {
-            var isChosen = await princess.AssessNextContender(contender);
-            if (isChosen)
-            {
-                await princess.SelectContenderAndCommentOnTopic(contender);
-                _eventContext.InvokeFinishAttempt();
+            try{ 
+                var isChosen = await princess.AssessNextContender(contender);
+                if (isChosen)
+                {
+                    await princess.SelectContenderAndCommentOnTopic(contender);
+                    _eventContext.InvokeFinishAttempt();
+                }
+                else if (currentContender < contendersCount)
+                {
+                    await princess.AskForNextContender();
+                }
+                else
+                {
+                    await princess.SelectContenderAndCommentOnTopic(null);
+                    _eventContext.InvokeFinishAttempt();
+                }
             }
-            else if (currentContender < contendersCount)
+            catch (Exception e)
             {
-                await princess.AskForNextContender();
-            }
-            else
-            {
-                await princess.SelectContenderAndCommentOnTopic(null);
-                _eventContext.InvokeFinishAttempt();
+                Console.WriteLine(e);
+                Console.WriteLine("Unexpected exception occured");
+                _applicationLifetime.StopApplication();
             }
         }
 
@@ -156,5 +184,6 @@ public class PrincessService : IHostedService, IConsumer<NextContenderMessage>
         _eventContext.OnCandidateReceived += OnCandidateReceivedAction;
         _eventContext.OnFinishAttempt += OnAttemptFinishAction;
         _eventContext.InvokeStartAttempt(attemptId);
+        return Task.CompletedTask;
     }
 }

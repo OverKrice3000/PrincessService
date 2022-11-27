@@ -22,7 +22,7 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var worldGenerator = scope.ServiceProvider.GetRequiredService<IWorldGenerator>();
-    await worldGenerator.GenerateWorld(Constants.DatabaseAttemptsGenerated);
+    await worldGenerator.GenerateWorld(PrincessProject.Data.Constants.DatabaseAttemptsGenerated);
 }
 
 app.MapControllers();
@@ -32,7 +32,7 @@ void AddServices(WebApplicationBuilder appBuilder, string[] args)
 {
     appBuilder.Services.AddMassTransit(config =>
     {
-        config.UsingRabbitMq((ctx, cfg) => { cfg.Host("amqp://guest:guest@localhost:5672"); });
+        config.UsingRabbitMq((ctx, cfg) => { cfg.Host(appBuilder.Configuration.GetConnectionString("RabbitMQ")); });
     });
 
     appBuilder.Services.AddDbContext<AttemptContext>(o =>
