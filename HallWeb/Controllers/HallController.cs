@@ -12,10 +12,12 @@ namespace HallWeb.Controllers;
 public class HallController : ControllerBase
 {
     private readonly IHall _hall;
+    private readonly IPublishEndpoint _publishEndpoint;
 
-    public HallController(IHall hall)
+    public HallController(IHall hall, IPublishEndpoint publishEndpoint)
     {
         _hall = hall;
+        _publishEndpoint = publishEndpoint;
     }
 
     [HttpPost("{attemptId}/reset")]
@@ -27,13 +29,13 @@ public class HallController : ControllerBase
 
     [HttpPost("{attemptId}/next")]
     [Produces("application/json")]
-    public async Task<ActionResult> GetNextContender([FromServices] IPublishEndpoint publishEndpoint, int attemptId)
+    public async Task<ActionResult> GetNextContender(int attemptId)
     {
         try
         {
             VisitingContender contender = _hall.GetNextContender(attemptId);
             var message = new NextContenderMessage(contender.FullName);
-            await publishEndpoint.Publish<NextContenderMessage>(message);
+            await _publishEndpoint.Publish<NextContenderMessage>(message);
             return StatusCode(200);
         }
         catch (ArgumentException e)
