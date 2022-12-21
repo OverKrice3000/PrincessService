@@ -6,8 +6,13 @@ using HallWeb.utils;
 using HallWeb.utils.ContenderNamesLoader;
 using HallWeb.utils.ResultSaver;
 using HallWeb.utils.WorldGeneratorClasses;
+using MassTransit;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PrincessProject.Data.context;
+using PrincessProject.Data.model;
+using PrincessProject.Data.model.api;
+using PrincessProject.Data.model.rabbitmq;
 
 var builder = WebApplication.CreateBuilder(args);
 AddServices(builder, args);
@@ -17,7 +22,7 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var worldGenerator = scope.ServiceProvider.GetRequiredService<IWorldGenerator>();
-    await worldGenerator.GenerateWorld(Constants.DatabaseAttemptsGenerated);
+    await worldGenerator.GenerateWorld(PrincessProject.Data.Constants.DatabaseAttemptsGenerated);
 }
 
 app.MapControllers();
@@ -25,6 +30,11 @@ app.Run();
 
 void AddServices(WebApplicationBuilder appBuilder, string[] args)
 {
+    appBuilder.Services.AddMassTransit(config =>
+    {
+        config.UsingRabbitMq((ctx, cfg) => { cfg.Host(appBuilder.Configuration.GetConnectionString("RabbitMQ")); });
+    });
+
     appBuilder.Services.AddDbContext<AttemptContext>(o =>
         o.UseNpgsql(appBuilder.Configuration.GetConnectionString("AttemptsDatabase")));
     var namesLoader = new CsvLoader(Constants.FromProjectRootCsvNamesFilepath)

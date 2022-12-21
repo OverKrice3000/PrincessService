@@ -9,7 +9,8 @@ namespace PrincessProject.PrincessClasses;
 public class Princess : IPrincess
 {
     private int _attemptId = 0;
-    private IStrategy? _strategy;
+    private IStrategy _strategy = new CandidatePositionAnalysisStrategy(0);
+
 
     public Princess()
     {
@@ -20,27 +21,23 @@ public class Princess : IPrincess
         _attemptId = attemptId;
     }
 
-    public async Task<int> ChooseHusband()
+    public async Task ResetAttempt()
     {
         await HallApi.ResetHall(_attemptId);
-        int size = Data.Constants.DefaultContendersCount;
         _strategy = new CandidatePositionAnalysisStrategy(_attemptId);
-
-        VisitingContender? chosen = null;
-        for (int i = 0; i < size; i++)
-        {
-            VisitingContender nextVisitingContender = await HallApi.NextContender(_attemptId);
-            if (await _strategy.AssessNextContender(nextVisitingContender))
-            {
-                chosen = nextVisitingContender;
-                break;
-            }
-        }
-
-        return await _calculateHappinessAndCommentOnTopic(chosen);
     }
 
-    private async Task<int> _calculateHappinessAndCommentOnTopic(VisitingContender? chosen)
+    public Task AskForNextContender()
+    {
+        return HallApi.NextContender(_attemptId);
+    }
+
+    public Task<bool> AssessNextContender(VisitingContender contender)
+    {
+        return _strategy.AssessNextContender(contender);
+    }
+
+    public async Task<int> SelectContenderAndCommentOnTopic(VisitingContender? chosen)
     {
         if (chosen is null)
         {

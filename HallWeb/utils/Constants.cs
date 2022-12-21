@@ -14,11 +14,8 @@ public static class Constants
     public const string OutputFileBasename = "attempt";
     public const string OutputFileExtension = ".txt";
 
-    // Count of attempts generated at start if database is empty
-    public const int DatabaseAttemptsGenerated = 100;
-
     // Debug mode, which enables some logs
-    public const bool DebugMode = true;
+    public const bool DebugMode = false;
 
     // Non configurable constants
     public const int First7DigitInteger = 1000000;

@@ -19,7 +19,7 @@ public class WorldGenerator : IWorldGenerator
         _context = context;
     }
 
-    public async Task GenerateWorld(int attempts = Constants.DatabaseAttemptsGenerated)
+    public async Task GenerateWorld(int attempts = PrincessProject.Data.Constants.DatabaseAttemptsGenerated)
     {
         if (_context.Attempts.Any())
         {
