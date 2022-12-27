@@ -9,7 +9,7 @@ public static class QualityMetrics
 {
     public static BigFloat ProbabilityOfSuccess()
     {
-        int s = Constants.DefaultContendersCount;
+        int s = Data.Constants.DefaultContendersCount;
         BigFloat[] lChosenProbabilities = new BigFloat[100];
         for (int l = 0; l < 100; l++)
         {

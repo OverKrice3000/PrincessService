@@ -1,72 +1,189 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using MassTransit;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using PrincessProject.ContenderGeneratorClasses;
+using PrincessProject.consumers;
+using PrincessProject.Data.model;
+using PrincessProject.Data.model.rabbitmq;
 using PrincessProject.PrincessClasses;
 using PrincessProject.utils;
-using PrincessProject.utils.WorldGeneratorClasses;
+using Constants = PrincessProject.Data.Constants;
 
 namespace PrincessProject;
 
 public class PrincessService : IHostedService
 {
     private readonly IHostApplicationLifetime _applicationLifetime;
+    private readonly EventContext _eventContext;
     private readonly IServiceScopeFactory _scopeFactory;
 
     public PrincessService(
         IServiceScopeFactory scopeFactory,
-        IHostApplicationLifetime applicationLifetime
+        IHostApplicationLifetime applicationLifetime,
+        EventContext eventContext
     )
     {
+        _eventContext = eventContext;
         _scopeFactory = scopeFactory;
         _applicationLifetime = applicationLifetime;
     }
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
-        Console.WriteLine("Starting Application!");
         Task.Run(Run);
         return Task.CompletedTask;
     }
 
     public Task StopAsync(CancellationToken cancellationToken)
     {
-        Console.WriteLine("Stopping Application!");
         return Task.CompletedTask;
     }
 
-    private async void Run()
+
+    private void Run()
     {
-        Console.WriteLine("Running Activity!");
-        await CalculateAverageHappiness();
-        _applicationLifetime.StopApplication();
+        CalculateAverageHappiness();
     }
 
-    //TODO move to hall web application
-    private async Task CalculateAverageHappiness()
+    private void CalculateAverageHappiness()
     {
         using var scope = _scopeFactory.CreateScope();
-        var generator =
-            (FromDatabaseContenderGenerator)scope.ServiceProvider.GetRequiredService<IContenderGenerator>();
         var princess = scope.ServiceProvider.GetRequiredService<IPrincess>();
-        var worldGenerator = scope.ServiceProvider.GetRequiredService<IWorldGenerator>();
-        //TODO move world generator to hall web application
-        await worldGenerator.GenerateWorld(Constants.DatabaseAttemptsGenerated);
+
+        const int contendersCount = Constants.DefaultContendersCount;
+        int currentContender = 0;
+        int currentAttempt = 0;
+
         double totalHappiness = 0;
-        for (int i = 0; i < 100; i++)
+
+        void OnStartAction(int attemptId)
         {
-            generator.SetAttemptId(i);
-            totalHappiness += princess.ChooseHusband();
+            try
+            {
+                princess.SetAttemptId(attemptId);
+                princess.ResetAttempt();
+                princess.AskForNextContender();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Unexpected exception occured");
+                Console.WriteLine(e);
+                _applicationLifetime.StopApplication();
+            }
         }
 
-        Console.WriteLine(totalHappiness / 100);
+        async void OnCandidateReceivedAction(VisitingContender contender)
+        {
+            try
+            {
+                var isChosen = await princess.AssessNextContender(contender);
+                if (isChosen)
+                {
+                    totalHappiness += await princess.SelectContenderAndCommentOnTopic(contender);
+                    _eventContext.InvokeFinishAttempt();
+                }
+                else if (currentContender < contendersCount)
+                {
+                    await princess.AskForNextContender();
+                }
+                else
+                {
+                    totalHappiness += await princess.SelectContenderAndCommentOnTopic(null);
+                    _eventContext.InvokeFinishAttempt();
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                Console.WriteLine("Unexpected exception occured");
+                _applicationLifetime.StopApplication();
+            }
+        }
+
+        void OnAttemptFinishAction()
+        {
+            if (++currentAttempt < Constants.DatabaseAttemptsGenerated)
+            {
+                _eventContext.InvokeStartAttempt(currentAttempt);
+            }
+            else
+            {
+                Console.WriteLine($"Princess average happiness is {totalHappiness / Constants.DatabaseAttemptsGenerated}");
+                _eventContext.OnStartAttempt -= OnStartAction;
+                _eventContext.OnCandidateReceived -= OnCandidateReceivedAction;
+                _eventContext.OnFinishAttempt -= OnAttemptFinishAction;
+                _applicationLifetime.StopApplication();
+            }
+        }
+
+        _eventContext.OnStartAttempt += OnStartAction;
+        _eventContext.OnCandidateReceived += OnCandidateReceivedAction;
+        _eventContext.OnFinishAttempt += OnAttemptFinishAction;
+        _eventContext.InvokeStartAttempt(currentAttempt);
     }
 
-    private async Task ChooseHusbandForAttempt()
+    private Task ChooseHusbandForAttempt(int attemptId)
     {
         using var scope = _scopeFactory.CreateScope();
         var princess = scope.ServiceProvider.GetRequiredService<IPrincess>();
-        var worldGenerator = scope.ServiceProvider.GetRequiredService<IWorldGenerator>();
-        await worldGenerator.GenerateWorld(Constants.DatabaseAttemptsGenerated);
-        princess.ChooseHusband();
+
+        const int contendersCount = Constants.DefaultContendersCount;
+        int currentContender = 0;
+
+        void OnStartAction(int attemptId)
+        {
+            try{
+                
+                princess.SetAttemptId(attemptId);
+                princess.ResetAttempt();
+                princess.AskForNextContender();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                Console.WriteLine("Unexpected exception occured");
+                _applicationLifetime.StopApplication();
+            }
+        }
+
+        async void OnCandidateReceivedAction(VisitingContender contender)
+        {
+            try{ 
+                var isChosen = await princess.AssessNextContender(contender);
+                if (isChosen)
+                {
+                    await princess.SelectContenderAndCommentOnTopic(contender);
+                    _eventContext.InvokeFinishAttempt();
+                }
+                else if (currentContender < contendersCount)
+                {
+                    await princess.AskForNextContender();
+                }
+                else
+                {
+                    await princess.SelectContenderAndCommentOnTopic(null);
+                    _eventContext.InvokeFinishAttempt();
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                Console.WriteLine("Unexpected exception occured");
+                _applicationLifetime.StopApplication();
+            }
+        }
+
+        void OnAttemptFinishAction()
+        {
+            _eventContext.OnStartAttempt -= OnStartAction;
+            _eventContext.OnCandidateReceived -= OnCandidateReceivedAction;
+            _eventContext.OnFinishAttempt -= OnAttemptFinishAction;
+            _applicationLifetime.StopApplication();
+        }
+
+        _eventContext.OnStartAttempt += OnStartAction;
+        _eventContext.OnCandidateReceived += OnCandidateReceivedAction;
+        _eventContext.OnFinishAttempt += OnAttemptFinishAction;
+        _eventContext.InvokeStartAttempt(attemptId);
+        return Task.CompletedTask;
     }
 }

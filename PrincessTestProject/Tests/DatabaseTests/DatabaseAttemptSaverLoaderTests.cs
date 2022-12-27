@@ -1,8 +1,7 @@
 ﻿using FluentAssertions;
-using PrincessProject.ContenderGeneratorClasses;
+using HallWeb.ContenderGeneratorClasses;
 using PrincessProject.Data.context;
-using PrincessProject.model;
-using PrincessProject.utils.AttemptLoader;
+using PrincessProject.Data.model;
 using PrincessTestProject.Builder;
 using PrincessTestProject.utils;
 
@@ -11,7 +10,6 @@ namespace PrincessTestProject.Tests.DatabaseTests;
 public class DatabaseAttemptSaverLoaderTests
 {
     private IContenderGenerator _attemptLoader;
-    private DatabaseAttemptSaver _attemptSaver;
     private AttemptContext _context;
     private ContenderGenerator _generator;
 
@@ -25,11 +23,6 @@ public class DatabaseAttemptSaverLoaderTests
         _context = TestBuilder
             .BuildDatabaseContext()
             .Build();
-        _attemptSaver = TestBuilder
-            .BuildIAttemptSaver()
-            .BuildDatabaseAttemptSaver()
-            .WithAttemptsContext(_context)
-            .Build();
         _attemptLoader = TestBuilder
             .BuildIContenderGenerator()
             .BuildFromDatabaseContenderGenerator()
@@ -40,7 +33,6 @@ public class DatabaseAttemptSaverLoaderTests
             .BuildIWorldGenerator()
             .BuildWorldGenerator()
             .WithContext(_context)
-            .WithAttemptSaver(_attemptSaver)
             .WithContendersGenerator(_generator)
             .Build();
 
@@ -65,7 +57,7 @@ public class DatabaseAttemptSaverLoaderTests
     public void WorldShouldBeGeneratedCorrectly()
     {
         _context.Attempts.Count().Should().Be(Constants.DatabaseAttemptsGenerated *
-                                              PrincessProject.utils.Constants.DefaultContendersCount);
+                                              PrincessProject.Data.Constants.DefaultContendersCount);
     }
 
     /// <summary>
@@ -84,23 +76,5 @@ public class DatabaseAttemptSaverLoaderTests
                     contendersDb[i].CandidateValue);
             contenderDb.Should().BeEquivalentTo(contendersLoader[i]);
         }
-    }
-
-    [Test]
-    public async Task AttemptCanBeSavedToDatabase()
-    {
-        var nextAttemptId = _context.Attempts.Any() ? _context.FindLastAttemptId() + 1 : 0;
-        var contenders = _generator.Generate()
-            .Select(c => new ContenderData(c.Name, c.Surname, c.Value)).ToArray();
-        await _attemptSaver.Save(new Attempt(contenders.Length, contenders, null));
-        _context.Attempts
-            .Count(a => a.AttemptId == nextAttemptId).Should().Be(contenders.Length);
-        var attempt = _context.Attempts.Where(a => a.AttemptId == nextAttemptId).ToList()
-            .MinBy(a => a.CandidateOrder);
-        attempt.Should().NotBeNull();
-        new Contender(attempt!.CandidateName, attempt.CandidateSurname, attempt.CandidateValue)
-            .FullName
-            .Should()
-            .Be(contenders[0].FullName);
     }
 }

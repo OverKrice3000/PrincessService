@@ -1,6 +1,9 @@
-﻿using PrincessProject.Hall;
+using PrincessProject.api;
+using PrincessProject.Data.model;
+using PrincessProject.Hall;
 using PrincessProject.model;
 using PrincessProject.PrincessClasses.Strategy;
+using PrincessProject.PrincessClasses.Strategy.CandidatePositionAnalysisStrategy;
 using PrincessProject.PrincessClasses.Strategy.StatisticsCollectedAnalysisStrategy;
 using PrincessProject.utils;
 
@@ -8,35 +11,36 @@ namespace PrincessProject.PrincessClasses;
 
 public class Princess : IPrincess
 {
-    private readonly IHall _hall;
-    private IStrategy? _strategy;
+    private int _attemptId = 0;
+    private IStrategy _strategy = new CandidatePositionAnalysisStrategy(0);
 
-    public Princess(IHall hall)
+
+    public Princess()
     {
-        _hall = hall;
     }
 
-    public int ChooseHusband()
+    public void SetAttemptId(int attemptId)
     {
-        _hall.Reset();
-        int size = _hall.GetTotalCandidates();
-        _strategy = new StatisticsCollectedAnalysisStrategy(_hall);
-
-        VisitingContender? chosen = null;
-        for (int i = 0; i < size; i++)
-        {
-            VisitingContender nextVisitingContender = _hall.GetNextContender();
-            if (_strategy.AssessNextContender(nextVisitingContender))
-            {
-                chosen = nextVisitingContender;
-                break;
-            }
-        }
-
-        return _calculateHappinessAndCommentOnTopic(chosen);
+        _attemptId = attemptId;
     }
 
-    private int _calculateHappinessAndCommentOnTopic(VisitingContender? chosen)
+    public async Task ResetAttempt()
+    {
+        await HallApi.ResetHall(_attemptId);
+        _strategy = new CandidatePositionAnalysisStrategy(_attemptId);
+    }
+
+    public Task AskForNextContender()
+    {
+        return HallApi.NextContender(_attemptId);
+    }
+
+    public Task<bool> AssessNextContender(VisitingContender contender)
+    {
+        return _strategy.AssessNextContender(contender);
+    }
+
+    public async Task<int> SelectContenderAndCommentOnTopic(VisitingContender? chosen)
     {
         if (chosen is null)
         {
@@ -45,7 +49,7 @@ public class Princess : IPrincess
             return Constants.NoHusbandHappinessLevel;
         }
 
-        int contenderValue = _hall.ChooseContender(chosen);
+        int contenderValue = await HallApi.SelectContender(_attemptId);
 
         if (contenderValue == Constants.FirstContenderValue)
         {
