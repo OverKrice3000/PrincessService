@@ -23,7 +23,6 @@ public class Princess : IPrincess
 
     public async Task ResetAttempt()
     {
-        await HallApi.ResetHall(_attemptId);
         _strategy = new CandidatePositionAnalysisStrategy(_attemptId);
     }
 

@@ -3,7 +3,7 @@ using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using PrincessProject.Data.model;
 using PrincessProject.Data.model.api;
-using PrincessProject.Data.model.rabbitmq;
+using Contender = Nsu.PeakyBride.DataContracts.Contender;
 
 namespace HallWeb.Controllers;
 
@@ -34,8 +34,8 @@ public class HallController : ControllerBase
         try
         {
             VisitingContender contender = _hall.GetNextContender(attemptId);
-            var message = new NextContenderMessage(contender.FullName);
-            await _publishEndpoint.Publish<NextContenderMessage>(message);
+            var message = new Contender(contender.FullName);
+            await _publishEndpoint.Publish<Contender>(message);
             return StatusCode(200);
         }
         catch (ArgumentException e)

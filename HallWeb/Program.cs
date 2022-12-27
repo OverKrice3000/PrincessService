@@ -7,12 +7,8 @@ using HallWeb.utils.ContenderNamesLoader;
 using HallWeb.utils.ResultSaver;
 using HallWeb.utils.WorldGeneratorClasses;
 using MassTransit;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PrincessProject.Data.context;
-using PrincessProject.Data.model;
-using PrincessProject.Data.model.api;
-using PrincessProject.Data.model.rabbitmq;
 
 var builder = WebApplication.CreateBuilder(args);
 AddServices(builder, args);

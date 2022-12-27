@@ -39,8 +39,7 @@ public class CandidatePositionAnalysisStrategy : IStrategy
             Console.WriteLine(position);
         }
 
-        if (_contenderChain.Size() == _contendersCount &&
-            position <= _contendersCount * Constants.IdiotHusbandTopBorderPercentage)
+        if (_contenderChain.Size() == _contendersCount)
             return true;
 
         return probabilityOfSuccess >= CandidatePositionAnalysisStrategyConfig.WorthyContenderSatisfactoryProbability

@@ -6,7 +6,7 @@ using PrincessProject.Data.model.api;
 
 namespace HallWeb.Controllers;
 
-[Route("friend")]
+[Route("freind")]
 [ApiController]
 public class FriendController : ControllerBase
 {

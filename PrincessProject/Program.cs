@@ -25,7 +25,8 @@ class Program
                     config.UsingRabbitMq((ctx, cfg) =>
                     {
                         cfg.Host(hostContext.Configuration.GetConnectionString("RabbitMQ"));
-                        cfg.ReceiveEndpoint("demo-queue", c => { c.ConfigureConsumer<ContenderReceivedConsumer>(ctx); });
+                        cfg.ReceiveEndpoint("bv0-ikt-awm-3ar",
+                            c => { c.ConfigureConsumer<ContenderReceivedConsumer>(ctx); });
                     });
                 });
 

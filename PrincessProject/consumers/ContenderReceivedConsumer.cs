@@ -1,10 +1,10 @@
 ﻿using MassTransit;
-using PrincessProject.Data.model.rabbitmq;
+using Nsu.PeakyBride.DataContracts;
 using PrincessProject.utils;
 
 namespace PrincessProject.consumers;
 
-public class ContenderReceivedConsumer : IConsumer<NextContenderMessage>
+public class ContenderReceivedConsumer : IConsumer<Contender>
 {
     private readonly EventContext _eventContext;
 
@@ -13,7 +13,7 @@ public class ContenderReceivedConsumer : IConsumer<NextContenderMessage>
         _eventContext = eventContext;
     }
 
-    public Task Consume(ConsumeContext<NextContenderMessage> context)
+    public Task Consume(ConsumeContext<Contender> context)
     {
         var nextVisitingContender = Util.VisitingContenderFromFullName(context.Message.Name);
         _eventContext.InvokeCandidateReceived(nextVisitingContender);
