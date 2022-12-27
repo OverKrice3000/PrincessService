@@ -1,10 +1,7 @@
 using PrincessProject.api;
 using PrincessProject.Data.model;
-using PrincessProject.Hall;
-using PrincessProject.model;
 using PrincessProject.PrincessClasses.Strategy;
 using PrincessProject.PrincessClasses.Strategy.CandidatePositionAnalysisStrategy;
-using PrincessProject.PrincessClasses.Strategy.StatisticsCollectedAnalysisStrategy;
 using PrincessProject.utils;
 
 namespace PrincessProject.PrincessClasses;
