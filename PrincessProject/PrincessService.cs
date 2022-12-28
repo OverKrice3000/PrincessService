@@ -55,6 +55,7 @@ public class PrincessService : IHostedService
 
         void OnStartAction(int attemptId)
         {
+            currentContender = 0;
             try
             {
                 princess.SetAttemptId(attemptId);
@@ -71,6 +72,7 @@ public class PrincessService : IHostedService
 
         async void OnCandidateReceivedAction(VisitingContender contender)
         {
+            currentContender++;
             try
             {
                 var isChosen = await princess.AssessNextContender(contender);
@@ -85,6 +87,7 @@ public class PrincessService : IHostedService
                 }
                 else
                 {
+                    await princess.AskForNextContender();
                     await princess.SelectContenderAndCommentOnTopic(null);
                     _eventContext.InvokeFinishAttempt();
                 }

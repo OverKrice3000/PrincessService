@@ -9,7 +9,7 @@ public static class Util
         var split = fullName.Split(" ");
         if (split.Length != 2)
         {
-            throw new ArgumentException("Bad contender name");
+            throw new ArgumentException($"Bad contender name: {fullName}");
         }
 
         return new VisitingContender(split[0], split[1]);

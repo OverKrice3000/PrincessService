@@ -39,10 +39,8 @@ public class CandidatePositionAnalysisStrategy : IStrategy
             Console.WriteLine(position);
         }
 
-        if (_contenderChain.Size() == _contendersCount)
-            return true;
-
         return probabilityOfSuccess >= CandidatePositionAnalysisStrategyConfig.WorthyContenderSatisfactoryProbability
+               && position <= 4
                && _contenderChain.Size() >= _contendersCount *
                CandidatePositionAnalysisStrategyConfig.FirstContendersRejectedPercentage;
     }
